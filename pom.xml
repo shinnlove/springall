@@ -163,6 +163,14 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.26</version>
         </dependency>
+
+        <!-- 分布式锁 redisson -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        
     </dependencies>
 
     <build>
