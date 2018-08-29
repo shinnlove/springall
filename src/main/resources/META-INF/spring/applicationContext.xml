@@ -5,13 +5,66 @@
        xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
        default-autowire="byName">
 
     <!-- 在此注入bean -->
+
+    <!-- 配置自动扫描的包,扫描service层,service上面有注解就直接被spring容器实例化 -->
+    <context:component-scan base-package="com.shinnlove.springall"/>
+
+    <!-- 数据库资源文件占位符 -->
+    <context:property-placeholder location="classpath:META-INF/db/db.properties"/>
+
+    <!-- 1. 配置数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="jdbcUrl" value="${jdbcUrl}"/>
+        <property name="driverClass" value="${driverClass}"/>
+        <property name="user" value="${user}"/>
+        <property name="password" value="${password}"/>
+        <property name="initialPoolSize" value="${initialPoolSize}"/>
+        <property name="maxPoolSize" value="${maxPoolSize}"/>
+    </bean>
+
+    <!-- 2. 配置 JPA 的 EntityManagerFactory -->
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+        </property>
+        <!-- 配置包扫描，扫描实体 -->
+        <property name="packagesToScan" value="com.shinnlove.springall.model"/>
+        <property name="jpaProperties">
+            <props>
+                <!-- 生成的数据表的列的映射策略 -->
+                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+                <!-- hibernate 基本属性 -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- 3. 配置事务管理器，使用jpa的TransactionManager -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- 4. 配置支持注解的事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- 5. 配置 SpringData,需要加入 jpa 的命名空间 -->
+    <!-- base-package: 扫描 Repository Bean 所在的 package -->
+    <!-- 类似`@RepositoryDefinition`类注解扫描仓储`XxxDao`的基础包 -->
+    <jpa:repositories base-package="com.shinnlove.springall.dao" entity-manager-factory-ref="entityManagerFactory"/>
 
 </beans>
