@@ -21,7 +21,7 @@ import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 
 /**
- * 消费者示例，代码配置型。
+ * Case1：消费者示例，代码配置型。
  *
  * @author shinnlove.jinsheng
  * @version $Id: QuickStart.java, v 0.1 2018-08-29 下午2:07 shinnlove.jinsheng Exp $$
@@ -42,7 +42,7 @@ public class QuickStart {
     }
 
     /**
-     * 启动生产者
+     * 启动生产者，发送消息方式采用同步。
      *
      * @throws MQClientException
      * @throws RemotingException
@@ -56,8 +56,9 @@ public class QuickStart {
         // 启动生产者准备发送消息
         producer.start();
         for (int i = 0; i < 100; i++) {
-            // 创建一条消息
+            // 创建一条消息（一个主题下可以有不同tag标签来打标消息）
             Message msg = new Message("TopicTest", "TagA", ("hello rocketmq " + i).getBytes());
+            // 同步发送返回结果
             SendResult sendResult = producer.send(msg);
             System.out.println(sendResult);
         }
