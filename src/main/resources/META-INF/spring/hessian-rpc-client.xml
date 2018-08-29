@@ -12,6 +12,12 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
        default-autowire="byName">
 
-    <!-- 在此注入bean -->
+    <!-- 使用`HessianProxyFactoryBean`在客户端spring上下文中生成代理，服务地址是IP地址+端口号+服务路径，接口必须指定 -->
+    <bean id="hessianUserService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="http://127.0.0.1:8080/user.hessianInvoker"/>
+        <property name="serviceInterface" value="com.shinnlove.springall.service.UserService"/>
+        <!--  新增overloadEnabled属性，并把它的值设置为true，默认是false，则Hessian就能支持方法的重载了。   -->
+        <property name="overloadEnabled" value="true"/>
+    </bean>
 
 </beans>

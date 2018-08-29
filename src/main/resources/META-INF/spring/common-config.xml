@@ -12,6 +12,19 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
        default-autowire="byName">
 
-    <!-- 在此注入bean -->
+    <bean id="userService" class="com.shinnlove.springall.service.impl.UserServiceImpl"/>
+
+    <!-- 呼应servlet的web.xml中servlet-mapping映射的请求 -->
+    <!-- servlet-mapping会拦截所有的`.httpInvoker`请求，这里指定一个`user.httpInvoker`被`serviceHttpInvoker`处理 -->
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <!-- 配置导出为`HttpInvoker`服务 -->
+                <prop key="/user.httpInvoker">serviceHttpInvoker</prop>
+                <!-- 配置导出为`hessianInvoker`服务 -->
+                <prop key="/user.hessianInvoker">serviceHessianInvoker</prop>
+            </props>
+        </property>
+    </bean>
 
 </beans>

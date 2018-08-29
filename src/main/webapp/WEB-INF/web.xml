@@ -88,4 +88,27 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <servlet>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:/META-INF/spring/*-rpc-server.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- 如果配置了servlet-mapping而spring中不见响应后缀的处理类(默认后缀的除外)，idea会标红报警 -->
+
+    <!-- 拦截所有后缀为`.httpInvoker`的请求 -->
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>*.httpInvoker</url-pattern>
+    </servlet-mapping>
+    <!-- 拦截所有后缀为`.hessianInvoker`的请求 -->
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>*.hessianInvoker</url-pattern>
+    </servlet-mapping>
+
 </web-app>

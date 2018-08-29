@@ -12,6 +12,15 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
        default-autowire="byName">
 
-    <!-- 在此注入bean -->
+    <bean id="userService" class="com.shinnlove.springall.service.impl.UserServiceImpl"/>
+
+    <!-- 发布RMI远程服务 -->
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="serviceName" value="userRmiService"/>
+        <property name="service" ref="userService"/>
+        <property name="serviceInterface" value="com.shinnlove.springall.service.UserService"/>
+        <!-- RMI 默认端口为1099，这里改个端口号 -->
+        <property name="registryPort" value="1199"/>
+    </bean>
 
 </beans>

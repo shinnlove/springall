@@ -12,6 +12,10 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
        default-autowire="byName">
 
-    <!-- 在此注入bean -->
+    <!-- 使用`HttpInvokerProxyFactoryBean`在客户端spring上下文中生成代理，服务地址是IP地址+端口号+服务路径，接口必须指定 -->
+    <bean id="userServiceProxy" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl" value="http://127.0.0.1:8080/user.httpInvoker"/>
+        <property name="serviceInterface" value="com.shinnlove.springall.service.UserService"/>
+    </bean>
 
 </beans>

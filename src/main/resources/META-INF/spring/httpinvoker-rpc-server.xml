@@ -12,6 +12,12 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
        default-autowire="byName">
 
-    <!-- 在此注入bean -->
+    <import resource="common-config.xml"/>
+
+    <!-- 使用HttpInvoker服务导出类发布服务`serviceHttpInvoker` -->
+    <bean id="serviceHttpInvoker" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="userService"/>
+        <property name="serviceInterface" value="com.shinnlove.springall.service.UserService"/>
+    </bean>
 
 </beans>

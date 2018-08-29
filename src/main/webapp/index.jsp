@@ -1,6 +1,6 @@
 <html>
 <body>
 <h2>Hello World!</h2>
-<p>Welcome to spring all, here are all kinds of integrations.</p>
+<h2>欢迎使用HttpInvoker发布引用远程服务，这是欢迎页，代表服务端已经起来了。</h2>
 </body>
 </html>

@@ -12,6 +12,12 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
        default-autowire="byName">
 
-    <!-- 在此注入bean -->
+    <!-- 引入RMI远程服务 -->
+    <bean id="userRmiServiceProxy" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+        <!-- rmi协议地址 -->
+        <property name="serviceUrl" value="rmi://127.0.0.1:1199/userRmiService"/>
+        <!-- rmi协议服务接口 -->
+        <property name="serviceInterface" value="com.shinnlove.springall.service.UserService"/>
+    </bean>
 
 </beans>
