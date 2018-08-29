@@ -19,6 +19,7 @@
         <slf4j.version>1.7.21</slf4j.version>
         <log4j2.version>2.8.2</log4j2.version>
         <async.disruptor.version>3.2.1</async.disruptor.version>
+        <apache.httpclient.version>4.5.3</apache.httpclient.version>
     </properties>
 
     <dependencies>
@@ -163,6 +164,21 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.26</version>
         </dependency>
+
+        <!-- http client -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${apache.httpclient.version}</version>
+        </dependency>
+
+        <!-- jsoup html parser -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.8.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>
