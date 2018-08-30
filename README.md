@@ -10,6 +10,10 @@ spring技术选型集成，不同分支代表不同技术选型，集成了常�
 
 应用级缓存Guava、EhCache、MapDB使用示例。
 
+## canal
+
+基于阿里开源DB日志订阅`canal`组件消费DB变更消息的客户端使用示例。
+
 ## crawler
 
 java爬虫和网页解析。
