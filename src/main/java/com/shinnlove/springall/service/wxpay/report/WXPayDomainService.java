@@ -75,35 +75,37 @@ public class WXPayDomainService {
     /**
      * 上报域名统计服务：线程安全的访问不同域名的`DomainStatistic`对象。
      *
+     * TODO：优化这段代码。
+     *
      * @param domain
      * @param elapsedTimeMillis
      * @param ex
      */
     public synchronized void statistic(final String domain, long elapsedTimeMillis,
                                        final Exception ex) {
-        DomainStatistic info = domainData.get(domain);
-        if (info == null) {
-            info = new DomainStatistic(domain);
-            domainData.put(domain, info);
+        DomainStatistic statistic = domainData.get(domain);
+        if (statistic == null) {
+            statistic = new DomainStatistic(domain);
+            domainData.put(domain, statistic);
         }
 
         if (ex == null) {
             //success
-            if (info.getSuccessCount() >= 2) {
+            if (statistic.getSuccessCount() >= 2) {
                 //continue succ, clear error count
-                info.clearError();
+                statistic.clearError();
             } else {
-                info.successCountPlus();
+                statistic.successCountPlus();
             }
         } else if (ex instanceof ConnectTimeoutException) {
-            info.clearSuccessAndDNS();
-            info.connectionTimeoutCountPlus();
+            statistic.clearSuccessAndDNS();
+            statistic.connectionTimeoutCountPlus();
         } else if (ex instanceof UnknownHostException) {
-            info.clearSuccess();
-            info.dnsErrorCountPlus();
+            statistic.clearSuccess();
+            statistic.dnsErrorCountPlus();
         } else {
-            info.clearSuccess();
-            info.otherErrorCountPlus();
+            statistic.clearSuccess();
+            statistic.otherErrorCountPlus();
         }
     }
 

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.shinnlove.springall.service.wxpay.report.WXPayDomainService;
 import com.shinnlove.springall.service.wxpay.report.WXPayReportService;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayGlobalConfig;
+import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
+import com.shinnlove.springall.util.wxpay.sdkplus.domain.WXPayDomain;
 import com.shinnlove.springall.util.wxpay.sdkplus.http.WXPayRequestUtil;
 import com.shinnlove.springall.util.wxpay.sdkplus.invoker.WXPayInvoker;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.handler.WXPayService;
@@ -52,45 +54,87 @@ public class WXPayRequestService implements WXPayService {
         // Step2：填写请求入参
         client.fillRequestParams(keyPairs, payParams);
 
-        // Step3：请求地址
-        String url = client.payRequestURL();
-
-        // Step4：组装支付xml报文
+        // Step3：组装支付xml报文
         String reqBody = WXPayUtil.mapToXml(payParams);
 
-        // Step5：是否需要证书
+        // 请求入参
+        WXPayMchConfig mchConfig = client.getWxPayMchConfig();
+        WXPayDomain domain = wxPayDomainService.getDomain();
+        String url = client.payRequestURL();
         boolean useCert = client.requestNeedCert();
 
-        // 当前选择的请求域名
-        String domain = wxPayDomainService.getDomain().getDomainName();
+        // Step4：执行请求并且上报
+        String respStr = requestAndReport(mchConfig, domain, url, reqBody, useCert);
 
-        // Step6：执行请求并且上报
-        String respStr = "";
-        try {
-            respStr = WXPayRequestUtil.request(client.getWxPayMchConfig(), domain, url, reqBody,
-                useCert, config.getHttpConnectionTimeoutMs(), config.getHttpReadTimeoutMs());
-        } catch (UnknownHostException ex) {
-
-        } catch (ConnectTimeoutException ex) {
-
-        } catch (SocketTimeoutException ex) {
-
-        } catch (Exception ex) {
-
-        }
-        // 域名统计
-        wxPayDomainService.statistic();
-        // 上报统计
-        wxPayReportService.report();
-
-        // Step7：解码请求结果
+        // Step5：解码请求结果
         final Map<String, String> response = client.processResponseXml(respStr);
 
-        // Step8：回调外层
+        // Step6：回调外层
         invoker.doPayCallback(response);
 
         // PS：结果还是返回，如果外面想要...
         return response;
+    }
+
+    /**
+     * 做请求与自动上报，发现错误之后会拦截上报然后抛出。
+     *
+     * @param mchConfig 
+     * @param domain
+     * @param url
+     * @param reqBody
+     * @param useCert
+     * @return
+     * @throws Exception
+     */
+    private String requestAndReport(WXPayMchConfig mchConfig, WXPayDomain domain, String url,
+                                    String reqBody, boolean useCert) throws Exception {
+        // 统计信息
+        long elapsedTimeMillis = 0;
+        long startTimestampMs = WXPayUtil.getCurrentTimestampMs();
+        int connectTimeoutMs = config.getHttpConnectionTimeoutMs();
+        int readTimeoutMs = config.getHttpReadTimeoutMs();
+        boolean firstHasDnsErr = false;
+        boolean firstHasConnectTimeout = false;
+        boolean firstHasReadTimeout = false;
+        Exception exception = null;
+
+        String respStr = "";
+        try {
+            respStr = WXPayRequestUtil.request(mchConfig, domain.getDomainName(), url, "", reqBody,
+                useCert, connectTimeoutMs, readTimeoutMs);
+        } catch (UnknownHostException ex) {
+            // 处理DNS Error
+            exception = ex;
+            firstHasDnsErr = true;
+        } catch (ConnectTimeoutException ex) {
+            // 处理连接超时
+            exception = ex;
+            firstHasConnectTimeout = true;
+        } catch (SocketTimeoutException ex) {
+            // 处理端口读取超时
+            exception = ex;
+            firstHasReadTimeout = true;
+        } catch (Exception ex) {
+            // 处理其他未知错误
+            exception = ex;
+        } finally {
+            elapsedTimeMillis = WXPayUtil.getCurrentTimestampMs() - startTimestampMs;
+        }
+
+        // 域名统计
+        wxPayDomainService.statistic(domain.getDomainName(), elapsedTimeMillis, exception);
+
+        // 上报统计
+        wxPayReportService.report(mchConfig.getApiKey(), "", elapsedTimeMillis,
+            domain.getDomainName(), domain.isPrimaryDomain(), connectTimeoutMs, readTimeoutMs,
+            firstHasDnsErr, firstHasConnectTimeout, firstHasReadTimeout);
+
+        if (exception != null) {
+            throw exception;
+        }
+
+        return respStr;
     }
 
 }
