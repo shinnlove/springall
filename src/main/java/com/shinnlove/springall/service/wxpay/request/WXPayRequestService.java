@@ -12,14 +12,14 @@ import java.util.Map;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.springframework.stereotype.Service;
 
+import com.shinnlove.springall.service.wxpay.callback.WXPayBizCallback;
+import com.shinnlove.springall.service.wxpay.handler.WXPayService;
 import com.shinnlove.springall.service.wxpay.report.WXPayDomainService;
 import com.shinnlove.springall.service.wxpay.report.WXPayReportService;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayGlobalConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.domain.WXPayDomain;
 import com.shinnlove.springall.util.wxpay.sdkplus.http.WXPayRequestUtil;
-import com.shinnlove.springall.util.wxpay.sdkplus.invoker.WXPayInvoker;
-import com.shinnlove.springall.util.wxpay.sdkplus.service.handler.WXPayService;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.request.base.WXPayRequestClient;
 import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 
@@ -43,7 +43,7 @@ public class WXPayRequestService implements WXPayService {
 
     @Override
     public Map<String, String> doPayRequest(WXPayRequestClient client,
-                                            Map<String, String> keyPairs, WXPayInvoker invoker)
+                                            Map<String, String> keyPairs, WXPayBizCallback callback)
                                                                                                throws Exception {
         // 一次微信请求的payParameters可以作为这个函数的局部变量栈上分配优化...
         Map<String, String> payParams = new HashMap<>();
@@ -70,7 +70,7 @@ public class WXPayRequestService implements WXPayService {
         final Map<String, String> response = client.processResponseXml(respStr);
 
         // Step6：回调外层
-        invoker.doPayCallback(response);
+        callback.doPayCallback(response);
 
         // PS：结果还是返回，如果外面想要...
         return response;

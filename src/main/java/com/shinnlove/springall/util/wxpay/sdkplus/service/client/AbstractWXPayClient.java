@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.consts.WXPayConstants;
-import com.shinnlove.springall.util.wxpay.sdkplus.service.handler.WXPayResponseHandler;
+import com.shinnlove.springall.util.wxpay.sdkplus.service.handler.WXPayRespMsgHandler;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.paymode.context.WXPayModeContext;
 import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 
@@ -16,12 +16,12 @@ import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
  * 微信支付抽象公共类。
  *
  * 这个类会派生出`主动请求类`和`被动通知类`，自身不持有通信结果的私有数据！
- * 因为主动请求后得到响应和被动通知得到响应都需要解析微信结果并进行签名验签，因此这个类实现{@link WXPayResponseHandler}。
+ * 因为主动请求后得到响应和被动通知得到响应都需要解析微信结果并进行签名验签，因此这个类实现{@link WXPayRespMsgHandler}。
  *
  * @author shinnlove.jinsheng
  * @version $Id: AbstractWXPayClient.java, v 0.1 2018-12-18 下午4:21 shinnlove.jinsheng Exp $$
  */
-public abstract class AbstractWXPayClient implements WXPayResponseHandler {
+public abstract class AbstractWXPayClient implements WXPayRespMsgHandler {
 
     /** 微信支付全局配置 */
     protected final WXPayMchConfig wxPayMchConfig;

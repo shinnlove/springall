@@ -26,7 +26,6 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.request.order.QueryOrd
  * @version $Id: WXPayController.java, v 0.1 2018-12-20 09:56 shinnlove.jinsheng Exp $$
  */
 @RestController
-@RequestMapping(value = "/wxpay")
 public class WXPayController {
 
     /** 微信支付服务 */
@@ -42,7 +41,7 @@ public class WXPayController {
      * @param params
      * @return
      */
-    @RequestMapping(value = "/orderquery", method = RequestMethod.POST)
+    @RequestMapping(value = "/wxpay/orderquery", method = RequestMethod.POST)
     public JSONObject orderQuery(@RequestParam("payParams") String params) throws Exception {
 
         // 模拟支付入参
@@ -53,7 +52,11 @@ public class WXPayController {
         QueryOrderClient client = new QueryOrderClient(mchConfig);
 
         Map<String, String> result = wxPayRequestService.doPayRequest(client, payParams,
-            (resp) -> System.out.println(resp));
+            (resp) -> {
+                // 根据微信应答处理业务
+            System.out.println(resp);
+            return null;
+        });
 
         return ResponseUtil.success(result);
     }
