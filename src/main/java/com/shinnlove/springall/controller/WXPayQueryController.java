@@ -18,6 +18,8 @@ import com.shinnlove.springall.util.tools.ResponseUtil;
 /**
  * 微信支付查询控制器。
  *
+ * 这个接口是给订单系统的掉单模块（掉单系统）查询支付状态用的。
+ *
  * @author shinnlove.jinsheng
  * @version $Id: WXPayController.java, v 0.1 2018-12-20 09:56 shinnlove.jinsheng Exp $$
  */
