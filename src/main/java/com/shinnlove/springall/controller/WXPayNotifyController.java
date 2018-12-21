@@ -23,6 +23,8 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.response.pay.WXPayNoti
  * 这个controller是需要直接把XML数据响应给微信的，因此不能作为Restful接口。
  * 本系统作为微信支付、支付宝支付的整合支付，如果后续还要拆分网关出来，再做成Restful接口给网关系统。
  *
+ * TODO：当收到微信支付回调的时候，做完平台勾兑后事务，应该投递kafka消息让订单系统消费勾兑订单支付状态。
+ *
  * @author shinnlove.jinsheng
  * @version $Id: WXPayNotifyController.java, v 0.1 2018-12-20 下午3:17 shinnlove.jinsheng Exp $$
  */
