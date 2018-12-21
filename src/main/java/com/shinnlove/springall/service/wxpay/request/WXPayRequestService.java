@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.conn.ConnectTimeoutException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinnlove.springall.service.wxpay.callback.WXPayBizCallback;
@@ -36,9 +37,11 @@ public class WXPayRequestService implements WXPayService {
     private WXPayGlobalConfig  config;
 
     /** 微信支付域名服务 */
+    @Autowired
     private WXPayDomainService wxPayDomainService;
 
     /** 微信支付上报服务 */
+    @Autowired
     private WXPayReportService wxPayReportService;
 
     @Override

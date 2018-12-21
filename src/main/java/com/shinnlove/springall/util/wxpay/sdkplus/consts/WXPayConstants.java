@@ -137,6 +137,8 @@ public final class WXPayConstants {
 
     /** 微信支付通信返回码 */
     public static final String RETURN_CODE                         = "return_code";
+    /** 微信支付通信返回消息 */
+    public static final String RETURN_MSG                          = "return_msg";
     /** 微信支付业务返回码 */
     public static final String RESULT_CODE                         = "result_code";
 
