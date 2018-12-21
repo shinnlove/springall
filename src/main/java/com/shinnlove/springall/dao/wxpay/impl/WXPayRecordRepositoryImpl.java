@@ -24,6 +24,16 @@ public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
     }
 
     @Override
+    public WXPayRecord queryPayRecordByOrderId(long orderId) {
+        return null;
+    }
+
+    @Override
+    public WXPayRecord queryPayRecordById(long payId) {
+        return null;
+    }
+
+    @Override
     public int updateWXPayRecord(WXPayRecord record) {
         return 0;
     }

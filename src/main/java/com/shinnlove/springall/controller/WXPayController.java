@@ -14,49 +14,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.shinnlove.springall.service.wxpay.request.WXPayRequestService;
+import com.shinnlove.springall.service.wxpay.jsapipay.WXPayJSAPIService;
 import com.shinnlove.springall.util.tools.ResponseUtil;
-import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
-import com.shinnlove.springall.util.wxpay.sdkplus.service.request.order.QueryOrderClient;
 
 /**
- * 微信支付请求受理控制器。
+ * 微信支付控制器（JSAPI、WAP等）。
  *
  * @author shinnlove.jinsheng
- * @version $Id: WXPayController.java, v 0.1 2018-12-20 09:56 shinnlove.jinsheng Exp $$
+ * @version $Id: WXPayController.java, v 0.1 2018-12-21 20:32 shinnlove.jinsheng Exp $$
  */
 @RestController
 public class WXPayController {
 
-    /** 微信支付服务 */
+    /** jsapi支付服务 */
     @Autowired
-    private WXPayRequestService wxPayRequestService;
+    private WXPayJSAPIService wxPayJSAPIService;
 
     /**
-     * 订单查询请求。
+     * 微信jsapi支付。
      *
-     * TODO：接口定义领域模型、根据请求入参校验字段完整性、组装成Map类型入参，再调用支付服务：params -> payParams
-     * TODO：为微信支付请求服务再包一层业务语义的服务，组装其原子能力（如JSAPI），然后吃掉所有错误。
-     *
-     * @param params
-     * @return
+     * @param orderId       订单id
+     * @param merchantId    商户id
+     * @param payParam      支付参数
+     * @param payType       支付类型
      */
-    @RequestMapping(value = "/wxpay/orderquery", method = RequestMethod.POST)
-    public JSONObject orderQuery(@RequestParam("payParams") String params) throws Exception {
+    @RequestMapping(value = "/wxpay/jsapi", method = RequestMethod.POST)
+    public JSONObject wxJsapiPay(String orderId, String merchantId,
+                                 @RequestParam(name = "payParam") String payParam, String payType) {
+        // 先根据payType判断，这里默认直接进入微信支付
+        int type = Integer.valueOf(payType);
 
-        // 模拟支付入参
-        Map<String, String> payParams = new HashMap<>();
-        // 商户配置
-        WXPayMchConfig mchConfig = new WXPayMchConfig();
-        // 订单查询
-        QueryOrderClient client = new QueryOrderClient(mchConfig);
+        // 再将json的payParam解码成Map，校验参数，这里直接mock
+        Map<String, String> params = new HashMap<>();
 
-        Map<String, String> result = wxPayRequestService.doPayRequest(client, payParams,
-            (resp) -> {
-                // 根据微信应答处理业务
-            System.out.println(resp);
-            return null;
-        });
+        long oId = Long.valueOf(orderId);
+        long mId = Long.valueOf(merchantId);
+
+        // 做jsapi支付，理论上返回2个key，一个是平台payId，一个是prepayId
+        Map<String, String> result = wxPayJSAPIService.jsapiPay(oId, mId, params);
 
         return ResponseUtil.success(result);
     }

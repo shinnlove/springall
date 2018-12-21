@@ -17,15 +17,19 @@ public class WXPayRecord {
 
     private long   id;
 
-    private long   mId;
+    private long    orderId;
+
+    private long    merchantId;
+
+    private boolean isPaid;
 
     private String appId;
 
-    private String mch_id;
+    private String  mchId;
 
-    private String device_info;
+    private String  deviceInfo;
 
-    private String nonce_str;
+    private String  nonceStr;
 
     private String sign;
 
@@ -70,17 +74,26 @@ public class WXPayRecord {
     public WXPayRecord() {
     }
 
-    public WXPayRecord(long mId, String appId, String mch_id, String device_info, String nonce_str,
-                       String sign, String body, String attach, String outTradeNo, int totalFee,
-                       String spbillCreateIp, String timeStart, String timeExpire, String goodsTag,
-                       String notifyURL, String tradeType, String openId, String prepayId,
-                       String productId, String codeURL, String errCode, String errCodeDes,
-                       int createTime, int modifyTime, String remark) {
-        this.mId = mId;
+    public WXPayRecord(long orderId, long merchantId) {
+        this.orderId = orderId;
+        this.merchantId = merchantId;
+    }
+
+    public WXPayRecord(long id, long orderId, long merchantId, boolean isPaid, String appId,
+                       String mchId, String deviceInfo, String nonceStr, String sign, String body,
+                       String attach, String outTradeNo, int totalFee, String spbillCreateIp,
+                       String timeStart, String timeExpire, String goodsTag, String notifyURL,
+                       String tradeType, String openId, String prepayId, String productId,
+                       String codeURL, String errCode, String errCodeDes, int createTime,
+                       int modifyTime, String remark) {
+        this.id = id;
+        this.orderId = orderId;
+        this.merchantId = merchantId;
+        this.isPaid = isPaid;
         this.appId = appId;
-        this.mch_id = mch_id;
-        this.device_info = device_info;
-        this.nonce_str = nonce_str;
+        this.mchId = mchId;
+        this.deviceInfo = deviceInfo;
+        this.nonceStr = nonceStr;
         this.sign = sign;
         this.body = body;
         this.attach = attach;
@@ -103,19 +116,20 @@ public class WXPayRecord {
         this.remark = remark;
     }
 
-    public WXPayRecord(long id, long mId, String appId, String mch_id, String device_info,
-                       String nonce_str, String sign, String body, String attach,
+    public WXPayRecord(long orderId, long merchantId, boolean isPaid, String appId, String mchId,
+                       String deviceInfo, String nonceStr, String sign, String body, String attach,
                        String outTradeNo, int totalFee, String spbillCreateIp, String timeStart,
                        String timeExpire, String goodsTag, String notifyURL, String tradeType,
                        String openId, String prepayId, String productId, String codeURL,
                        String errCode, String errCodeDes, int createTime, int modifyTime,
                        String remark) {
-        this.id = id;
-        this.mId = mId;
+        this.orderId = orderId;
+        this.merchantId = merchantId;
+        this.isPaid = isPaid;
         this.appId = appId;
-        this.mch_id = mch_id;
-        this.device_info = device_info;
-        this.nonce_str = nonce_str;
+        this.mchId = mchId;
+        this.deviceInfo = deviceInfo;
+        this.nonceStr = nonceStr;
         this.sign = sign;
         this.body = body;
         this.attach = attach;
@@ -157,21 +171,52 @@ public class WXPayRecord {
     }
 
     /**
-     * Getter method for property mId.
+     * Getter method for property orderId.
      *
-     * @return property value of mId
+     * @return property value of orderId
      */
-    public long getmId() {
-        return mId;
+    public long getOrderId() {
+        return orderId;
     }
 
     /**
-     * Setter method for property mId.
+     * Setter method for property orderId.
      *
-     * @param mId value to be assigned to property mId
+     * @param orderId value to be assigned to property orderId
      */
-    public void setmId(long mId) {
-        this.mId = mId;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    /**
+     * Getter method for property merchantId.
+     *
+     * @return property value of merchantId
+     */
+    public long getMerchantId() {
+        return merchantId;
+    }
+
+    /**
+     * Setter method for property merchantId.
+     *
+     * @param merchantId value to be assigned to property merchantId
+     */
+    public void setMerchantId(long merchantId) {
+        this.merchantId = merchantId;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    /**
+     * Setter method for property paid.
+     *
+     * @param paid value to be assigned to property paid
+     */
+    public void setPaid(boolean paid) {
+        isPaid = paid;
     }
 
     /**
@@ -193,57 +238,57 @@ public class WXPayRecord {
     }
 
     /**
-     * Getter method for property mch_id.
+     * Getter method for property mchId.
      *
-     * @return property value of mch_id
+     * @return property value of mchId
      */
-    public String getMch_id() {
-        return mch_id;
+    public String getMchId() {
+        return mchId;
     }
 
     /**
-     * Setter method for property mch_id.
+     * Setter method for property mchId.
      *
-     * @param mch_id value to be assigned to property mch_id
+     * @param mchId value to be assigned to property mchId
      */
-    public void setMch_id(String mch_id) {
-        this.mch_id = mch_id;
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
     }
 
     /**
-     * Getter method for property device_info.
+     * Getter method for property deviceInfo.
      *
-     * @return property value of device_info
+     * @return property value of deviceInfo
      */
-    public String getDevice_info() {
-        return device_info;
+    public String getDeviceInfo() {
+        return deviceInfo;
     }
 
     /**
-     * Setter method for property device_info.
+     * Setter method for property deviceInfo.
      *
-     * @param device_info value to be assigned to property device_info
+     * @param deviceInfo value to be assigned to property deviceInfo
      */
-    public void setDevice_info(String device_info) {
-        this.device_info = device_info;
+    public void setDeviceInfo(String deviceInfo) {
+        this.deviceInfo = deviceInfo;
     }
 
     /**
-     * Getter method for property nonce_str.
+     * Getter method for property nonceStr.
      *
-     * @return property value of nonce_str
+     * @return property value of nonceStr
      */
-    public String getNonce_str() {
-        return nonce_str;
+    public String getNonceStr() {
+        return nonceStr;
     }
 
     /**
-     * Setter method for property nonce_str.
+     * Setter method for property nonceStr.
      *
-     * @param nonce_str value to be assigned to property nonce_str
+     * @param nonceStr value to be assigned to property nonceStr
      */
-    public void setNonce_str(String nonce_str) {
-        this.nonce_str = nonce_str;
+    public void setNonceStr(String nonceStr) {
+        this.nonceStr = nonceStr;
     }
 
     /**

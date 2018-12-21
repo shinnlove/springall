@@ -19,7 +19,7 @@ import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
 public class MchWXPayConfigRepositoryImpl implements MchWXPayConfigRepository {
 
     @Override
-    public WXPayMchConfig queryWXPayConfigByMchId(String mchId) {
+    public WXPayMchConfig queryWXPayConfigByMchId(long merchantId) {
         WXPayMchConfig config = new WXPayMchConfig();
         return config;
     }

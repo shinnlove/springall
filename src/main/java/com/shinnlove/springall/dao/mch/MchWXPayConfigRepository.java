@@ -17,9 +17,9 @@ public interface MchWXPayConfigRepository {
     /**
      * 通过商户id查询商户配置。
      * 
-     * @param mchId
+     * @param merchantId 
      * @return
      */
-    WXPayMchConfig queryWXPayConfigByMchId(String mchId);
+    WXPayMchConfig queryWXPayConfigByMchId(long merchantId);
 
 }
