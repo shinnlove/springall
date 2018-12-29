@@ -43,7 +43,9 @@ public class HelloSpringController {
     @RequestMapping(value = "/kafka", method = { RequestMethod.GET, RequestMethod.POST })
     public String sendKafkaMsg() {
         Student student = new Student(1, "shinnlove", 25, "15021237551", "三好学生");
+        student.setFrom("通过spring发送");
         String info = JSON.toJSONString(student);
+
         long offset = kafkaProducerService.sendMsg("first", info);
 
         LoggerUtil.info(LOGGER, "消息成功发送，offset=", offset);

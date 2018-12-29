@@ -6,6 +6,9 @@ package com.shinnlove.springall.core.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * 学生model类。
  *
@@ -21,6 +24,7 @@ public class Student implements Serializable {
     private int               age;
     private String            telphone;
     private String            remark;
+    private String            from;
 
     public Student() {
     }
@@ -31,6 +35,15 @@ public class Student implements Serializable {
         this.age = age;
         this.telphone = telphone;
         this.remark = remark;
+    }
+
+    public Student(long id, String name, int age, String telphone, String remark, String from) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.telphone = telphone;
+        this.remark = remark;
+        this.from = from;
     }
 
     /**
@@ -121,6 +134,32 @@ public class Student implements Serializable {
      */
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    /**
+     * Getter method for property from.
+     *
+     * @return property value of from
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    /**
+     * Setter method for property from.
+     *
+     * @param from value to be assigned to property from
+     */
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    /**
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
 }

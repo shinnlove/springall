@@ -10,7 +10,6 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -31,13 +30,16 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
     private static final Logger           LOGGER = LoggerFactory
                                                      .getLogger(KafkaProducerServiceImpl.class);
 
-    @Autowired
+    /** 往test中发送消息 */
+    private static final String           TOPIC  = "test";
+
+    /** !!!这里特别注意，如果bean是xml中实例化的，因为生成时序问题，建议不要使用@Autowired，避免出现null */
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     public long sendMsg(String key, String value) {
         ListenableFuture<SendResult<String, String>> future = kafkaTemplate
-            .send(new ProducerRecord<>(key, value));
+            .send(new ProducerRecord<>(TOPIC, key, value));
         try {
             SendResult<String, String> result = future.get();
             RecordMetadata metadata = result.getRecordMetadata();
@@ -49,6 +51,15 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
             LoggerUtil.error(LOGGER, e, e);
             throw new SystemException(SystemResultCode.SYSTEM_ERROR, e);
         }
+    }
+
+    /**
+     * Setter method for property kafkaTemplate.
+     *
+     * @param kafkaTemplate value to be assigned to property kafkaTemplate
+     */
+    public void setKafkaTemplate(KafkaTemplate kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
 
 }
