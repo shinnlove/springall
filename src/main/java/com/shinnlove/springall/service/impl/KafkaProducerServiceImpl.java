@@ -8,6 +8,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -16,6 +18,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import com.shinnlove.springall.service.KafkaProducerService;
 import com.shinnlove.springall.util.code.SystemResultCode;
 import com.shinnlove.springall.util.exception.SystemException;
+import com.shinnlove.springall.util.log.LoggerUtil;
 
 /**
  * kafka消息发送者服务。
@@ -24,6 +27,9 @@ import com.shinnlove.springall.util.exception.SystemException;
  * @version $Id: KafkaProducerServiceImpl.java, v 0.1 2018-12-29 16:55 shinnlove.jinsheng Exp $$
  */
 public class KafkaProducerServiceImpl implements KafkaProducerService {
+
+    private static final Logger           LOGGER = LoggerFactory
+                                                     .getLogger(KafkaProducerServiceImpl.class);
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -37,8 +43,10 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
             RecordMetadata metadata = result.getRecordMetadata();
             return metadata.offset();
         } catch (InterruptedException e) {
+            LoggerUtil.error(LOGGER, e, e);
             throw new SystemException(SystemResultCode.SYSTEM_ERROR, e);
         } catch (ExecutionException e) {
+            LoggerUtil.error(LOGGER, e, e);
             throw new SystemException(SystemResultCode.SYSTEM_ERROR, e);
         }
     }

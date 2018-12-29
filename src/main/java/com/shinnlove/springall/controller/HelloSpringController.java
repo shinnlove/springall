@@ -45,6 +45,9 @@ public class HelloSpringController {
         Student student = new Student(1, "shinnlove", 25, "15021237551", "三好学生");
         String info = JSON.toJSONString(student);
         long offset = kafkaProducerService.sendMsg("first", info);
+
+        LoggerUtil.info(LOGGER, "消息成功发送，offset=", offset);
+
         return "消息已经发送到kafka，消息在分区中的位置offset=" + offset;
     }
 
