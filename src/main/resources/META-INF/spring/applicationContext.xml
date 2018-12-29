@@ -14,4 +14,12 @@
 
     <!-- 在此注入bean -->
 
+    <!-- kafka生产者 -->
+    <bean id="kafkaProducerService"
+          class="com.shinnlove.springall.service.impl.KafkaProducerServiceImpl" />
+
+    <!-- kafka消费者 -->
+    <bean id="kafkaConsumerService"
+          class="com.shinnlove.springall.service.impl.KafkaConsumerServiceImpl" />
+
 </beans>
