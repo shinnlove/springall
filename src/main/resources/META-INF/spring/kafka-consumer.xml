@@ -44,7 +44,7 @@
         <!-- topic -->
         <constructor-arg name="topics">
             <list>
-                <value>spring-topic</value>
+                <value>test</value>
                 <!-- <value>${templar.agreement.feedback.topic}</value>
                  <value>${templar.aggrement.active.feedback.topic}</value>
                  <value>${templar.aggrement.agreementRepaid.topic}</value>
