@@ -163,7 +163,13 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.26</version>
         </dependency>
-
+        <!-- RocketMQ 底层集成netty -->
+        <!-- netty:5.0.0.Alpha1报错NoSuchMethod：https://ask.csdn.net/questions/377773 -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.0.24.Final</version>
+        </dependency>
         <!-- 集成 RocketMQ -->
         <dependency>
             <groupId>com.alibaba.rocketmq</groupId>

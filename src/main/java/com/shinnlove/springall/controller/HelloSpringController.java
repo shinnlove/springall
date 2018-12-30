@@ -29,7 +29,7 @@ public class HelloSpringController {
     /** log4j2日志 */
     private static final Logger     LOGGER = LoggerFactory.getLogger(HelloSpringController.class);
 
-    /** 消息主题 */
+    /** 投递消息主题 */
     private static final String     TOPIC  = "my-topic";
 
     /** rocketMQ消息投递 */

@@ -2,7 +2,7 @@
  * Alipay.com Inc.
  * Copyright (c) 2004-2018 All Rights Reserved.
  */
-package com.shinnlove.springall.service.rocketmq;
+package com.shinnlove.springall.service.rocketmq.demo;
 
 import java.util.List;
 

@@ -17,7 +17,13 @@
     <!-- rocketmq spring 包装消息生产者 -->
     <bean id="spRocketMQProducer" class="com.shinnlove.springall.service.rocketmq.SPRocketMQProducer"/>
 
-    <!-- rocketmq 消息服务 -->
+    <!-- rocketmq spring 包装消息消费者 -->
+    <bean id="spRocketMQConsumer" class="com.shinnlove.springall.service.rocketmq.SPRocketMQConsumer"/>
+
+    <!-- rocketmq 生产者服务 -->
     <bean id="rocketMQProducerService" class="com.shinnlove.springall.service.rocketmq.impl.RocketMQProducerServiceImpl"/>
+
+    <!-- rocketmq 消费者服务 -->
+    <bean id="rocketMQConsumerService" class="com.shinnlove.springall.service.rocketmq.impl.RocketMQConsumerServiceImpl"/>
 
 </beans>
