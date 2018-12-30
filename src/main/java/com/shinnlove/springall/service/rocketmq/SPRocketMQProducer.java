@@ -30,7 +30,7 @@ public class SPRocketMQProducer implements InitializingBean, DisposableBean {
     private static final String CONSUME_GROUP    = "my-default-group";
 
     /** name-server地址 */
-    private static final String NAME_SERVER_ADDR = "192.168.0.100:9876";
+    private static final String NAME_SERVER_ADDR = "127.0.0.1:9876";
 
     /** 消息失败重发次数 */
     private int                 retryTimes       = 3;
