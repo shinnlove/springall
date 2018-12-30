@@ -5,13 +5,23 @@
        xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:reg="http://www.dangdang.com/schema/ddframe/reg" xmlns:job="http://www.dangdang.com/schema/ddframe/job"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.dangdang.com/schema/ddframe/reg http://www.dangdang.com/schema/ddframe/reg/reg.xsd http://www.dangdang.com/schema/ddframe/job http://www.dangdang.com/schema/ddframe/job/job.xsd"
        default-autowire="byName">
 
     <!-- 在此注入bean -->
+
+    <!-- 配置作业注册中心 -->
+    <reg:zookeeper id="regCenter" server-lists="127.0.0.1:2181" namespace="hello"
+                   base-sleep-time-milliseconds="1000"
+                   max-sleep-time-milliseconds="3000" max-retries="3" />
+
+    <!-- 配置作业 -->
+    <job:simple id="hellSpring" class="com.shinnlove.springall.service.HelloJob" registry-center-ref="regCenter"
+                cron="0/10 * * * * ?" sharding-total-count="3" sharding-item-parameters="0=A, 1=B, 2=C" />
 
 </beans>
