@@ -22,6 +22,6 @@
 
     <!-- 配置作业 -->
     <job:simple id="hellSpring" class="com.shinnlove.springall.service.HelloJob" registry-center-ref="regCenter"
-                cron="0/10 * * * * ?" sharding-total-count="3" sharding-item-parameters="0=A, 1=B, 2=C" />
+                cron="0/5 * * * * ?" sharding-total-count="3" sharding-item-parameters="0=A, 1=B, 2=C" />
 
 </beans>

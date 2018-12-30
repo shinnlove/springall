@@ -17,7 +17,21 @@ public class HelloJob implements SimpleJob {
 
     @Override
     public void execute(ShardingContext shardingContext) {
-        System.out.println("你好");
+        switch (shardingContext.getShardingItem()) {
+            case 0:
+                System.out.println("你好0");
+                break;
+            case 1:
+                System.out.println("你好1");
+                break;
+            case 2:
+                System.out.println("你好2");
+                break;
+            default:
+                System.out.println("不知道的item");
+                break;
+        }
+        System.out.println("定时任务调用完毕");
     }
 
 }
