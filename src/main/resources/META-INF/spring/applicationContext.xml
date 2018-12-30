@@ -14,4 +14,10 @@
 
     <!-- 在此注入bean -->
 
+    <!-- rocketmq spring 包装消息生产者 -->
+    <bean id="spRocketMQProducer" class="com.shinnlove.springall.service.rocketmq.SPRocketMQProducer"/>
+
+    <!-- rocketmq 消息服务 -->
+    <bean id="rocketMQProducerService" class="com.shinnlove.springall.service.rocketmq.impl.RocketMQProducerServiceImpl"/>
+
 </beans>

@@ -6,10 +6,14 @@ package com.shinnlove.springall.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+import com.shinnlove.springall.core.model.Student;
+import com.shinnlove.springall.service.rocketmq.RocketMQProducerService;
 import com.shinnlove.springall.util.log.LoggerUtil;
 
 /**
@@ -23,7 +27,14 @@ import com.shinnlove.springall.util.log.LoggerUtil;
 public class HelloSpringController {
 
     /** log4j2日志 */
-    private static final Logger LOGGER = LoggerFactory.getLogger(HelloSpringController.class);
+    private static final Logger     LOGGER = LoggerFactory.getLogger(HelloSpringController.class);
+
+    /** 消息主题 */
+    private static final String     TOPIC  = "my-topic";
+
+    /** rocketMQ消息投递 */
+    @Autowired
+    private RocketMQProducerService rocketMQProducerService;
 
     @RequestMapping(value = "/log4j2", method = { RequestMethod.GET, RequestMethod.POST })
     public String sayHello() {
@@ -31,6 +42,18 @@ public class HelloSpringController {
         LoggerUtil.warn(LOGGER, "你好，我的英文名叫shinnlove。");
         LoggerUtil.error(LOGGER, new RuntimeException("这是我自定义的错误"));
         return "This is log4j2 test.";
+    }
+
+    @RequestMapping(value = "/rocketmq", method = { RequestMethod.GET, RequestMethod.POST })
+    public String sendRocketMQMsg() {
+        Student student = new Student(1L, "shinnlove", 27);
+        String tag = "三好学生";
+
+        String info = JSON.toJSONString(student);
+
+        rocketMQProducerService.sendMsg(TOPIC, tag, info);
+
+        return "Sent msg to rocketmq successfully.";
     }
 
 }
