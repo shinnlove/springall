@@ -31,7 +31,7 @@ public class PageViewCounter implements IRichBolt {
     public void execute(Tuple input) {
         // 对PV进行统计，持久化存储（这里先简单输出）
         // 可以使用redis对象进行分布式持久化计数统计
-        System.out.println("storm雷电头输出信息，传入数据是：" + input.getValue(0));
+        System.out.println("我是雷电头PageViewCounter，输出信息，上个雷电头传入数据是：" + input.getValue(0));
     }
 
     @Override

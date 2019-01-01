@@ -45,10 +45,8 @@ public class LogReader implements IRichSpout {
             connection = connectionFactory.createConnection();
             connection.start();
             session = connection.createSession(Boolean.FALSE, session.AUTO_ACKNOWLEDGE);
-            destination = session.createQueue("LogQueue");
+            destination = session.createQueue("spitter.queue");
             consumer = session.createConsumer(destination);
-        } catch (JMSException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,8 +72,6 @@ public class LogReader implements IRichSpout {
         try {
             TextMessage message = (TextMessage) consumer.receive(100000);
             this.collector.emit(new Values(message.getText()));
-        } catch (JMSException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

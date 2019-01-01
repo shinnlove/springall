@@ -33,9 +33,27 @@ public class LogAnalysis implements IRichBolt {
     @Override
     public void execute(Tuple input) {
         String logLine = input.getString(0);
-        String[] input_fields = logLine.toString().split(" ");
+        String[] input_fields = logLine.toString().split(";");
+        int len = input_fields.length;
+
+        String msg = "I love evelyn";
+        if (len > 1) {
+            msg = input_fields[1];
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("message info: ");
+        for (int i = 0; i < len - 1; i++) {
+            sb.append(input_fields[i]).append(",");
+        }
+        if (input_fields.length > 0) {
+            sb.append(", ");
+            sb.append(input_fields[len - 1]);
+        }
+        System.out.println("我是雷电头LogAnalysis，input_fields=" + sb.toString());
+
         // 假定日志按空格切分后，第四位是需要的数据，就调用collector发射出去
-        collector.emit(new Values(input_fields[1]));
+        collector.emit(new Values(msg));
     }
 
     @Override
