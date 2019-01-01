@@ -7,7 +7,9 @@
     <groupId>com.shinnlove</groupId>
     <artifactId>springall</artifactId>
     <version>1.0.0.20180829</version>
-    <packaging>war</packaging>
+    <!--<packaging>war</packaging>-->
+    <!-- 给storm集群跑任务的jar，打包方式为jar -->
+    <packaging>jar</packaging>
 
     <name>springall Maven Webapp</name>
     <url>http://www.shinnlove.com</url>
@@ -162,6 +164,19 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.26</version>
+        </dependency>
+        <!-- apache storm-core -->
+        <dependency>
+            <groupId>org.apache.storm</groupId>
+            <artifactId>storm-core</artifactId>
+            <version>1.2.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- demo从active读取消息，apache active mq 5.11以后版本增加springframework有冲突，要exclude掉-->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.10.0</version>
         </dependency>
     </dependencies>
 
