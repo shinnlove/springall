@@ -7,7 +7,9 @@
     <groupId>com.shinnlove</groupId>
     <artifactId>springall</artifactId>
     <version>1.0.0.20180829</version>
-    <packaging>war</packaging>
+    <!--<packaging>war</packaging>-->
+    <!-- 给hadoop集群跑任务的jar，打包方式为jar -->
+    <packaging>jar</packaging>
 
     <name>springall Maven Webapp</name>
     <url>http://www.shinnlove.com</url>
