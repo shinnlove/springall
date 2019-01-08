@@ -76,7 +76,7 @@ public class WXPayQueryOrderService {
                 return null;
             });
         } catch (SystemException e) {
-
+            throw e;
         } catch (Exception e) {
             throw new SystemException(SystemResultCode.SYSTEM_ERROR, e);
         }

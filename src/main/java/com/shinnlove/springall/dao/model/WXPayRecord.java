@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class WXPayRecord {
 
-    private long   id;
+    private long    id;
 
     private long    orderId;
 
@@ -23,7 +23,7 @@ public class WXPayRecord {
 
     private boolean isPaid;
 
-    private String appId;
+    private String  appId;
 
     private String  mchId;
 
@@ -31,45 +31,45 @@ public class WXPayRecord {
 
     private String  nonceStr;
 
-    private String sign;
+    private String  sign;
 
-    private String body;
+    private String  body;
 
-    private String attach;
+    private String  attach;
 
-    private String outTradeNo;
+    private String  outTradeNo;
 
-    private int    totalFee;
+    private int     totalFee;
 
-    private String spbillCreateIp;
+    private String  spbillCreateIp;
 
-    private String timeStart;
+    private String  timeStart;
 
-    private String timeExpire;
+    private String  timeExpire;
 
-    private String goodsTag;
+    private String  goodsTag;
 
-    private String notifyURL;
+    private String  notifyURL;
 
-    private String tradeType;
+    private String  tradeType;
 
-    private String openId;
+    private String  openId;
 
-    private String prepayId;
+    private String  prepayId;
 
-    private String productId;
+    private String  productId;
 
-    private String codeURL;
+    private String  codeURL;
 
-    private String errCode;
+    private String  errCode;
 
-    private String errCodeDes;
+    private String  errCodeDes;
 
-    private int    createTime;
+    private int     createTime;
 
-    private int    modifyTime;
+    private int     modifyTime;
 
-    private String remark;
+    private String  remark;
 
     public WXPayRecord() {
     }
