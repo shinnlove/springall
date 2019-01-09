@@ -72,7 +72,7 @@ public class WXPayJSAPIService {
      * 所以jsapi就是生成一条待支付记录（若无）、并且调用微信接口返回prepayId信息返回的两个步骤。
      *
      * @param orderId       订单id
-     * @param merchantId    商户id
+     * @param merchantId    平台商户id
      * @param payParams     支付参数
      * @return
      */
