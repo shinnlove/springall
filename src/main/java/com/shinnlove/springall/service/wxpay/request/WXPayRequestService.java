@@ -44,6 +44,9 @@ public class WXPayRequestService implements WXPayService {
     @Autowired
     private WXPayReportService wxPayReportService;
 
+    /**
+     * @see WXPayService#doPayRequest(com.shinnlove.springall.util.wxpay.sdkplus.service.request.base.WXPayRequestClient, java.util.Map, com.shinnlove.springall.service.wxpay.callback.WXPayBizCallback)
+     */
     @Override
     public Map<String, String> doPayRequest(WXPayRequestClient client,
                                             Map<String, String> keyPairs, WXPayBizCallback callback)
