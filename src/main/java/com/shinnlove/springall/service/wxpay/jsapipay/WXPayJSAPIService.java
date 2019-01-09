@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.shinnlove.springall.dao.mch.MchWXPayConfigRepository;
 import com.shinnlove.springall.dao.model.WXPayRecord;
@@ -36,6 +37,10 @@ public class WXPayJSAPIService {
 
     /** 平台支付层的id常量 */
     private static final String      PAY_ID = "pay_id";
+
+    /** tx-template */
+    @Autowired
+    private TransactionTemplate      transactionTemplate;
 
     /** 微信支付记录仓储 */
     @Autowired
@@ -77,48 +82,52 @@ public class WXPayJSAPIService {
         WXPayMchConfig mchConfig = mchWXPayConfigRepository.queryWXPayConfigByMchId(merchantId);
         WXPayAssert.confAvailable(mchConfig);
 
-        // which one?
-        WXPayRecord payRecord = wxPayRecordRepository.queryPayRecordByOrderId(orderId);
-        WXPayAssert.notPaid(payRecord);
+        // pessimistic with innodb line-lock
+        return transactionTemplate.execute(status -> {
 
-        // 首付
-        if (payRecord == null) {
-            payRecord = buildWXPayRecord(orderId, merchantId, payParams);
-            wxPayRecordRepository.insertRecord(payRecord);
-        }
+            // which one?
+            WXPayRecord payRecord = wxPayRecordRepository.getWXPayRecordByOrderIdForUpdate(orderId);
+            WXPayAssert.notPaid(payRecord);
 
-        // 平台记录与支付结果
-        final WXPayRecord pay = payRecord;
-        Map<String, String> result = new HashMap<>();
+            // 首付
+            if (payRecord == null) {
+                payRecord = buildWXPayRecord(orderId, merchantId, payParams);
+                wxPayRecordRepository.insertRecord(payRecord);
+            }
 
-        UnifiedOrderClient client = new UnifiedOrderClient(mchConfig);
+            // 平台记录与支付结果
+            final WXPayRecord pay = payRecord;
+            Map<String, String> result = new HashMap<>();
 
-        try {
-            result = wxPayRequestService.doPayRequest(client, payParams, (resp) -> {
+            UnifiedOrderClient client = new UnifiedOrderClient(mchConfig);
 
-                WXPayAssert.checkPayResp(resp);
+            try {
+                result = wxPayRequestService.doPayRequest(client, payParams, (resp) -> {
 
-                pay.setPrepayId(resp.get(WXPayConstants.PREPAY_ID));
-                pay.setNonceStr(resp.get(WXPayConstants.NONCE_STR));
-                pay.setSign(resp.get(WXPayConstants.SIGN));
-                pay.setNotifyURL(resp.get(WXPayConstants.NOTIFY_URL));
+                    WXPayAssert.checkPayResp(resp);
 
-                wxPayRecordRepository.updateWXPayRecord(pay);
+                    pay.setPrepayId(resp.get(WXPayConstants.PREPAY_ID));
+                    pay.setNonceStr(resp.get(WXPayConstants.NONCE_STR));
+                    pay.setSign(resp.get(WXPayConstants.SIGN));
+                    pay.setNotifyURL(resp.get(WXPayConstants.NOTIFY_URL));
 
-                return null;
-            });
-        } catch (SystemException e) {
-            // 自己人
-            throw e;
-        } catch (Exception e) {
-            // 超时、dns解析、签名验签、稀奇古怪错误等统统穿上马甲扔给切面
-            throw new SystemException(SystemResultCode.WXPAY_UNIFIED_ORDER_ERROR, e);
-        }
+                    wxPayRecordRepository.updateWXPayRecord(pay);
 
-        // 盖章
-        result.put(PAY_ID, String.valueOf(pay.getId()));
+                    return null;
+                });
+            } catch (SystemException e) {
+                // 自己人
+                throw e;
+            } catch (Exception e) {
+                // 超时、dns解析、签名验签、稀奇古怪错误等统统穿上马甲扔给切面
+                throw new SystemException(SystemResultCode.WXPAY_UNIFIED_ORDER_ERROR, e);
+            }
 
-        return result;
+            // 盖章
+            result.put(PAY_ID, String.valueOf(pay.getId()));
+
+            return result;
+        });
     }
 
     /**

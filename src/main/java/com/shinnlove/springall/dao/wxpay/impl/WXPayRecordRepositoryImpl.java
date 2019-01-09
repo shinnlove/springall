@@ -26,7 +26,7 @@ public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
     private WXPayRecordDaoMapper wxPayRecordDaoMapper;
 
     /**
-     * @see WXPayRecordDaoMapper#addWXPayRecord(com.shinnlove.springall.dao.model.WXPayRecord)
+     * @see WXPayRecordRepository#insertRecord(com.shinnlove.springall.dao.model.WXPayRecord)
      */
     @Override
     public long insertRecord(WXPayRecord record) {
@@ -38,11 +38,19 @@ public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
     }
 
     /**
-     * @see WXPayRecordDaoMapper#getWXPayRecordByOrderId(long)
+     * @see WXPayRecordRepository#queryPayRecordByOrderId(long)
      */
     @Override
     public WXPayRecord queryPayRecordByOrderId(long orderId) {
         return wxPayRecordDaoMapper.getWXPayRecordByOrderId(orderId);
+    }
+
+    /**
+     * @see WXPayRecordRepository#getWXPayRecordByOrderIdForUpdate(long) 
+     */
+    @Override
+    public WXPayRecord getWXPayRecordByOrderIdForUpdate(long orderId) {
+        return wxPayRecordDaoMapper.getWXPayRecordByOrderIdForUpdate(orderId);
     }
 
     @Override
@@ -51,7 +59,7 @@ public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
     }
 
     /**
-     * @see WXPayRecordDaoMapper#updateWXPayRecord(com.shinnlove.springall.dao.model.WXPayRecord)
+     * @see WXPayRecordRepository#updateWXPayRecord(WXPayRecord) 
      */
     @Override
     public int updateWXPayRecord(WXPayRecord record) {

@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @version $Id: WXPayRecordDaoMapperTest.java, v 0.1 2019-01-09 15:22 shinnlove.jinsheng Exp $$
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/META-INF/spring/spring-datasource.xml",
+@ContextConfiguration(locations = {"classpath:/META-INF/spring/spring-datasource-tx.xml",
                                    "classpath:/META-INF/spring/spring-database-mybatis.xml" })
 public class WXPayRecordDaoMapperTest {
 

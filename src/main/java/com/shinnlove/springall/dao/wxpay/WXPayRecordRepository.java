@@ -31,6 +31,14 @@ public interface WXPayRecordRepository {
     WXPayRecord queryPayRecordByOrderId(long orderId);
 
     /**
+     * 根据orderId锁定一笔微信支付记录。InnoDB悲观锁。
+     *
+     * @param orderId
+     * @return
+     */
+    WXPayRecord getWXPayRecordByOrderIdForUpdate(long orderId);
+
+    /**
      * 根据id查询平台支付记录。
      *
      * @param payId

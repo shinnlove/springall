@@ -23,6 +23,14 @@ public interface WXPayRecordDaoMapper {
     WXPayRecord getWXPayRecordByOrderId(long orderId);
 
     /**
+     * 根据orderId锁定一笔微信支付记录。InnoDB悲观锁。
+     *
+     * @param orderId
+     * @return
+     */
+    WXPayRecord getWXPayRecordByOrderIdForUpdate(long orderId);
+
+    /**
      * 新增一条微信支付记录。
      *
      * @param record

@@ -30,4 +30,20 @@
           p:maxPoolSize="${jdbc.c3p0.maxPoolSize}"
           p:maxIdleTime="${jdbc.c3p0.maxIdleTime}"/>
 
+    <!--在数据源上配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置默认的PROPAGATION_REQUIRED事务模板（传入事务管理器）-->
+    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <!--传播级别为PROPAGATION_REQUIRES_NEW的事务模板-->
+    <bean id="requiresNewTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRES_NEW"/>
+    </bean>
+
 </beans>
