@@ -46,13 +46,16 @@ public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
     }
 
     /**
-     * @see WXPayRecordRepository#getWXPayRecordByOrderIdForUpdate(long) 
+     * @see WXPayRecordRepository#queryPayRecordByOrderIdForUpdate(long)
      */
     @Override
-    public WXPayRecord getWXPayRecordByOrderIdForUpdate(long orderId) {
+    public WXPayRecord queryPayRecordByOrderIdForUpdate(long orderId) {
         return wxPayRecordDaoMapper.getWXPayRecordByOrderIdForUpdate(orderId);
     }
 
+    /**
+     * @see WXPayRecordRepository#queryPayRecordById(long) 
+     */
     @Override
     public WXPayRecord queryPayRecordById(long payId) {
         return null;

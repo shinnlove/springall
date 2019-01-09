@@ -36,7 +36,7 @@ public interface WXPayRecordRepository {
      * @param orderId
      * @return
      */
-    WXPayRecord getWXPayRecordByOrderIdForUpdate(long orderId);
+    WXPayRecord queryPayRecordByOrderIdForUpdate(long orderId);
 
     /**
      * 根据id查询平台支付记录。

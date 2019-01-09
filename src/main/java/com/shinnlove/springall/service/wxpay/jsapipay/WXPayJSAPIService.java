@@ -82,24 +82,22 @@ public class WXPayJSAPIService {
         WXPayMchConfig mchConfig = mchWXPayConfigRepository.queryWXPayConfigByMchId(merchantId);
         WXPayAssert.confAvailable(mchConfig);
 
-        // pessimistic with innodb line-lock
+        final UnifiedOrderClient client = new UnifiedOrderClient(mchConfig);
+
+        // 首付?(db-uk幂等)
+        WXPayRecord record = wxPayRecordRepository.queryPayRecordByOrderId(orderId);
+        if (record == null) {
+            record = buildWXPayRecord(orderId, merchantId, payParams);
+            wxPayRecordRepository.insertRecord(record);
+        }
+
         return transactionTemplate.execute(status -> {
 
-            // which one?
-            WXPayRecord payRecord = wxPayRecordRepository.getWXPayRecordByOrderIdForUpdate(orderId);
-            WXPayAssert.notPaid(payRecord);
+            // innodb pessimistic line-lock
+            final WXPayRecord pay = wxPayRecordRepository.queryPayRecordByOrderIdForUpdate(orderId);
+            WXPayAssert.notPaid(pay);
 
-            // 首付
-            if (payRecord == null) {
-                payRecord = buildWXPayRecord(orderId, merchantId, payParams);
-                wxPayRecordRepository.insertRecord(payRecord);
-            }
-
-            // 平台记录与支付结果
-            final WXPayRecord pay = payRecord;
             Map<String, String> result = new HashMap<>();
-
-            UnifiedOrderClient client = new UnifiedOrderClient(mchConfig);
 
             try {
                 result = wxPayRequestService.doPayRequest(client, payParams, (resp) -> {
@@ -111,19 +109,20 @@ public class WXPayJSAPIService {
                     pay.setSign(resp.get(WXPayConstants.SIGN));
                     pay.setNotifyURL(resp.get(WXPayConstants.NOTIFY_URL));
 
+                    // 勾兑
                     wxPayRecordRepository.updateWXPayRecord(pay);
 
                     return null;
                 });
             } catch (SystemException e) {
-                // 自己人
+                // 有马甲
                 throw e;
             } catch (Exception e) {
                 // 超时、dns解析、签名验签、稀奇古怪错误等统统穿上马甲扔给切面
                 throw new SystemException(SystemResultCode.WXPAY_UNIFIED_ORDER_ERROR, e);
             }
 
-            // 盖章
+            // 平台盖章
             result.put(PAY_ID, String.valueOf(pay.getId()));
 
             return result;
