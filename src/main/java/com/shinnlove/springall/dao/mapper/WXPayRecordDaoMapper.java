@@ -15,6 +15,7 @@ import com.shinnlove.springall.dao.model.WXPayRecord;
 public interface WXPayRecordDaoMapper {
 
     /**
+     * 根据orderId查询微信支付记录。
      *
      * @param orderId
      * @return
@@ -22,6 +23,7 @@ public interface WXPayRecordDaoMapper {
     WXPayRecord getWXPayRecordByOrderId(long orderId);
 
     /**
+     * 新增一条微信支付记录。
      *
      * @param record
      * @return

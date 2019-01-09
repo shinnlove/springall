@@ -4,14 +4,12 @@
  */
 package com.shinnlove.springall.dao.wxpay.impl;
 
-import com.shinnlove.springall.dao.mapper.WXPayRecordDaoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.shinnlove.springall.dao.converter.WXPayRecordConverter;
+import com.shinnlove.springall.dao.mapper.WXPayRecordDaoMapper;
 import com.shinnlove.springall.dao.model.WXPayRecord;
 import com.shinnlove.springall.dao.wxpay.WXPayRecordRepository;
-import com.shinnlove.springall.model.WxpayRecordDO;
 
 /**
  * 微信支付记录操作仓储。
@@ -22,17 +20,24 @@ import com.shinnlove.springall.model.WxpayRecordDO;
 @Repository(value = "wxPayRecordRepository")
 public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
 
+    /** mybatis-mapper */
     @Autowired
     private WXPayRecordDaoMapper wxPayRecordDaoMapper;
 
+    /**
+     * @see WXPayRecordDaoMapper#addWXPayRecord(com.shinnlove.springall.dao.model.WXPayRecord)
+     */
     @Override
     public long insertRecord(WXPayRecord record) {
         return wxPayRecordDaoMapper.addWXPayRecord(record);
     }
 
+    /**
+     * @see WXPayRecordDaoMapper#getWXPayRecordByOrderId(long)
+     */
     @Override
     public WXPayRecord queryPayRecordByOrderId(long orderId) {
-        return null;
+        return wxPayRecordDaoMapper.getWXPayRecordByOrderId(orderId);
     }
 
     @Override
