@@ -14,7 +14,7 @@ import com.shinnlove.springall.util.enums.BaseEnum;
  */
 public enum SystemResultCode implements BaseEnum {
 
-    /** ---------------------- 公用类:0×× ---------------------- */
+    /** ---------------------- 公用类:0×00 ---------------------- */
 
     /** 成功 */
     SUCCESS("0", "成功"),
@@ -42,6 +42,11 @@ public enum SystemResultCode implements BaseEnum {
 
     /** 数据SQL执行出错 */
     DB_EXECUTE_ERROR("10008", "数据SQL执行出错"),
+
+    /** ---------------------- 微信支付类:0×01 ---------------------- */
+
+    /** 微信支付统一下单出错 */
+    WXPAY_UNIFIED_ORDER_ERROR("20001", "微信支付统一下单出错"),
 
     ;
 

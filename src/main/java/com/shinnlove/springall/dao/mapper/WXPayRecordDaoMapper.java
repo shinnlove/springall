@@ -30,4 +30,16 @@ public interface WXPayRecordDaoMapper {
      */
     long addWXPayRecord(WXPayRecord record);
 
+    /**
+     * 更新微信支付记录。
+     *
+     * 一般用于：
+     * a) 统一支付得到预支付id
+     * b) 支付得到响应回调
+     *
+     * @param record
+     * @return
+     */
+    int updateWXPayRecord(WXPayRecord record);
+
 }

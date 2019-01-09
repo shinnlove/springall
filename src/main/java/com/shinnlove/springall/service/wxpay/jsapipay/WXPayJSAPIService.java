@@ -14,6 +14,7 @@ import com.shinnlove.springall.dao.mch.MchWXPayConfigRepository;
 import com.shinnlove.springall.dao.model.WXPayRecord;
 import com.shinnlove.springall.dao.wxpay.WXPayRecordRepository;
 import com.shinnlove.springall.service.wxpay.request.WXPayRequestService;
+import com.shinnlove.springall.service.wxpay.util.WXPayAssert;
 import com.shinnlove.springall.util.code.SystemResultCode;
 import com.shinnlove.springall.util.exception.SystemException;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
@@ -72,81 +73,50 @@ public class WXPayJSAPIService {
      */
     public Map<String, String> jsapiPay(final long orderId, final long merchantId,
                                         final Map<String, String> payParams) {
-        // 查询或生成待支付记录
+        // ready?
+        WXPayMchConfig mchConfig = mchWXPayConfigRepository.queryWXPayConfigByMchId(merchantId);
+        WXPayAssert.confAvailable(mchConfig);
+
+        // which one?
         WXPayRecord payRecord = wxPayRecordRepository.queryPayRecordByOrderId(orderId);
-        if (payRecord != null && payRecord.getIsPaid() > 0) {
-            throw new SystemException("当前订单已经完成微信支付，无需重复支付");
-        }
-        // 无记录
+        WXPayAssert.notPaid(payRecord);
+
+        // 首付
         if (payRecord == null) {
             payRecord = buildWXPayRecord(orderId, merchantId, payParams);
             wxPayRecordRepository.insertRecord(payRecord);
         }
 
+        // 平台记录与支付结果
         final WXPayRecord pay = payRecord;
+        Map<String, String> result = new HashMap<>();
 
-        WXPayMchConfig mchConfig = mchWXPayConfigRepository.queryWXPayConfigByMchId(merchantId);
         UnifiedOrderClient client = new UnifiedOrderClient(mchConfig);
 
-        // 支付结果
-        Map<String, String> result = new HashMap<>();
-        result.put(PAY_ID, String.valueOf(pay.getId()));
-
-        // TODO：result_code不是SUCCESS时需要映射一把错误码原因：@see https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
         try {
-            result = wxPayRequestService
-                .doPayRequest(client, payParams,
-                    (resp) -> {
-                        // 根据微信应答处理业务
-                    if (!resp.containsKey(WXPayConstants.RESULT_CODE)) {
-                        throw new SystemException("微信支付业务返回码不存在");
-                    }
+            result = wxPayRequestService.doPayRequest(client, payParams, (resp) -> {
 
-                    if (!WXPayConstants.SUCCESS.equalsIgnoreCase(resp
-                        .get(WXPayConstants.RESULT_CODE))) {
-                        String failMsg = resp.get(WXPayConstants.RESULT_CODE);
-                        String des = resp.get(WXPayConstants.ERR_CODE_DES);
-                        throw new SystemException("微信支付业务返回码FAIL" + failMsg + des);
-                    }
+                WXPayAssert.checkPayResp(resp);
 
-                    if (!resp.containsKey(WXPayConstants.PREPAY_ID)) {
-                        throw new SystemException("微信支付业务需返回统一下单prepay_id，当前不存在");
-                    }
-                    if ("".equals(resp.get(WXPayConstants.PREPAY_ID))) {
-                        throw new SystemException("微信支付业务需返回统一下单prepay_id为空");
-                    }
+                pay.setPrepayId(resp.get(WXPayConstants.PREPAY_ID));
+                pay.setNonceStr(resp.get(WXPayConstants.NONCE_STR));
+                pay.setSign(resp.get(WXPayConstants.SIGN));
+                pay.setNotifyURL(resp.get(WXPayConstants.NOTIFY_URL));
 
-                    String tradeType = resp.get(WXPayConstants.TRADE_TYPE);
-                    if (!WXPayConstants.JSAPI.equalsIgnoreCase(tradeType)) {
-                        throw new SystemException("微信支付返回支付类型错误，JSAPI支付交易类型返回必须是JSAPI");
-                    }
+                wxPayRecordRepository.updateWXPayRecord(pay);
 
-                    String prepayId = resp.get(WXPayConstants.PREPAY_ID);
-                    String nonceStr = resp.get(WXPayConstants.NONCE_STR);
-                    String sign = resp.get(WXPayConstants.SIGN);
-                    String notifyURL = resp.get(WXPayConstants.NOTIFY_URL);
-
-                    pay.setPrepayId(prepayId);
-                    pay.setNonceStr(nonceStr);
-                    pay.setSign(sign);
-                    pay.setNotifyURL(notifyURL);
-
-                    int update = wxPayRecordRepository.updateWXPayRecord(pay);
-                    if (update <= 0) {
-                        throw new SystemException("保存微信支付结果出错");
-                    }
-
-                    System.out.println(resp);
-
-                    return null;
-                });
+                return null;
+            });
         } catch (SystemException e) {
-            // 打印日志、做错误的抛出或者结果集转换
+            // 自己人
             throw e;
         } catch (Exception e) {
-            // 打印日志、
-            throw new SystemException(SystemResultCode.SYSTEM_ERROR, e);
+            // 超时、dns解析、签名验签、稀奇古怪错误等统统穿上马甲扔给切面
+            throw new SystemException(SystemResultCode.WXPAY_UNIFIED_ORDER_ERROR, e);
         }
+
+        // 盖章
+        result.put(PAY_ID, String.valueOf(pay.getId()));
 
         return result;
     }

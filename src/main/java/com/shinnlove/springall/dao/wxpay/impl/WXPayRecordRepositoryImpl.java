@@ -50,9 +50,16 @@ public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
         return null;
     }
 
+    /**
+     * @see WXPayRecordDaoMapper#updateWXPayRecord(com.shinnlove.springall.dao.model.WXPayRecord)
+     */
     @Override
     public int updateWXPayRecord(WXPayRecord record) {
-        return 0;
+        int result = wxPayRecordDaoMapper.updateWXPayRecord(record);
+        if (result <= 0) {
+            throw new SystemException("保存微信支付结果出错");
+        }
+        return result;
     }
 
 }
