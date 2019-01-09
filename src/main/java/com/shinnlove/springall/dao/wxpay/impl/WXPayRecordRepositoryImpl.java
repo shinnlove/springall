@@ -4,11 +4,11 @@
  */
 package com.shinnlove.springall.dao.wxpay.impl;
 
+import com.shinnlove.springall.dao.mapper.WXPayRecordDaoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.shinnlove.springall.dao.converter.WXPayRecordConverter;
-import com.shinnlove.springall.dao.mapper.WxpayRecordMapper;
 import com.shinnlove.springall.dao.model.WXPayRecord;
 import com.shinnlove.springall.dao.wxpay.WXPayRecordRepository;
 import com.shinnlove.springall.model.WxpayRecordDO;
@@ -23,12 +23,11 @@ import com.shinnlove.springall.model.WxpayRecordDO;
 public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
 
     @Autowired
-    private WxpayRecordMapper wxpayRecordMapper;
+    private WXPayRecordDaoMapper wxPayRecordDaoMapper;
 
     @Override
     public long insertRecord(WXPayRecord record) {
-        WxpayRecordDO recordDO = WXPayRecordConverter.toDO(record);
-        return wxpayRecordMapper.insert(recordDO);
+        return wxPayRecordDaoMapper.addWXPayRecord(record);
     }
 
     @Override

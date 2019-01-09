@@ -73,7 +73,7 @@ public class WXPayJSAPIService {
                                         final Map<String, String> payParams) {
         // 查询或生成待支付记录
         WXPayRecord payRecord = wxPayRecordRepository.queryPayRecordByOrderId(orderId);
-        if (payRecord != null && payRecord.isPaid()) {
+        if (payRecord != null && payRecord.getIsPaid() > 0) {
             throw new SystemException("当前订单已经完成微信支付，无需重复支付");
         }
         if (payRecord == null) {

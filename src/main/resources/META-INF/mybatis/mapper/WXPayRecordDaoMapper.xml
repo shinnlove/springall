@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shinnlove.springall.dao.mapper.WXPayRecordDaoMapper">
+    <!-- select 查询语句 -->
+    <select id="getWXPayRecordByOrderId" parameterType="long" resultMap="WXPayRecordMapping">
+        SELECT order_id, merchant_id, is_paid, app_id, mch_id, device_info,
+        nonce_str, sign, body, attach, total_fee, spbill_create_ip, time_start,
+        time_expire, goods_tag, notify_url, trade_type, open_id, prepay_id, product_id,
+        code_url, err_code, err_code_des, create_time, modify_time, remark
+        FROM wxpay_record WHERE order_id=#{orderId}
+    </select>
+    <!-- 通过<resultMap>映射实体类属性名和表的字段名对应关系 -->
+    <resultMap id="WXPayRecordMapping" type="WXPayRecord">
+        <!-- id属性来映射主键字段 -->
+        <id column="id" property="id" javaType="long"/>
+        <!-- result属性映射非主键字段 -->
+        <result column="order_id" property="orderId" javaType="long"/>
+        <result column="merchant_id" property="merchantId" javaType="long"/>
+        <result column="is_paid" property="isPaid" javaType="int"/>
+        <result column="app_id" property="appId" javaType="String"/>
+        <result column="mch_id" property="mchId" javaType="String"/>
+        <result column="device_info" property="deviceInfo" javaType="String"/>
+        <result column="nonce_str" property="nonceStr" javaType="String"/>
+        <result column="sign" property="sign" javaType="String"/>
+        <result column="body" property="body" javaType="String"/>
+        <result column="attach" property="attach" javaType="String"/>
+        <result column="total_fee" property="totalFee" javaType="int"/>
+        <result column="spbill_create_ip" property="spbillCreateIp" javaType="String"/>
+        <result column="time_start" property="timeStart" javaType="String"/>
+        <result column="time_expire" property="timeExpire" javaType="String"/>
+        <result column="goods_tag" property="goodsTag" javaType="String"/>
+        <result column="notify_url" property="notifyURL" javaType="String"/>
+        <result column="trade_type" property="tradeType" javaType="String"/>
+        <result column="open_id" property="openId" javaType="String"/>
+        <result column="prepay_id" property="prepayId" javaType="String"/>
+        <result column="product_id" property="productId" javaType="String"/>
+        <result column="code_url" property="codeURL" javaType="String"/>
+        <result column="err_code" property="errCode" javaType="String"/>
+        <result column="err_code_des" property="errCodeDes" javaType="String"/>
+        <result column="create_time" property="createTime" javaType="int"/>
+        <result column="modify_time" property="modifyTime" javaType="int"/>
+        <result column="remark" property="remark" javaType="String"/>
+    </resultMap>
+    <insert id="addWXPayRecord" parameterType="WXPayRecord" flushCache="true">
+        INSERT INTO wxpay_record (id,name,password) VALUES (#{id},#{name},#{password})
+    </insert>
+    <!--<update id="updateUser" parameterType="User">-->
+    <!--UPDATE user SET password=#{password} WHERE id=#{id}-->
+    <!--</update>-->
+    <!--<delete id="deleteUser" parameterType="int">-->
+    <!--DELETE FROM user WHERE id=#{id}-->
+    <!--</delete>-->
+</mapper>

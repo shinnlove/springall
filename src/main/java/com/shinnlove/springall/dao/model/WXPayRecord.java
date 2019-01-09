@@ -15,61 +15,59 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class WXPayRecord {
 
-    private long    id;
+    private long   id;
 
-    private long    orderId;
+    private long   orderId;
 
-    private long    merchantId;
+    private long   merchantId;
 
-    private boolean isPaid;
+    private int    isPaid;
 
-    private String  appId;
+    private String appId;
 
-    private String  mchId;
+    private String mchId;
 
-    private String  deviceInfo;
+    private String deviceInfo;
 
-    private String  nonceStr;
+    private String nonceStr;
 
-    private String  sign;
+    private String sign;
 
-    private String  body;
+    private String body;
 
-    private String  attach;
+    private String attach;
 
-    private String  outTradeNo;
+    private int    totalFee;
 
-    private int     totalFee;
+    private String spbillCreateIp;
 
-    private String  spbillCreateIp;
+    private String timeStart;
 
-    private String  timeStart;
+    private String timeExpire;
 
-    private String  timeExpire;
+    private String goodsTag;
 
-    private String  goodsTag;
+    private String notifyURL;
 
-    private String  notifyURL;
+    private String tradeType;
 
-    private String  tradeType;
+    private String openId;
 
-    private String  openId;
+    private String prepayId;
 
-    private String  prepayId;
+    private String productId;
 
-    private String  productId;
+    private String codeURL;
 
-    private String  codeURL;
+    private String errCode;
 
-    private String  errCode;
+    private String errCodeDes;
 
-    private String  errCodeDes;
+    private int    createTime;
 
-    private int     createTime;
+    private int    modifyTime;
 
-    private int     modifyTime;
-
-    private String  remark;
+    private String remark;
 
     public WXPayRecord() {
     }
@@ -79,13 +77,13 @@ public class WXPayRecord {
         this.merchantId = merchantId;
     }
 
-    public WXPayRecord(long id, long orderId, long merchantId, boolean isPaid, String appId,
+    public WXPayRecord(long id, long orderId, long merchantId, int isPaid, String appId,
                        String mchId, String deviceInfo, String nonceStr, String sign, String body,
-                       String attach, String outTradeNo, int totalFee, String spbillCreateIp,
-                       String timeStart, String timeExpire, String goodsTag, String notifyURL,
-                       String tradeType, String openId, String prepayId, String productId,
-                       String codeURL, String errCode, String errCodeDes, int createTime,
-                       int modifyTime, String remark) {
+                       String attach, int totalFee, String spbillCreateIp, String timeStart,
+                       String timeExpire, String goodsTag, String notifyURL, String tradeType,
+                       String openId, String prepayId, String productId, String codeURL,
+                       String errCode, String errCodeDes, int createTime, int modifyTime,
+                       String remark) {
         this.id = id;
         this.orderId = orderId;
         this.merchantId = merchantId;
@@ -97,7 +95,6 @@ public class WXPayRecord {
         this.sign = sign;
         this.body = body;
         this.attach = attach;
-        this.outTradeNo = outTradeNo;
         this.totalFee = totalFee;
         this.spbillCreateIp = spbillCreateIp;
         this.timeStart = timeStart;
@@ -116,13 +113,12 @@ public class WXPayRecord {
         this.remark = remark;
     }
 
-    public WXPayRecord(long orderId, long merchantId, boolean isPaid, String appId, String mchId,
+    public WXPayRecord(long orderId, long merchantId, int isPaid, String appId, String mchId,
                        String deviceInfo, String nonceStr, String sign, String body, String attach,
-                       String outTradeNo, int totalFee, String spbillCreateIp, String timeStart,
-                       String timeExpire, String goodsTag, String notifyURL, String tradeType,
-                       String openId, String prepayId, String productId, String codeURL,
-                       String errCode, String errCodeDes, int createTime, int modifyTime,
-                       String remark) {
+                       int totalFee, String spbillCreateIp, String timeStart, String timeExpire,
+                       String goodsTag, String notifyURL, String tradeType, String openId,
+                       String prepayId, String productId, String codeURL, String errCode,
+                       String errCodeDes, int createTime, int modifyTime, String remark) {
         this.orderId = orderId;
         this.merchantId = merchantId;
         this.isPaid = isPaid;
@@ -133,7 +129,6 @@ public class WXPayRecord {
         this.sign = sign;
         this.body = body;
         this.attach = attach;
-        this.outTradeNo = outTradeNo;
         this.totalFee = totalFee;
         this.spbillCreateIp = spbillCreateIp;
         this.timeStart = timeStart;
@@ -206,17 +201,22 @@ public class WXPayRecord {
         this.merchantId = merchantId;
     }
 
-    public boolean isPaid() {
+    /**
+     * Getter method for property isPaid.
+     *
+     * @return property value of isPaid
+     */
+    public int getIsPaid() {
         return isPaid;
     }
 
     /**
-     * Setter method for property paid.
+     * Setter method for property isPaid.
      *
-     * @param paid value to be assigned to property paid
+     * @param isPaid value to be assigned to property isPaid
      */
-    public void setPaid(boolean paid) {
-        isPaid = paid;
+    public void setIsPaid(int isPaid) {
+        this.isPaid = isPaid;
     }
 
     /**
@@ -343,24 +343,6 @@ public class WXPayRecord {
      */
     public void setAttach(String attach) {
         this.attach = attach;
-    }
-
-    /**
-     * Getter method for property outTradeNo.
-     *
-     * @return property value of outTradeNo
-     */
-    public String getOutTradeNo() {
-        return outTradeNo;
-    }
-
-    /**
-     * Setter method for property outTradeNo.
-     *
-     * @param outTradeNo value to be assigned to property outTradeNo
-     */
-    public void setOutTradeNo(String outTradeNo) {
-        this.outTradeNo = outTradeNo;
     }
 
     /**
