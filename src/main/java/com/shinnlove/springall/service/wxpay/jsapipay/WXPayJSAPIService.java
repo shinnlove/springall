@@ -92,7 +92,6 @@ public class WXPayJSAPIService {
         }
 
         return transactionTemplate.execute(status -> {
-
             // innodb pessimistic line-lock
             final WXPayRecord pay = wxPayRecordRepository.queryPayRecordByOrderIdForUpdate(orderId);
             WXPayAssert.notPaid(pay);
