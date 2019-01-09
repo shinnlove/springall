@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.shinnlove.springall.dao.mapper.WXPayRecordDaoMapper;
 import com.shinnlove.springall.dao.model.WXPayRecord;
 import com.shinnlove.springall.dao.wxpay.WXPayRecordRepository;
+import com.shinnlove.springall.util.exception.SystemException;
 
 /**
  * 微信支付记录操作仓储。
@@ -29,7 +30,11 @@ public class WXPayRecordRepositoryImpl implements WXPayRecordRepository {
      */
     @Override
     public long insertRecord(WXPayRecord record) {
-        return wxPayRecordDaoMapper.addWXPayRecord(record);
+        long result = wxPayRecordDaoMapper.addWXPayRecord(record);
+        if (result <= 0) {
+            throw new SystemException("创建支付信息失败，请稍后再试");
+        }
+        return result;
     }
 
     /**

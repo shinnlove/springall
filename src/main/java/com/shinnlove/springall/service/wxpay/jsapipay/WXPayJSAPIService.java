@@ -23,7 +23,8 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.request.order.UnifiedO
 /**
  * 平台处理微信内H5网页JS唤起支付。
  *
- * 这个类就是支持之前的：
+ * 这个类就是支持之前的：WeActJSAPIPay。
+ * 
  * TODO：为微信支付请求服务再包一层业务语义的服务，组装其原子能力（如JSAPI），然后吃掉所有错误。
  *
  * @author shinnlove.jinsheng
@@ -76,18 +77,15 @@ public class WXPayJSAPIService {
         if (payRecord != null && payRecord.getIsPaid() > 0) {
             throw new SystemException("当前订单已经完成微信支付，无需重复支付");
         }
+        // 无记录
         if (payRecord == null) {
-            // 无记录
-            payRecord = new WXPayRecord(orderId, merchantId);
-            long insert = wxPayRecordRepository.insertRecord(payRecord);
-            if (insert <= 0) {
-                throw new SystemException("创建支付信息失败，请稍后再试");
-            }
+            payRecord = buildWXPayRecord(orderId, merchantId, payParams);
+            wxPayRecordRepository.insertRecord(payRecord);
         }
+
         final WXPayRecord pay = payRecord;
 
         WXPayMchConfig mchConfig = mchWXPayConfigRepository.queryWXPayConfigByMchId(merchantId);
-
         UnifiedOrderClient client = new UnifiedOrderClient(mchConfig);
 
         // 支付结果
@@ -151,6 +149,22 @@ public class WXPayJSAPIService {
         }
 
         return result;
+    }
+
+    /**
+     * 新创建一条微信支付记录。
+     *
+     * @param orderId    
+     * @param merchantId
+     * @param payParams
+     * @return
+     */
+    private WXPayRecord buildWXPayRecord(long orderId, long merchantId,
+                                         Map<String, String> payParams) {
+        WXPayRecord record = new WXPayRecord(orderId, merchantId);
+        // 做个塞字段示例
+        record.setOpenId(payParams.get(WXPayConstants.OPENID));
+        return record;
     }
 
 }
