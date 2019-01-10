@@ -162,20 +162,9 @@
             <version>1.6.8</version>
         </dependency>
         <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.26</version>
-        </dependency>
-        <!-- http client -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${apache.httpclient.version}</version>
         </dependency>
         <!-- 接入mybatis，特别注意：mybatis版本高，容易爆出错误，相应的mybatis-spring版本也要升级！！！ -->
         <dependency>
@@ -188,6 +177,11 @@
             <artifactId>mybatis</artifactId>
             <version>3.4.1</version>
         </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
         <!-- 数据库连接池hibernate-c3p0(后面换成德鲁伊连接池，再总结下) -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -199,6 +193,12 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.1.10</version>
+        </dependency>
+        <!-- http client -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${apache.httpclient.version}</version>
         </dependency>
     </dependencies>
 
