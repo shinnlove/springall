@@ -17,18 +17,26 @@
     <context:property-placeholder location="classpath:META-INF/database/jdbc.properties" file-encoding="utf-8"
                                   ignore-unresolvable="true"/>
     <!-- 配置数据源 -->
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"
-          p:driverClass="${jdbc.driverClassName}"
-          p:jdbcUrl="${jdbc.url}"
-          p:user="${jdbc.username}"
-          p:password="${jdbc.password}"
-          p:testConnectionOnCheckout="${jdbc.c3p0.testConnectionOnCheckout}"
-          p:testConnectionOnCheckin="${jdbc.c3p0.testConnectionOnCheckin}"
-          p:idleConnectionTestPeriod="${jdbc.c3p0.idleConnectionTestPeriod}"
-          p:initialPoolSize="${jdbc.c3p0.initialPoolSize}"
-          p:minPoolSize="${jdbc.c3p0.minPoolSize}"
-          p:maxPoolSize="${jdbc.c3p0.maxPoolSize}"
-          p:maxIdleTime="${jdbc.c3p0.maxIdleTime}"/>
+    <!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"-->
+          <!--p:driverClass="${jdbc.driverClassName}"-->
+          <!--p:jdbcUrl="${jdbc.url}"-->
+          <!--p:user="${jdbc.username}"-->
+          <!--p:password="${jdbc.password}"-->
+          <!--p:testConnectionOnCheckout="${jdbc.c3p0.testConnectionOnCheckout}"-->
+          <!--p:testConnectionOnCheckin="${jdbc.c3p0.testConnectionOnCheckin}"-->
+          <!--p:idleConnectionTestPeriod="${jdbc.c3p0.idleConnectionTestPeriod}"-->
+          <!--p:initialPoolSize="${jdbc.c3p0.initialPoolSize}"-->
+          <!--p:minPoolSize="${jdbc.c3p0.minPoolSize}"-->
+          <!--p:maxPoolSize="${jdbc.c3p0.maxPoolSize}"-->
+          <!--p:maxIdleTime="${jdbc.c3p0.maxIdleTime}"/>-->
+
+    <!-- 为了让mybatis自动扫描mapper，临时换成dbcp连接池，c3p0无法解析属性 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/wechatpay"/>
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
 
     <!--在数据源上配置事务管理器-->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
