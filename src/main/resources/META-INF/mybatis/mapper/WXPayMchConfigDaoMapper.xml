@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shinnlove.springall.dao.mapper.WXPayMchConfigDaoMapper">
+    <!-- select 查询语句 -->
+    <select id="getConfigByMchId" parameterType="long" resultMap="WXPayMchConfigMapping">
+        SELECT id, merchant_id, mch_id, sub_mch_id, app_id, sub_app_id, app_secret,
+        api_key, cert_p12, ssl_cert_path, ssl_key_path, rootca_pem, pay_mode,
+        sign_type, use_sandbox, available, create_time, modify_time, remark
+        FROM wxpay_mch_config WHERE merchant_id=#{merchantId}
+    </select>
+    <!-- 通过<resultMap>映射实体类属性名和表的字段名对应关系 -->
+    <resultMap id="WXPayMchConfigMapping" type="WXPayMchConfigDO">
+        <!-- id属性来映射主键字段 -->
+        <id column="id" property="id" javaType="long"/>
+        <!-- result属性映射非主键字段 -->
+        <result column="merchant_id" property="merchantId" javaType="long"/>
+        <result column="mch_id" property="mchId" javaType="String"/>
+        <result column="sub_mch_id" property="subMchId" javaType="String"/>
+        <result column="app_id" property="appId" javaType="String"/>
+        <result column="sub_app_id" property="subAppId" javaType="String"/>
+        <result column="app_secret" property="appSecret" javaType="String"/>
+        <result column="api_key" property="apiKey" javaType="String"/>
+        <result column="cert_p12" property="certP12" javaType="String"/>
+        <result column="ssl_cert_path" property="sslCertPath" javaType="String"/>
+        <result column="ssl_key_path" property="sslKeyPath" javaType="String"/>
+        <result column="rootca_pem" property="rootcaPem" javaType="String"/>
+        <result column="pay_mode" property="payMode" javaType="int"/>
+        <result column="sign_type" property="signType" javaType="int"/>
+        <result column="use_sandbox" property="useSandbox" javaType="int"/>
+        <result column="available" property="available" javaType="int"/>
+        <result column="create_time" property="createTime" javaType="int"/>
+        <result column="modify_time" property="modifyTime" javaType="int"/>
+        <result column="remark" property="remark" javaType="String"/>
+    </resultMap>
+</mapper>

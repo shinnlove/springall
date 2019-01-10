@@ -45,7 +45,7 @@ public class CloseOrderClient extends WXPayRequestClient {
 
     @Override
     public String payRequestURL() {
-        if (wxPayMchConfig.isUseSandBox()) {
+        if (wxPayMchConfig.isUseSandbox()) {
             // 沙箱环境
             return WXPayConstants.HTTPS + WXPayConstants.DOMAIN_API
                    + WXPayConstants.SANDBOX_CLOSEORDER_URL_SUFFIX;

@@ -44,4 +44,18 @@ public enum WXPayMode {
         return message;
     }
 
+    /**
+     * 通过CODE获取ENUM的名字
+     * @param code  枚举code
+     * @return      缓存类型枚举
+     */
+    public static WXPayMode parseByCode(int code) {
+        for (WXPayMode type : WXPayMode.values()) {
+            if (type.code == code) {
+                return type;
+            }
+        }
+        return null;
+    }
+
 }

@@ -3,14 +3,18 @@
         "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <!-- 全局配置中定义一些领域模型 -->
     <typeAliases>
         <typeAlias alias="WXPayRecord" type="com.shinnlove.springall.dao.model.WXPayRecord" />
+        <typeAlias alias="WXPayMchConfigDO" type="com.shinnlove.springall.dao.model.WXPayMchConfigDO" />
     </typeAliases>
+    <!-- 不再通过mapperFactoryBean来实例化，交给mapper配置来扫描 -->
     <mappers>
         <!-- 特别注意：mybatis的`resource`属性已经对应到`src/main/resources`路径中，因此类似下面的写法读取不到！！！ -->
         <!--<mapper resource="classpath:META-INF/mybatis/dao/*.xml"/>-->
         <!-- 正确的写法：相对于src/main/resources开始，每一个文件夹用`/`来表示，指出具体的`abc.xml`！！！ -->
         <!-- 特别注意：在mybatis-cfg.xml中配置，不允许出现`*.xml`，框架不会自动扫描路径下所有*.xml！！！ -->
         <mapper resource="META-INF/mybatis/mapper/WXPayRecordDaoMapper.xml"/>
+        <mapper resource="META-INF/mybatis/mapper/WXPayMchConfigDaoMapper.xml"/>
     </mappers>
 </configuration>

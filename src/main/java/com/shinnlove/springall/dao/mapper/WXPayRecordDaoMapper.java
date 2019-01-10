@@ -4,6 +4,8 @@
  */
 package com.shinnlove.springall.dao.mapper;
 
+import org.mybatis.spring.annotation.MapperScan;
+
 import com.shinnlove.springall.dao.model.WXPayRecord;
 
 /**
@@ -12,6 +14,7 @@ import com.shinnlove.springall.dao.model.WXPayRecord;
  * @author shinnlove.jinsheng
  * @version $Id: WXPayRecordDaoMapper.java, v 0.1 2019-01-09 14:52 shinnlove.jinsheng Exp $$
  */
+@MapperScan
 public interface WXPayRecordDaoMapper {
 
     /**

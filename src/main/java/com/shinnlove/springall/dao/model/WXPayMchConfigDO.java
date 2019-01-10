@@ -1,119 +1,82 @@
 /**
  * Alipay.com Inc.
- * Copyright (c) 2004-2018 All Rights Reserved.
+ * Copyright (c) 2004-2019 All Rights Reserved.
  */
-package com.shinnlove.springall.util.wxpay.sdkplus.config;
-
-import java.io.*;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import com.shinnlove.springall.util.wxpay.sdkplus.enums.WXPayMode;
-import com.shinnlove.springall.util.wxpay.sdkplus.enums.WXPaySignType;
+package com.shinnlove.springall.dao.model;
 
 /**
- * 微信支付商户配置VO。
+ * 微信支付商户数据库领域模型。
  *
  * @author shinnlove.jinsheng
- * @version $Id: WXPayMchConfig.java, v 0.1 2018-12-18 下午3:48 shinnlove.jinsheng Exp $$
+ * @version $Id: WXPayMchConfigDO.java, v 0.1 2019-01-10 17:50 shinnlove.jinsheng Exp $$
  */
-public class WXPayMchConfig {
+public class WXPayMchConfigDO {
 
-    /** pk */
-    private long          id;
+    /** 主键id */
+    private long   id;
 
-    /** 微信支付配置属于哪个商户 */
-    private long          merchantId;
+    /** 微动平台商户id */
+    private long   merchantId;
 
     /** V3版微信支付是MCHID */
-    private String        mchId;
+    private String mchId;
 
     /** 微信服务商代理子商户号 */
-    private String        subMchId;
+    private String subMchId;
 
     /** 微信支付公众号appid */
-    private String        appId;
+    private String appId;
 
     /** 微信支付子公众号appid（服务商模式） */
-    private String        subAppId;
+    private String subAppId;
 
     /** 三方app secret */
-    private String        appSecret;
+    private String appSecret;
 
     /** 商户API密钥 */
-    private String        apiKey;
+    private String apiKey;
 
     /** p12文件 */
-    private String        certP12;
+    private String certP12;
 
     /** 支付证书绝对路径 */
-    private String        sslCertPath;
+    private String sslCertPath;
 
     /** 支付密钥证书绝对路径 */
-    private String        sslKeyPath;
+    private String sslKeyPath;
 
     /** 证书根地址 */
-    private String        rootcaPem;
-
-    /** 证书文件读入字节流 */
-    private InputStream   certStream;
+    private String rootcaPem;
 
     /** 微信支付种类：0是普通商户、1是服务商模式 */
-    private WXPayMode     payMode;
+    private int    payMode;
 
     /** 微信支付签名类型：1是MD5（默认类型）、2是HMACSHA256 */
-    private WXPaySignType signType;
+    private int    signType;
 
     /** 当前商户是否使用沙箱环境进行测试 */
-    private boolean       useSandbox;
+    private int    useSandbox;
 
     /** 商户微信支付是否可用 */
-    private boolean       available;
+    private int    available;
 
     /** create time */
-    private int           createTime;
+    private int    createTime;
 
     /** modify time */
-    private int           modifyTime;
+    private int    modifyTime;
 
     /** remark */
-    private String        remark;
+    private String remark;
 
-    /**
-     * construct for reflect
-     */
-    public WXPayMchConfig() {
+    public WXPayMchConfigDO() {
     }
 
-    /**
-     * 构造函数。
-     * 
-     * @param id
-     * @param merchantId
-     * @param mchId
-     * @param subMchId
-     * @param appId
-     * @param subAppId
-     * @param appSecret
-     * @param apiKey
-     * @param certP12
-     * @param sslcertPath
-     * @param sslkeyPath
-     * @param rootcaPem
-     * @param payMode
-     * @param signType
-     * @param useSandbox
-     * @param available
-     * @param createTime
-     * @param modifyTime
-     * @param remark
-     */
-    public WXPayMchConfig(long id, long merchantId, String mchId, String subMchId, String appId,
-                          String subAppId, String appSecret, String apiKey, String certP12,
-                          String sslCertPath, String sslKeyPath, String rootcaPem,
-                          WXPayMode payMode, WXPaySignType signType, boolean useSandbox,
-                          boolean available, int createTime, int modifyTime, String remark) {
+    public WXPayMchConfigDO(long id, long merchantId, String mchId, String subMchId, String appId,
+                            String subAppId, String appSecret, String apiKey, String certP12,
+                            String sslCertPath, String sslKeyPath, String rootcaPem, int payMode,
+                            int signType, int useSandbox, int available, int createTime,
+                            int modifyTime, String remark) {
         this.id = id;
         this.merchantId = merchantId;
         this.mchId = mchId;
@@ -133,39 +96,6 @@ public class WXPayMchConfig {
         this.createTime = createTime;
         this.modifyTime = modifyTime;
         this.remark = remark;
-        // 读入证书（NFS上需要转成二进制流）
-        readCertData(sslCertPath);
-    }
-
-    /**
-     * 根据证书地址读入证书文件二进制流。
-     *
-     * @param certPath
-     */
-    private void readCertData(String certPath) {
-        //        String certPath = "/Users/zhaochensheng/Documents/Shinnlove/我的资料/微动证书/apiclient_cert.p12";
-        InputStream fileStream = null;
-        try {
-            File file = new File(certPath);
-            fileStream = new FileInputStream(file);
-            // 文件数据
-            byte[] fileData = new byte[(int) file.length()];
-            // 读入
-            fileStream.read(fileData);
-            // 包装流
-            certStream = new ByteArrayInputStream(fileData);
-        } catch (Exception e) {
-            // ...
-            certStream = new ByteArrayInputStream(new byte[0]);
-        } finally {
-            if (fileStream != null) {
-                try {
-                    fileStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     /**
@@ -385,29 +315,11 @@ public class WXPayMchConfig {
     }
 
     /**
-     * Getter method for property certStream.
-     *
-     * @return property value of certStream
-     */
-    public InputStream getCertStream() {
-        return certStream;
-    }
-
-    /**
-     * Setter method for property certStream.
-     *
-     * @param certStream value to be assigned to property certStream
-     */
-    public void setCertStream(InputStream certStream) {
-        this.certStream = certStream;
-    }
-
-    /**
      * Getter method for property payMode.
      *
      * @return property value of payMode
      */
-    public WXPayMode getPayMode() {
+    public int getPayMode() {
         return payMode;
     }
 
@@ -416,7 +328,7 @@ public class WXPayMchConfig {
      *
      * @param payMode value to be assigned to property payMode
      */
-    public void setPayMode(WXPayMode payMode) {
+    public void setPayMode(int payMode) {
         this.payMode = payMode;
     }
 
@@ -425,7 +337,7 @@ public class WXPayMchConfig {
      *
      * @return property value of signType
      */
-    public WXPaySignType getSignType() {
+    public int getSignType() {
         return signType;
     }
 
@@ -434,11 +346,16 @@ public class WXPayMchConfig {
      *
      * @param signType value to be assigned to property signType
      */
-    public void setSignType(WXPaySignType signType) {
+    public void setSignType(int signType) {
         this.signType = signType;
     }
 
-    public boolean isUseSandbox() {
+    /**
+     * Getter method for property useSandbox.
+     *
+     * @return property value of useSandbox
+     */
+    public int getUseSandbox() {
         return useSandbox;
     }
 
@@ -447,11 +364,16 @@ public class WXPayMchConfig {
      *
      * @param useSandbox value to be assigned to property useSandbox
      */
-    public void setUseSandbox(boolean useSandbox) {
+    public void setUseSandbox(int useSandbox) {
         this.useSandbox = useSandbox;
     }
 
-    public boolean isAvailable() {
+    /**
+     * Getter method for property available.
+     *
+     * @return property value of available
+     */
+    public int getAvailable() {
         return available;
     }
 
@@ -460,7 +382,7 @@ public class WXPayMchConfig {
      *
      * @param available value to be assigned to property available
      */
-    public void setAvailable(boolean available) {
+    public void setAvailable(int available) {
         this.available = available;
     }
 
@@ -516,14 +438,6 @@ public class WXPayMchConfig {
      */
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    /**
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
 }
