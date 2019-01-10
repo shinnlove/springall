@@ -13,8 +13,8 @@
 
     <!-- 配置数据源和mybatis ORM框架 -->
 
-    <!-- 以下为接入mybatis -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <!-- 以下为接入mybatis，注意不能命名`sqlSessionFactory`，否则配置占位符无法读取 -->
+    <bean id="ysSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:META-INF/mybatis/mybatis-config.xml"></property>
         <!-- 以下为cfg.xml中免去mapper的属性，可以不设置到cfg中设置mapper，但是要注意路径！ -->
@@ -25,7 +25,7 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <!-- 注意这个dao.mapper.*不能随便用，否则不能锁定目录下的接口文件进行扫描 -->
         <property name="basePackage" value="com.shinnlove.springall.dao.mapper" />
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="sqlSessionFactoryBeanName" value="ysSqlSessionFactory" />
     </bean>
 
     <!-- mapper较多不推荐使用这个方法，要一个个mapper手动配置 -->
