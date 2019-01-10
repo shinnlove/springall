@@ -31,6 +31,9 @@ public class WXPayAssert {
         if (config == null) {
             throw new SystemException("商户未完善微信支付信息，请稍后再试");
         }
+        if (!config.isAvailable()) {
+            throw new SystemException("商户微信支付未开启，请联系商户配置");
+        }
     }
 
     /**
