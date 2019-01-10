@@ -26,6 +26,7 @@ import javax.annotation.Resource;
                                    "classpath:/META-INF/spring/spring-database-mybatis.xml" })
 public class WXPayMchConfigDaoMapperTest {
 
+    /** mybatis-mapper */
     @Resource
     private WXPayMchConfigDaoMapper wxPayMchConfigDaoMapper;
 

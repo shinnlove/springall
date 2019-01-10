@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
+
 /**
  * 测试mybatis接入。
  *
@@ -22,7 +24,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
                                    "classpath:/META-INF/spring/spring-database-mybatis.xml" })
 public class WXPayRecordDaoMapperTest {
 
-    @Autowired
+    /** mybatis-mapper */
+    @Resource
     private WXPayRecordDaoMapper wxPayRecordDaoMapper;
 
     @Test
