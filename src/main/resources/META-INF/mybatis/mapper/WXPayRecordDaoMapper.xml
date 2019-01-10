@@ -10,6 +10,13 @@
         code_url, err_code, err_code_des, create_time, modify_time, remark
         FROM wxpay_record WHERE order_id=#{orderId}
     </select>
+    <select id="getWXPayRecordByOrderIdForUpdate" parameterType="long" resultMap="WXPayRecordMapping">
+        SELECT order_id, merchant_id, is_paid, app_id, mch_id, device_info,
+        nonce_str, sign, body, attach, total_fee, spbill_create_ip, time_start,
+        time_expire, goods_tag, notify_url, trade_type, open_id, prepay_id, product_id,
+        code_url, err_code, err_code_des, create_time, modify_time, remark
+        FROM wxpay_record WHERE order_id=#{orderId} for update
+    </select>
     <!-- 通过<resultMap>映射实体类属性名和表的字段名对应关系 -->
     <resultMap id="WXPayRecordMapping" type="WXPayRecord">
         <!-- id属性来映射主键字段 -->
@@ -43,7 +50,14 @@
         <result column="remark" property="remark" javaType="String"/>
     </resultMap>
     <insert id="addWXPayRecord" parameterType="WXPayRecord" flushCache="true">
-        INSERT INTO wxpay_record (id,name,password) VALUES (#{id},#{name},#{password})
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO wxpay_record (order_id, merchant_id, is_paid, app_id, mch_id, device_info,
+        nonce_str, sign, body, attach, total_fee, spbill_create_ip, time_start,
+        time_expire, goods_tag, notify_url, trade_type, open_id, prepay_id, product_id,
+        code_url, err_code, err_code_des, create_time, modify_time, remark)
+        VALUES (#{id},#{name},#{password})
     </insert>
     <!--<update id="updateUser" parameterType="User">-->
     <!--UPDATE user SET password=#{password} WHERE id=#{id}-->

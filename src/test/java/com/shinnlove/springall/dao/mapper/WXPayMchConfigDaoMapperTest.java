@@ -39,4 +39,34 @@ public class WXPayMchConfigDaoMapperTest {
         System.out.println(configVO.getApiKey());
     }
 
+    @Test
+    public void test_addMchConfig() {
+        WXPayMchConfigDO configDO = buildConfig();
+        System.out.println("插入前id=" + configDO.getId());
+        long result = wxPayMchConfigDaoMapper.addMchConfig(configDO);
+        System.out.println("插入影响的行数：" + result);
+        System.out.println("插入后id=" + configDO.getId());
+    }
+
+    private WXPayMchConfigDO buildConfig() {
+        long merchantId = 201812200006L;
+        WXPayMchConfigDO configDO = new WXPayMchConfigDO();
+        configDO.setMerchantId(merchantId);
+        configDO.setMchId("1230612306");
+        configDO.setSubMchId("");
+        configDO.setAppId("abcd1234");
+        configDO.setSubAppId("");
+        configDO.setAppSecret("abcadfasdfewfasf");
+        configDO.setApiKey("weactyesweactyesweactyesweactyes");
+        configDO.setCertP12("/Users/shinnlove/certs/cert_p12.pem");
+        configDO.setSslCertPath("/Users/shinnlove/certs/ssl_cert.pem");
+        configDO.setSslKeyPath("/Users/shinnlove/certs/ssl_key.pem");
+        configDO.setRootcaPem("/Users/shinnlove/certs/rootca.pem");
+        configDO.setPayMode(0);
+        configDO.setSignType(1);
+        configDO.setAvailable(1);
+        configDO.setRemark("单元测试增加的微信支付配置");
+        return configDO;
+    }
+
 }

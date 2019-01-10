@@ -26,4 +26,12 @@ public interface WXPayMchConfigDaoMapper {
      */
     WXPayMchConfigDO getConfigByMchId(@Param("merchantId") long merchantId);
 
+    /**
+     * 新增一条微信支付商户配置。
+     *
+     * @param configDO
+     * @return
+     */
+    long addMchConfig(WXPayMchConfigDO configDO);
+
 }

@@ -33,4 +33,16 @@
         <result column="modify_time" property="modifyTime" javaType="int"/>
         <result column="remark" property="remark" javaType="String"/>
     </resultMap>
+    <insert id="addMchConfig" parameterType="WXPayRecord" flushCache="true">
+        <!-- 将插入后数据的主键返回，并且给到指定属性（这里是id字段） -->
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO wxpay_mch_config (merchant_id, mch_id, sub_mch_id, app_id, sub_app_id, app_secret,
+        api_key, cert_p12, ssl_cert_path, ssl_key_path, rootca_pem, pay_mode,
+        sign_type, use_sandbox, available, remark)
+        VALUES (#{merchantId}, #{mchId}, #{subMchId}, #{appId}, #{subAppId}, #{appSecret},
+        #{apiKey}, #{certP12}, #{sslCertPath}, #{sslKeyPath}, #{rootcaPem}, #{payMode},
+        #{signType}, #{useSandbox}, #{available}, #{remark})
+    </insert>
 </mapper>
