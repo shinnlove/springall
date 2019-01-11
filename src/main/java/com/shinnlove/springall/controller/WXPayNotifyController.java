@@ -45,7 +45,11 @@ public class WXPayNotifyController {
     /**
      * 处理微信支付通知。
      *
-     * @param merchantId 
+     * 特别注意，这个函数其实很特别的做什么事情都要try...catch...!!!
+     * 因为目标对象是微信服务器，而不是内网服务器，所以它只有application/xml一种格式，SUCCESS/FAIL两种选择。
+     * 并不需要回复常规restful接口需要的字段。
+     *
+     * @param merchantId
      * @param xmlStr
      * @return
      * @throws Exception
