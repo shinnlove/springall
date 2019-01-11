@@ -30,7 +30,7 @@
           p:maxPoolSize="${jdbc.c3p0.maxPoolSize}"
           p:maxIdleTime="${jdbc.c3p0.maxIdleTime}"/>
 
-    <!-- 为了让mybatis自动扫描mapper，临时换成dbcp连接池，c3p0无法解析属性 -->
+    <!-- dbcp连接池 -->
     <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
         <!--<property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
         <!--<property name="url" value="jdbc:mysql://127.0.0.1:3306/wechatpay"/>-->

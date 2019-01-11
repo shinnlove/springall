@@ -6,14 +6,13 @@ package com.shinnlove.springall.dao.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.shinnlove.springall.dao.converter.WXPayMchConfigConverter;
 import com.shinnlove.springall.dao.model.WXPayMchConfigDO;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
-
-import javax.annotation.Resource;
 
 /**
  * 测试微信支付商户配置。
@@ -27,12 +26,12 @@ import javax.annotation.Resource;
 public class WXPayMchConfigDaoMapperTest {
 
     /** mybatis-mapper */
-    @Resource
+    @Autowired
     private WXPayMchConfigDaoMapper wxPayMchConfigDaoMapper;
 
     @Test
     public void test_getWXPayRecord() {
-        long merchantId = 2014250006L;
+        long merchantId = 201425666688880006L;
         WXPayMchConfigDO configDO = wxPayMchConfigDaoMapper.getConfigByMchId(merchantId);
         WXPayMchConfig configVO = WXPayMchConfigConverter.toVO(configDO);
         System.out.println(configVO);

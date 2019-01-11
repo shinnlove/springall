@@ -8,11 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.shinnlove.springall.service.wxpay.jsapipay.WXPayJSAPIService;
 import com.shinnlove.springall.util.tools.ResponseUtil;
@@ -34,14 +35,18 @@ public class WXPayController {
     /**
      * 微信jsapi支付。
      *
-     * @param orderId       订单id
-     * @param merchantId    商户id
-     * @param payParam      支付参数
-     * @param payType       支付类型
+     * @param requestData   json格式数据，包含：订单id、商户id、支付参数、支付类型
+     * @return
      */
     @RequestMapping(value = "/jsapi", method = RequestMethod.POST)
-    public JSONObject wxJsapiPay(String orderId, String merchantId,
-                                 @RequestParam(name = "payParam") String payParam, String payType) {
+    public JSONObject wxJsapiPay(@RequestBody String requestData) {
+
+        JSONObject data = JSON.parseObject(requestData);
+        String orderId = (String) data.get("order_id");
+        String merchantId = (String) data.get("merchant_id");
+        String payParam = (String) data.get("pay_param");
+        String payType = (String) data.get("pay_type");
+
         // 先根据payType判断，这里默认直接进入微信支付
         int type = Integer.valueOf(payType);
 

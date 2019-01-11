@@ -166,16 +166,17 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.26</version>
         </dependency>
-        <!-- 接入mybatis，特别注意：mybatis版本高，容易爆出错误，相应的mybatis-spring版本也要升级！！！ -->
+        <!-- 接入mybatis，特别注意：mybatis版本高，容易爆出错误，相应的mybatis-spring版本也要升级！！！3.3.1和1.3.1，我是怎么找到的？ -->
+        <!-- 小心出现org.mybatis.spring.transaction.SpringManagedTransaction.getTimeout()Ljava/lang/Integer; -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
-            <version>1.3.0</version>
+            <version>1.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.4.1</version>
+            <version>3.3.1</version>
         </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>

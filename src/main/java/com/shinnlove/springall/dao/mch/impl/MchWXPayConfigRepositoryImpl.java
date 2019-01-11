@@ -4,15 +4,14 @@
  */
 package com.shinnlove.springall.dao.mch.impl;
 
-import com.shinnlove.springall.dao.converter.WXPayMchConfigConverter;
-import com.shinnlove.springall.dao.mapper.WXPayMchConfigDaoMapper;
-import com.shinnlove.springall.dao.model.WXPayMchConfigDO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinnlove.springall.dao.converter.WXPayMchConfigConverter;
+import com.shinnlove.springall.dao.mapper.WXPayMchConfigDaoMapper;
 import com.shinnlove.springall.dao.mch.MchWXPayConfigRepository;
+import com.shinnlove.springall.dao.model.WXPayMchConfigDO;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
-
-import javax.annotation.Resource;
 
 /**
  * 商户微信支付仓储。
@@ -24,7 +23,7 @@ import javax.annotation.Resource;
 public class MchWXPayConfigRepositoryImpl implements MchWXPayConfigRepository {
 
     /** mybatis-mapper */
-    @Resource
+    @Autowired
     private WXPayMchConfigDaoMapper wxPayMchConfigDaoMapper;
 
     /**
