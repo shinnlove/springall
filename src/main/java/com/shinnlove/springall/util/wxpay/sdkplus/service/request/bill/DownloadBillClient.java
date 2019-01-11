@@ -55,15 +55,13 @@ public class DownloadBillClient extends WXPayRequestClient {
     }
 
     @Override
-    public String payRequestURL() {
+    public String requestURLSuffix() {
         if (wxPayMchConfig.isUseSandbox()) {
             // 沙箱环境
-            return WXPayConstants.HTTPS + WXPayConstants.DOMAIN_API
-                   + WXPayConstants.SANDBOX_DOWNLOADBILL_URL_SUFFIX;
+            return WXPayConstants.SANDBOX_DOWNLOADBILL_URL_SUFFIX;
         } else {
             // 正式环境
-            return WXPayConstants.HTTPS + WXPayConstants.DOMAIN_API
-                   + WXPayConstants.DOWNLOADBILL_URL_SUFFIX;
+            return WXPayConstants.DOWNLOADBILL_URL_SUFFIX;
         }
     }
 

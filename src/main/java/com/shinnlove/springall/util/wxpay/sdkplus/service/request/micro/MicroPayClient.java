@@ -42,7 +42,7 @@ public class MicroPayClient extends WXPayRequestClient {
     }
 
     @Override
-    public String payRequestURL() {
+    public String requestURLSuffix() {
         return null;
     }
 

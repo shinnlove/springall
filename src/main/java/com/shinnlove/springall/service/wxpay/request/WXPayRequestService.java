@@ -68,7 +68,7 @@ public class WXPayRequestService implements WXPayService {
         // 请求入参
         WXPayMchConfig mchConfig = client.getWxPayMchConfig();
         WXPayDomain domain = wxPayDomainService.getDomain();
-        String url = client.payRequestURL();
+        String url = client.requestURLSuffix();
         boolean useCert = client.requestNeedCert();
 
         // Step4：执行请求并且上报

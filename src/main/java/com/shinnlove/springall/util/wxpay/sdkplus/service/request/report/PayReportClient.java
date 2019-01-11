@@ -43,7 +43,7 @@ public class PayReportClient extends WXPayRequestClient {
     }
 
     @Override
-    public String payRequestURL() {
+    public String requestURLSuffix() {
         return null;
     }
 

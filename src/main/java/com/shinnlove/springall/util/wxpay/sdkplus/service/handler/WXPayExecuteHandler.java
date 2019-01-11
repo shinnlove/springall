@@ -24,10 +24,10 @@ public interface WXPayExecuteHandler {
     boolean requestNeedCert();
 
     /**
-     * 微信支付请求具体地址，这里可以设置主备域、沙箱与正式环境。
+     * 微信支付请求url后缀，可以配合主备域切换进行沙箱与正式环境的请求。
      *
      * @return
      */
-    String payRequestURL();
+    String requestURLSuffix();
 
 }

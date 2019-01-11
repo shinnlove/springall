@@ -89,15 +89,13 @@ public class RefundClient extends WXPayRequestClient {
     }
 
     @Override
-    public String payRequestURL() {
+    public String requestURLSuffix() {
         if (wxPayMchConfig.isUseSandbox()) {
             // 沙箱环境
-            return WXPayConstants.HTTPS + WXPayConstants.DOMAIN_API
-                   + WXPayConstants.SANDBOX_REFUND_URL_SUFFIX;
+            return WXPayConstants.SANDBOX_REFUND_URL_SUFFIX;
         } else {
             // 正式环境
-            return WXPayConstants.HTTPS + WXPayConstants.DOMAIN_API
-                   + WXPayConstants.REFUND_URL_SUFFIX;
+            return WXPayConstants.REFUND_URL_SUFFIX;
         }
     }
 

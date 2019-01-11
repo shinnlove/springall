@@ -62,15 +62,13 @@ public class QueryOrderClient extends WXPayRequestClient {
     }
 
     @Override
-    public String payRequestURL() {
+    public String requestURLSuffix() {
         if (wxPayMchConfig.isUseSandbox()) {
             // 沙箱环境
-            return WXPayConstants.HTTPS + WXPayConstants.DOMAIN_API
-                   + WXPayConstants.SANDBOX_ORDERQUERY_URL_SUFFIX;
+            return WXPayConstants.SANDBOX_ORDERQUERY_URL_SUFFIX;
         } else {
             // 正式环境
-            return WXPayConstants.HTTPS + WXPayConstants.DOMAIN_API
-                   + WXPayConstants.ORDERQUERY_URL_SUFFIX;
+            return WXPayConstants.ORDERQUERY_URL_SUFFIX;
         }
     }
 

@@ -41,20 +41,20 @@ public class WXPayController {
     @RequestMapping(value = "/jsapi", method = RequestMethod.POST)
     public JSONObject wxJsapiPay(@RequestBody String requestData) {
 
+        // 基础参数
         JSONObject data = JSON.parseObject(requestData);
         String orderId = (String) data.get("order_id");
         String merchantId = (String) data.get("merchant_id");
         String payParam = (String) data.get("pay_param");
         String payType = (String) data.get("pay_type");
 
-        // 先根据payType判断，这里默认直接进入微信支付
-        int type = Integer.valueOf(payType);
-
-        // 再将json的payParam解码成Map，校验参数，这里直接mock
-        Map<String, String> params = new HashMap<>();
+        // 支付入参
+        HashMap<String, String> params = JSON.parseObject(payParam, HashMap.class);
 
         long oId = Long.valueOf(orderId);
         long mId = Long.valueOf(merchantId);
+        // 先根据payType判断，这里默认直接进入微信支付
+        int type = Integer.valueOf(payType);
 
         // 做jsapi支付，理论上返回2个key，一个是平台payId，一个是prepayId
         Map<String, String> result = wxPayJSAPIService.jsapiPay(oId, mId, params);
