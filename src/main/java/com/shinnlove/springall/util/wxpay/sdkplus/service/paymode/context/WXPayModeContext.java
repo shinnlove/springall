@@ -7,10 +7,13 @@ package com.shinnlove.springall.util.wxpay.sdkplus.service.paymode.context;
 import java.util.Map;
 
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
+import com.shinnlove.springall.util.wxpay.sdkplus.consts.WXPayConstants;
 import com.shinnlove.springall.util.wxpay.sdkplus.enums.WXPayMode;
+import com.shinnlove.springall.util.wxpay.sdkplus.enums.WXPaySignType;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.paymode.strategy.WXPayModeStrategy;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.paymode.strategy.impl.OrdinaryPayModeStrategy;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.paymode.strategy.impl.ServicePayModeStrategy;
+import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 
 /**
  * 微信支付——支付模式上下文，对外屏蔽不同模式的差异。
@@ -49,7 +52,22 @@ public class WXPayModeContext {
      */
     public void fillRequestMainBodyParams(WXPayMchConfig wxPayMchConfig,
                                           final Map<String, String> payParameters) throws Exception {
+        // 不同策略
         wxPayModeStrategy.fillRequestMainBodyParams(wxPayMchConfig, payParameters);
+
+        // 准备签名
+        payParameters.put(WXPayConstants.NONCE_STR, WXPayUtil.generateUUID());
+        // 验签方式
+        if (WXPaySignType.MD5.equals(wxPayMchConfig.getSignType())) {
+            // MD5
+            payParameters.put(WXPayConstants.SIGN_TYPE, WXPayConstants.MD5);
+        } else if (WXPaySignType.HMACSHA256.equals(wxPayMchConfig.getSignType())) {
+            // HMACSHA256
+            payParameters.put(WXPayConstants.SIGN_TYPE, WXPayConstants.HMACSHA256);
+        }
+        String sign = WXPayUtil.generateSignature(payParameters, wxPayMchConfig.getApiKey(),
+            wxPayMchConfig.getSignType());
+        payParameters.put(WXPayConstants.SIGN, sign);
     }
 
 }

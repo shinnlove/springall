@@ -39,7 +39,7 @@ public abstract class WXPayRequestClient extends AbstractWXPayClient implements 
     @Override
     public void fillRequestParams(Map<String, String> keyPairs, final Map<String, String> payParams)
                                                                                                     throws Exception {
-        // 策略模式上下文填写请求主体信息
+        // 策略模式上下文填写请求主体信息与签名
         wxPayModeContext.fillRequestMainBodyParams(wxPayMchConfig, payParams);
 
         // 交给具体的子类完成其他请求必填参数
