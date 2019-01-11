@@ -25,6 +25,7 @@ import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
+import com.shinnlove.springall.util.wxpay.sdkplus.consts.WXPayConstants;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -105,7 +106,7 @@ public class WXPayRequestUtil {
                                       int connectTimeoutMs, int readTimeoutMs, boolean useCert)
                                                                                                throws Exception {
         String mchId = mchConfig.getMchId();
-        String url = "https://" + domain + urlSuffix;
+        String url = WXPayConstants.HTTPS + domain + urlSuffix;
 
         SSLConnectionSocketFactory socketFactory = SSLConnectionSocketFactory.getSocketFactory();
         if (useCert) {
