@@ -9,10 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import com.shinnlove.springall.dao.mch.MchWXPayConfigRepository;
 import com.shinnlove.springall.service.wxpay.response.WXPayResponseService;
@@ -55,6 +52,7 @@ public class WXPayNotifyController {
      */
     @RequestMapping(value = "/notify/merchantId/{merchantId}", method = { RequestMethod.GET,
             RequestMethod.POST }, produces = { "application/xml" })
+    @ResponseBody
     public String doResponseNotify(@PathVariable String merchantId, @RequestBody String xmlStr)
                                                                                                throws Exception {
         // 商户配置ready?
@@ -69,10 +67,10 @@ public class WXPayNotifyController {
             // 处理业务
             System.out.println(resp);
 
-            // 平台业务应答结果（签名验签）
+            // 平台业务应答结果（不需要签名验签）
             Map<String, String> respCheck = new HashMap<>();
-            respCheck.put("result", "success");
-            respCheck.put("sign", "23FGOAFH0QEHFSHDKF");
+            respCheck.put("return_code", "SUCCESS");
+            respCheck.put("return_msg", "OK");
 
             return respCheck;
         });
