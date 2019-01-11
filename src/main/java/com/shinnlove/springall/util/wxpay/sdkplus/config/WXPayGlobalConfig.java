@@ -7,12 +7,10 @@ package com.shinnlove.springall.util.wxpay.sdkplus.config;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.shinnlove.springall.util.wxpay.sdkplus.domain.WXPayDomain;
-
 /**
- * 微信支付全局配置。
- *
- * 本类包含主备域名切换、超时时间控制、重试次数等微信支付通信的全局配置（后续做成动态可切换配置）。
+ * 微信支付全局配置。本类包含超时时间控制、重试次数等微信支付通信的全局配置。
+ * 
+ * 备注：主备域名动态可切换配置由域名服务来做，不包含在全局配置中。
  *
  * @author shinnlove.jinsheng
  * @version $Id: WXPayGlobalConfig.java, v 0.1 2018-12-19 下午4:33 shinnlove.jinsheng Exp $$
@@ -20,47 +18,42 @@ import com.shinnlove.springall.util.wxpay.sdkplus.domain.WXPayDomain;
 public class WXPayGlobalConfig {
 
     /** http连接超时数 */
-    private int         httpConnectionTimeoutMs;
+    private int     httpConnectionTimeoutMs;
 
     /** http读取超时数 */
-    private int         httpReadTimeoutMs;
+    private int     httpReadTimeoutMs;
 
     /** 上报线程数 */
-    private int         reportWorkerNum;
+    private int     reportWorkerNum;
 
     /** 一次上报批量数 */
-    private int         reportBatchSize;
+    private int     reportBatchSize;
 
     /** 健康上报缓存消息的最大数量，会有线程去独立上报。粗略计算：加入一条消息200B，10000消息占用空间 2000 KB，约为2MB，可以接受 */
-    private int         reportQueueMaxSize;
+    private int     reportQueueMaxSize;
 
     /** 是否自动上报（不自动就写到持久化缓存或者MongoDB里） */
-    private boolean     autoReport;
-
-    /** 微信支付域名 */
-    private WXPayDomain domain;
+    private boolean autoReport;
 
     /**
      * 这个可以做成spring bean来配置，或者spring-cloud的git配置。
      *
-     * @param httpConnectionTimeoutMs
+     * @param httpConnectionTimeoutMs 
      * @param httpReadTimeoutMs
      * @param reportWorkerNum
      * @param reportBatchSize
      * @param reportQueueMaxSize
      * @param autoReport
-     * @param domain
      */
     public WXPayGlobalConfig(int httpConnectionTimeoutMs, int httpReadTimeoutMs,
                              int reportWorkerNum, int reportBatchSize, int reportQueueMaxSize,
-                             boolean autoReport, WXPayDomain domain) {
+                             boolean autoReport) {
         this.httpConnectionTimeoutMs = httpConnectionTimeoutMs;
         this.httpReadTimeoutMs = httpReadTimeoutMs;
         this.reportWorkerNum = reportWorkerNum;
         this.reportBatchSize = reportBatchSize;
         this.reportQueueMaxSize = reportQueueMaxSize;
         this.autoReport = autoReport;
-        this.domain = domain;
     }
 
     /**
@@ -164,24 +157,6 @@ public class WXPayGlobalConfig {
      */
     public void setAutoReport(boolean autoReport) {
         this.autoReport = autoReport;
-    }
-
-    /**
-     * Getter method for property domain.
-     *
-     * @return property value of domain
-     */
-    public WXPayDomain getDomain() {
-        return domain;
-    }
-
-    /**
-     * Setter method for property domain.
-     *
-     * @param domain value to be assigned to property domain
-     */
-    public void setDomain(WXPayDomain domain) {
-        this.domain = domain;
     }
 
     /**
