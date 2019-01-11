@@ -22,15 +22,25 @@ import com.shinnlove.springall.util.wxpay.sdkplus.consts.WXPayConstants;
 public class WXPayAssert {
 
     /**
+     * 检测商户微信支付配置是否存在。
+     *
+     * @param config
+     * @throws SystemException
+     */
+    public static void confExist(WXPayMchConfig config) throws SystemException {
+        if (config == null) {
+            throw new SystemException("商户未完善微信支付信息，请稍后再试");
+        }
+    }
+
+    /**
      * 检测商户微信配置是否ready和可用。
      *
      * @param config
      * @throws SystemException
      */
     public static void confAvailable(WXPayMchConfig config) throws SystemException {
-        if (config == null) {
-            throw new SystemException("商户未完善微信支付信息，请稍后再试");
-        }
+        confExist(config);
         if (!config.isAvailable()) {
             throw new SystemException("商户微信支付未开启，请联系商户配置");
         }

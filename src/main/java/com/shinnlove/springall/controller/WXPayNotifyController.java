@@ -5,15 +5,18 @@
 package com.shinnlove.springall.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.shinnlove.springall.dao.mch.MchWXPayConfigRepository;
 import com.shinnlove.springall.service.wxpay.response.WXPayResponseService;
+import com.shinnlove.springall.service.wxpay.util.WXPayAssert;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.response.pay.WXPayNotifyClient;
 
@@ -34,23 +37,30 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.response.pay.WXPayNoti
 @RequestMapping(value = "/wxpayresult")
 public class WXPayNotifyController {
 
+    /** 微信配置仓储 */
+    @Autowired
+    private MchWXPayConfigRepository mchWXPayConfigRepository;
+
     /** 微信响应服务 */
     @Autowired
-    private WXPayResponseService wxPayResponseService;
+    private WXPayResponseService     wxPayResponseService;
 
     /**
      * 处理微信支付通知。
      *
+     * @param merchantId 
      * @param xmlStr
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/notify", method = { RequestMethod.GET, RequestMethod.POST })
-    @ResponseBody
-    public String doResponseNotify(@RequestBody String xmlStr) throws Exception {
-
-        // 商户配置
-        WXPayMchConfig mchConfig = new WXPayMchConfig();
+    @RequestMapping(value = "/notify/merchantId/{merchantId}", method = { RequestMethod.GET,
+            RequestMethod.POST }, produces = { "application/xml" })
+    public String doResponseNotify(@PathVariable String merchantId, @RequestBody String xmlStr)
+                                                                                               throws Exception {
+        // 商户配置ready?
+        WXPayMchConfig mchConfig = mchWXPayConfigRepository.queryWXPayConfigByMchId(Long
+            .valueOf(merchantId));
+        WXPayAssert.confExist(mchConfig);
 
         WXPayNotifyClient client = new WXPayNotifyClient(mchConfig);
 
@@ -58,8 +68,13 @@ public class WXPayNotifyController {
         String result = wxPayResponseService.doCallbackResponse(client, xmlStr, (resp) -> {
             // 处理业务
             System.out.println(resp);
-            // 平台业务应答结果
-            return new HashMap<>();
+
+            // 平台业务应答结果（签名验签）
+            Map<String, String> respCheck = new HashMap<>();
+            respCheck.put("result", "success");
+            respCheck.put("sign", "23FGOAFH0QEHFSHDKF");
+
+            return respCheck;
         });
 
         // 响应给微信
