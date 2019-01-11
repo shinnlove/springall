@@ -48,7 +48,7 @@ public interface WXPayRecordDaoMapper {
      * a) 统一支付得到预支付id
      * b) 支付得到响应回调
      *
-     * @param record
+     * @param record 
      * @return
      */
     int updateWXPayRecord(WXPayRecord record);

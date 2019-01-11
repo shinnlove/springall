@@ -4,12 +4,12 @@
  */
 package com.shinnlove.springall.dao.mapper;
 
-import com.shinnlove.springall.dao.model.WXPayRecord;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.shinnlove.springall.dao.model.WXPayRecord;
 
 import javax.annotation.Resource;
 
@@ -34,6 +34,19 @@ public class WXPayRecordDaoMapperTest {
         WXPayRecord record = wxPayRecordDaoMapper.getWXPayRecordByOrderId(orderId);
         System.out.println(record.getMerchantId());
         System.out.println(record);
+    }
+
+    @Test
+    public void test_updateWXPayRecord() {
+        WXPayRecord record = new WXPayRecord();
+        record.setOrderId(666666L);
+
+        record.setPrepayId("wx21432512395713498571234");
+        record.setSign("T34THJKEJKQBE4590342890HGF");
+        record.setNonceStr("n42243jfewg09uwe");
+
+        int result = wxPayRecordDaoMapper.updateWXPayRecord(record);
+        System.out.println(result);
     }
 
 }

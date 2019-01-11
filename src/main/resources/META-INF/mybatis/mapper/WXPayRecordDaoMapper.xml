@@ -60,8 +60,8 @@
         VALUES (#{id},#{name},#{password})
     </insert>
     <update id="updateWXPayRecord" parameterType="WXPayRecord">
-    UPDATE wxpay_record SET prepay_id=#{prepayId}#, nonce_str=#{nonceStr}#, sign=#{sign}#
-    WHERE order_id=#{orderId}
+      UPDATE wxpay_record SET prepay_id = #{prepayId}, nonce_str = #{nonceStr}, sign = #{sign}
+      WHERE order_id = #{orderId}
     </update>
     <!--<delete id="deleteUser" parameterType="int">-->
     <!--DELETE FROM user WHERE id=#{id}-->
