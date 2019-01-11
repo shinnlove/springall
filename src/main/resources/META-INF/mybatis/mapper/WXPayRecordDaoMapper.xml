@@ -59,9 +59,10 @@
         code_url, err_code, err_code_des, create_time, modify_time, remark)
         VALUES (#{id},#{name},#{password})
     </insert>
-    <!--<update id="updateUser" parameterType="User">-->
-    <!--UPDATE user SET password=#{password} WHERE id=#{id}-->
-    <!--</update>-->
+    <update id="updateWXPayRecord" parameterType="WXPayRecord">
+    UPDATE wxpay_record SET prepay_id=#{prepayId}#, nonce_str=#{nonceStr}#, sign=#{sign}#
+    WHERE order_id=#{orderId}
+    </update>
     <!--<delete id="deleteUser" parameterType="int">-->
     <!--DELETE FROM user WHERE id=#{id}-->
     <!--</delete>-->
