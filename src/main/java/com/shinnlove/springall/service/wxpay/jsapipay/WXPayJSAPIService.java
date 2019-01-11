@@ -118,7 +118,8 @@ public class WXPayJSAPIService {
                 throw e;
             } catch (Exception e) {
                 // 超时、dns解析、签名验签、稀奇古怪错误等统统穿上马甲扔给切面
-                throw new SystemException(SystemResultCode.WXPAY_UNIFIED_ORDER_ERROR, e);
+                throw new SystemException(SystemResultCode.WXPAY_UNIFIED_ORDER_ERROR, e, e
+                    .getMessage());
             }
 
             // 平台盖章
