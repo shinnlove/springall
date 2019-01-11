@@ -144,4 +144,25 @@ public final class WXPayConstants {
     /** 微信支付业务错误描述（目前此字段不知道是否还有） */
     public static final String ERR_CODE_DES                        = "err_code_des";
 
+    // 刷卡支付响应字段
+
+    /** 刷卡支付错误码 */
+    public static final String ERR_CODE                            = "err_code";
+
+    // 刷卡支付状态机
+
+    /** 用户支付中 */
+    public static final String USERPAYING                          = "USERPAYING";
+    /** 刷卡支付系统错误 */
+    public static final String SYSTEMERROR                         = "SYSTEMERROR";
+
+    // 订单查询相关字段
+
+    /** 刷卡支付hold单状态：1-成功；2-系统错误或用户支付中，继续查询；0-查无此单 */
+    public static final String MICRO_HOLD_STATUS                   = "micro_hold_status";
+    /** 订单交易状态 */
+    public static final String TRADE_STATE                         = "trade_state";
+    /** 订单交易状态 */
+    public static final String ORDERNOTEXIST                       = "ORDERNOTEXIST";
+
 }

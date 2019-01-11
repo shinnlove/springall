@@ -20,6 +20,12 @@ import com.shinnlove.springall.util.tools.ResponseUtil;
  *
  * 这个接口是给订单系统的掉单模块（掉单系统）查询支付状态用的。
  *
+ * 订单控制器应该包含两个服务：
+ * 1、订单支付表查询服务；
+ * 2、微信支付查询订单服务（或支付宝支付订单查询服务）。
+ *
+ * 后续全部开发完可以重新调整下结构。
+ *
  * @author shinnlove.jinsheng
  * @version $Id: WXPayController.java, v 0.1 2018-12-20 09:56 shinnlove.jinsheng Exp $$
  */

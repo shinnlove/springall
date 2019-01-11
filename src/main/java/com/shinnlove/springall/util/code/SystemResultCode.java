@@ -48,6 +48,9 @@ public enum SystemResultCode implements BaseEnum {
     /** 微信支付统一下单出错 */
     WXPAY_UNIFIED_ORDER_ERROR("20001", "微信支付统一下单出错"),
 
+    /** 微信支付刷卡支付出错 */
+    WXPAY_MICRO_PAY_ERROR("20002", "微信支付刷卡支付出错"),
+
     ;
 
     /** 错误码 */
