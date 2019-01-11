@@ -6,11 +6,12 @@ package com.shinnlove.springall.service.wxpay.response;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinnlove.springall.service.wxpay.callback.WXPayBizCallback;
+import com.shinnlove.springall.service.wxpay.config.WXPayGlobalConfigService;
 import com.shinnlove.springall.service.wxpay.handler.WXPayCallback;
-import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayGlobalConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.handler.WXPayRespMsgHandler;
 import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 
@@ -23,8 +24,9 @@ import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 @Service
 public class WXPayResponseService implements WXPayCallback {
 
-    /** 微信支付全局配置 */
-    private WXPayGlobalConfig config;
+    /** 微信支付全局配置服务 */
+    @Autowired
+    private WXPayGlobalConfigService wxPayGlobalConfigService;
 
     @Override
     public String doCallbackResponse(WXPayRespMsgHandler client, String responseXml,

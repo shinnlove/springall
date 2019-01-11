@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinnlove.springall.service.wxpay.callback.WXPayBizCallback;
+import com.shinnlove.springall.service.wxpay.config.WXPayGlobalConfigService;
 import com.shinnlove.springall.service.wxpay.handler.WXPayService;
 import com.shinnlove.springall.service.wxpay.report.WXPayDomainService;
 import com.shinnlove.springall.service.wxpay.report.WXPayReportService;
@@ -33,16 +34,17 @@ import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 @Service
 public class WXPayRequestService implements WXPayService {
 
-    /** 微信支付全局配置 */
-    private WXPayGlobalConfig  config;
+    /** 微信支付全局配置服务 */
+    @Autowired
+    private WXPayGlobalConfigService wxPayGlobalConfigService;
 
     /** 微信支付域名服务 */
     @Autowired
-    private WXPayDomainService wxPayDomainService;
+    private WXPayDomainService       wxPayDomainService;
 
     /** 微信支付上报服务 */
     @Autowired
-    private WXPayReportService wxPayReportService;
+    private WXPayReportService       wxPayReportService;
 
     /**
      * @see WXPayService#doPayRequest(com.shinnlove.springall.util.wxpay.sdkplus.service.request.base.WXPayRequestClient, java.util.Map, com.shinnlove.springall.service.wxpay.callback.WXPayBizCallback)
@@ -50,7 +52,7 @@ public class WXPayRequestService implements WXPayService {
     @Override
     public Map<String, String> doPayRequest(WXPayRequestClient client,
                                             Map<String, String> keyPairs, WXPayBizCallback callback)
-                                                                                               throws Exception {
+                                                                                                    throws Exception {
         // 一次微信请求的payParameters可以作为这个函数的局部变量栈上分配优化...
         Map<String, String> payParams = new HashMap<>();
 
@@ -95,6 +97,7 @@ public class WXPayRequestService implements WXPayService {
      */
     private String requestAndReport(WXPayMchConfig mchConfig, WXPayDomain domain, String url,
                                     String reqBody, boolean useCert) throws Exception {
+        WXPayGlobalConfig config = wxPayGlobalConfigService.getGlobalConfig();
         // 统计信息
         long elapsedTimeMillis = 0;
         long startTimestampMs = WXPayUtil.getCurrentTimestampMs();

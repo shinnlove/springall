@@ -9,23 +9,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinnlove.springall.service.wxpay.config.WXPayGlobalConfigService;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayGlobalConfig;
+import com.shinnlove.springall.util.wxpay.sdkplus.http.WXPayRequestUtil;
 import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 
 /**
@@ -37,8 +28,9 @@ import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 @Service
 public class WXPayReportService implements InitializingBean {
 
-    /** 微信支付全局配置 */
-    private WXPayGlobalConfig           config;
+    /** 微信支付全局配置服务 */
+    @Autowired
+    private WXPayGlobalConfigService    wxPayGlobalConfigService;
 
     /** 微信支付上报地址 */
     private static final String         REPORT_URL                    = "http://report.mch.weixin.qq.com/wxpay/report/default";
@@ -85,46 +77,10 @@ public class WXPayReportService implements InitializingBean {
         }
     }
 
-    /**
-     * http 请求，都是Young GC一次性请求。
-     *
-     * @param data
-     * @param connectTimeoutMs
-     * @param readTimeoutMs
-     * @return
-     * @throws Exception
-     */
-    private String httpRequest(String data, int connectTimeoutMs, int readTimeoutMs)
-                                                                                    throws Exception {
-        // 默认单线程连接管理器、默认连接工厂、默认schema解析、默认dns
-        BasicHttpClientConnectionManager connManager;
-        connManager = new BasicHttpClientConnectionManager(RegistryBuilder
-            .<ConnectionSocketFactory> create()
-            .register("http", PlainConnectionSocketFactory.getSocketFactory())
-            .register("https", SSLConnectionSocketFactory.getSocketFactory()).build(), null, null,
-            null);
-        HttpClient httpClient = HttpClientBuilder.create().setConnectionManager(connManager)
-            .build();
-
-        // 上报信息地址用post
-        HttpPost httpPost = new HttpPost(REPORT_URL);
-
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(readTimeoutMs)
-            .setConnectTimeout(connectTimeoutMs).build();
-        httpPost.setConfig(requestConfig);
-
-        StringEntity postEntity = new StringEntity(data, "UTF-8");
-        httpPost.addHeader("Content-Type", "text/xml");
-        httpPost.addHeader("User-Agent", "wxpay sdk java v1.0 "); // TODO: 很重要，用来检测 sdk 的使用情况，要不要加上商户信息？
-        httpPost.setEntity(postEntity);
-
-        HttpResponse httpResponse = httpClient.execute(httpPost);
-        HttpEntity httpEntity = httpResponse.getEntity();
-        return EntityUtils.toString(httpEntity, "UTF-8");
-    }
-
     @Override
     public void afterPropertiesSet() throws Exception {
+        WXPayGlobalConfig config = wxPayGlobalConfigService.getGlobalConfig();
+
         // 创建异步线程池，若自动上报则线程池while(true)处理队列。
         reportMsgQueue = new LinkedBlockingQueue<String>(config.getReportQueueMaxSize());
 
@@ -168,8 +124,11 @@ public class WXPayReportService implements InitializingBean {
                                         sb.append(msg);
                                     }
                                 }
-                                // 上报(httpclient-post上报)
-                                httpRequest(sb.toString(), DEFAULT_CONNECTION_TIMEOUT_MS,
+
+                                // 上报(httpclient-post上报)，在runnable线程中Young GC一次性请求
+                                WXPayRequestUtil.doHttpPost(
+                                    SSLConnectionSocketFactory.getSocketFactory(), REPORT_URL, "",
+                                    sb.toString(), DEFAULT_CONNECTION_TIMEOUT_MS,
                                     DEFAULT_READ_TIMEOUT_MS);
                             } catch (Exception ex) {
                                 WXPayUtil.getLogger().warn("report fail. reason: {}",
