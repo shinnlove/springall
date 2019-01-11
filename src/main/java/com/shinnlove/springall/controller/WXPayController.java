@@ -24,6 +24,7 @@ import com.shinnlove.springall.util.tools.ResponseUtil;
  * @version $Id: WXPayController.java, v 0.1 2018-12-21 20:32 shinnlove.jinsheng Exp $$
  */
 @RestController
+@RequestMapping(value = "/wxpay")
 public class WXPayController {
 
     /** jsapi支付服务 */
@@ -38,7 +39,7 @@ public class WXPayController {
      * @param payParam      支付参数
      * @param payType       支付类型
      */
-    @RequestMapping(value = "/wxpay/jsapi", method = RequestMethod.POST)
+    @RequestMapping(value = "/jsapi", method = RequestMethod.POST)
     public JSONObject wxJsapiPay(String orderId, String merchantId,
                                  @RequestParam(name = "payParam") String payParam, String payType) {
         // 先根据payType判断，这里默认直接进入微信支付

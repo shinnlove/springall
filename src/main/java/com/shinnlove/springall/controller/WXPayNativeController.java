@@ -26,6 +26,7 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.response.scan.WXNative
  * @version $Id: WXPayNativeController.java, v 0.1 2018-12-21 下午1:11 shinnlove.jinsheng Exp $$
  */
 @Controller
+@RequestMapping(value = "/native")
 public class WXPayNativeController {
 
     /** 微信响应服务 */
@@ -38,7 +39,7 @@ public class WXPayNativeController {
      * @param xmlStr
      * @return
      */
-    @RequestMapping(value = "/wxpay/notify", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/notify", method = { RequestMethod.GET, RequestMethod.POST })
     public String nativeScan(@RequestBody String xmlStr) throws Exception {
 
         // 商户配置

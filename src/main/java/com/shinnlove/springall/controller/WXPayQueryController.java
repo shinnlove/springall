@@ -24,6 +24,7 @@ import com.shinnlove.springall.util.tools.ResponseUtil;
  * @version $Id: WXPayController.java, v 0.1 2018-12-20 09:56 shinnlove.jinsheng Exp $$
  */
 @RestController
+@RequestMapping(value = "/wxpayquery")
 public class WXPayQueryController {
 
     /** 微信支付订单查询服务 */
@@ -38,7 +39,7 @@ public class WXPayQueryController {
      * @param orderId 
      * @return
      */
-    @RequestMapping(value = "/wxpay/orderquery", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderquery", method = RequestMethod.POST)
     public JSONObject orderQuery(String orderId) {
 
         Map<String, String> result = wxPayQueryOrderService.queryWXPayOrder(Long.valueOf(orderId));

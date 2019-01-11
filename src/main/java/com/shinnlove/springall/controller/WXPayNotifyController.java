@@ -31,6 +31,7 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.response.pay.WXPayNoti
  * @version $Id: WXPayNotifyController.java, v 0.1 2018-12-20 下午3:17 shinnlove.jinsheng Exp $$
  */
 @Controller
+@RequestMapping(value = "/wxpayresult")
 public class WXPayNotifyController {
 
     /** 微信响应服务 */
@@ -44,7 +45,7 @@ public class WXPayNotifyController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/wxpay/notify", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/notify", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public String doResponseNotify(@RequestBody String xmlStr) throws Exception {
 
