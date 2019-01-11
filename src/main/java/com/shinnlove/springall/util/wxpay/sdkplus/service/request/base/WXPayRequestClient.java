@@ -7,10 +7,13 @@ package com.shinnlove.springall.util.wxpay.sdkplus.service.request.base;
 import java.util.Map;
 
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
+import com.shinnlove.springall.util.wxpay.sdkplus.consts.WXPayConstants;
+import com.shinnlove.springall.util.wxpay.sdkplus.enums.WXPaySignType;
 import com.shinnlove.springall.util.wxpay.sdkplus.http.WXPayRequestUtil;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.client.AbstractWXPayClient;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.handler.WXPayExecuteHandler;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.handler.WXPayParamsHandler;
+import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
 
 /**
  * 微信支付主动请求抽象类。
@@ -36,14 +39,31 @@ public abstract class WXPayRequestClient extends AbstractWXPayClient implements 
         super(wxPayMchConfig);
     }
 
+    /**
+     * @see WXPayParamsHandler#fillRequestParams(java.util.Map, java.util.Map)
+     */
     @Override
     public void fillRequestParams(Map<String, String> keyPairs, final Map<String, String> payParams)
                                                                                                     throws Exception {
-        // 策略模式上下文填写请求主体信息与签名
+        // Step1：策略模式上下文填写请求主体信息与签名
         wxPayModeContext.fillRequestMainBodyParams(wxPayMchConfig, payParams);
 
-        // 交给具体的子类完成其他请求必填参数
+        // Step2：交给具体的子类完成其他请求必填参数
         fillRequestDetailParams(keyPairs, payParams);
+
+        // Step3：准备签名，特别注意：签名一定是等到最后信息全部填完了再签!!!
+        payParams.put(WXPayConstants.NONCE_STR, WXPayUtil.generateUUID());
+        // 验签方式
+        if (WXPaySignType.MD5.equals(wxPayMchConfig.getSignType())) {
+            // MD5
+            payParams.put(WXPayConstants.SIGN_TYPE, WXPayConstants.MD5);
+        } else if (WXPaySignType.HMACSHA256.equals(wxPayMchConfig.getSignType())) {
+            // HMACSHA256
+            payParams.put(WXPayConstants.SIGN_TYPE, WXPayConstants.HMACSHA256);
+        }
+        String sign = WXPayUtil.generateSignature(payParams, wxPayMchConfig.getApiKey(),
+            wxPayMchConfig.getSignType());
+        payParams.put(WXPayConstants.SIGN, sign);
     }
 
     /**
