@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.shinnlove.springall.service.wxpay.jsapipay.WXPayJSAPIService;
+import com.shinnlove.springall.util.consts.SystemPayConsts;
 import com.shinnlove.springall.util.tools.ResponseUtil;
 
 /**
@@ -48,8 +49,9 @@ public class WXPayController {
         String payParam = (String) data.get("pay_param");
         String payType = (String) data.get("pay_type");
 
-        // 支付入参
+        // 支付入参，一并塞入merchantId做notifyURL的拼接
         HashMap<String, String> params = JSON.parseObject(payParam, HashMap.class);
+        params.put(SystemPayConsts.MERCHANT_ID, merchantId);
 
         long oId = Long.valueOf(orderId);
         long mId = Long.valueOf(merchantId);

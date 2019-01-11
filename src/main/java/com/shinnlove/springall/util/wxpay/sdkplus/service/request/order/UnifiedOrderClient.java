@@ -6,6 +6,7 @@ package com.shinnlove.springall.util.wxpay.sdkplus.service.request.order;
 
 import java.util.Map;
 
+import com.shinnlove.springall.util.consts.SystemPayConsts;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.consts.WXPayConstants;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.request.base.WXPayRequestClient;
@@ -86,8 +87,10 @@ public class UnifiedOrderClient extends WXPayRequestClient {
         payParams.put(WXPayConstants.OUT_TRADE_NO, keyPairs.get(WXPayConstants.OUT_TRADE_NO));
         // 总金额，单位为分，不能带小数点
         payParams.put(WXPayConstants.TOTAL_FEE, keyPairs.get(WXPayConstants.TOTAL_FEE));
-        // 支付通知地址，接收微信支付成功通知
-        payParams.put(WXPayConstants.NOTIFY_URL, keyPairs.get(WXPayConstants.NOTIFY_URL));
+        // 支付通知地址，接收微信支付成功通知（每个商户带参数）
+        String merchantId = keyPairs.get(SystemPayConsts.MERCHANT_ID);
+        String notifyURL = keyPairs.get(WXPayConstants.NOTIFY_URL) + "/merchantId/" + merchantId;
+        payParams.put(WXPayConstants.NOTIFY_URL, notifyURL);
         // 本函数处理的交易类型:JSAPI（JSAPI、NATIVE、APP三种）
         payParams.put(WXPayConstants.TRADE_TYPE, keyPairs.get(WXPayConstants.TRADE_TYPE));
 
