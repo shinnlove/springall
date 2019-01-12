@@ -6,10 +6,13 @@ package com.shinnlove.springall.service.wxpay.micropay;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -36,7 +39,7 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.request.micro.MicroPay
  * @version $Id: WXPayMicroService.java, v 0.1 2019-01-11 20:30 shinnlove.jinsheng Exp $$
  */
 @Service
-public class WXPayMicroService {
+public class WXPayMicroService implements InitializingBean {
 
     /** log4j2日志 */
     private static final Logger      LOGGER = LoggerFactory.getLogger(WXPayMicroService.class);
@@ -63,6 +66,9 @@ public class WXPayMicroService {
     /** 微信支付订单查询服务 */
     @Autowired
     private WXPayQueryOrderService   wxPayQueryOrderService;
+
+    /** 刷卡查单异步任务线程池 */
+    private ExecutorService          executorService;
 
     /**
      * 进行微信刷卡支付，尽可能等待用户微信侧的支付成功。
@@ -132,13 +138,14 @@ public class WXPayMicroService {
      *
      * 主订单表的订单若未支付，还是可以重复支付。
      *
-     * @param orderId    
-     * @param merchantId
-     * @param payParams
+     * @param orderId       刷卡支付订单号
+     * @param merchantId    刷卡支付商户id
+     * @param payParams     刷卡支付参数
+     * @param asyncHoldOn   用户支付中...状态时：false-锁死主线程hold单查询 | true-异步查询直接返回
      * @return
      */
     public Map<String, String> microPay(final long orderId, final long merchantId,
-                                        final Map<String, String> payParams) {
+                                        final Map<String, String> payParams, boolean asyncHoldOn) {
         // ready?
         WXPayMchConfig mchConfig = mchWXPayConfigRepository.queryWXPayConfigByMchId(merchantId);
         WXPayAssert.confAvailable(mchConfig);
@@ -150,7 +157,7 @@ public class WXPayMicroService {
             wxPayRecordRepository.insertRecord(record);
         }
 
-        Map<String, String> result = doMicroPay(mchConfig, payParams);
+        final Map<String, String> result = doMicroPay(mchConfig, payParams);
 
         if (WXPayConstants.SUCCESS.equalsIgnoreCase(result.get(WXPayConstants.RESULT_CODE))) {
             // 刷卡支付一次成功，盖章平台支付id并返回
@@ -159,13 +166,19 @@ public class WXPayMicroService {
             return result;
         }
 
-        // 代码走到这里，一定是刷卡支付没有双SUCCESS（很有可能用户支付中），需要开始循环查询订单状态
-        // TODO：这样做是hold住了主线程，导致商户侧订单系统请求支付系统一直waiting。
-        //  可以直接返回用户支付中给订单系统，然后让其定时查询（最多30秒不行撤单）确定是否支付成功。
-        //  这样如下的代码可以放在异步线程中去做，以DB状态为衔接点。
-        holdOnForPay(orderId, merchantId, result, 10);
+        // 代码走到这里，刷卡支付没有双SUCCESS（很有可能用户支付中），需要开始循环查询订单状态
 
-        // TODO：代码走到这里，不得不说努力10次都未成功真是遗憾，只好开启异步任务1分钟20次不停轮询了...
+        if (!asyncHoldOn) {
+            // 刷卡业务方要求同步hold单10次
+            holdOnForPay(orderId, merchantId, result, 10, 2);
+        }
+
+        // hold单没成功或压根没做，异步任务，交给你了...
+        if (!WXPayConstants.SUCCESS.equalsIgnoreCase(result.get(WXPayConstants.RESULT_CODE))) {
+            // Case1：不得不说努力10次都未成功真是遗憾...；Case2：去吧，皮卡丘...
+            // 异步任务以DB为衔接点，坐等上游系统查询
+            executorService.submit(() -> holdOnForPay(orderId, merchantId, result, 20, 3));
+        }
 
         return result;
     }
@@ -207,21 +220,19 @@ public class WXPayMicroService {
      * @param merchantId    订单所属商户id
      * @param firstResp     第一次刷卡支付返回的原始结果
      * @param retryCount    hold单查询次数
-     * @return
+     * @param interval      hold单查询间隙秒数
      */
-    private Map<String, String> holdOnForPay(final long orderId, final long merchantId,
-                                             final Map<String, String> firstResp, int retryCount) {
+    private void holdOnForPay(final long orderId, final long merchantId,
+                              final Map<String, String> firstResp, int retryCount, long interval) {
         if (--retryCount <= 0) {
-            return firstResp;
+            return;
         }
 
         try {
             Map<String, String> resp = wxPayQueryOrderService.queryWXPayOrder(orderId, merchantId);
-
             LoggerUtil.info(LOGGER, "查询刷卡支付第", (10 - retryCount), "返回resp=", resp);
 
             int holdStatus = Integer.valueOf(resp.get(WXPayConstants.MICRO_HOLD_STATUS));
-
             if (holdStatus == 1) {
 
                 // TODO：这一次查询如果成功了，是否查询返回中有微信支付订单信息呢？
@@ -233,21 +244,21 @@ public class WXPayMicroService {
                 firstResp.remove(WXPayConstants.ERR_CODE);
                 firstResp.remove(WXPayConstants.ERR_CODE_DES);
 
-                return firstResp;
-
+                return;
             } else if (holdStatus == 2) {
-                sleepSilently(2);
+                sleepSilently(interval);
             } else {
                 // 其他情况一律异常不再重新查询
-                return firstResp;
+                // TODO：考虑将查询错误信息塞入？
+                return;
             }
 
         } catch (Exception e) {
             LoggerUtil.error(LOGGER, e, "刷卡支付验密中查询第", (10 - retryCount), "次出错，e=", e);
-            sleepSilently(2);
+            sleepSilently(interval);
         }
 
-        return holdOnForPay(orderId, merchantId, firstResp, retryCount);
+        holdOnForPay(orderId, merchantId, firstResp, retryCount, interval);
     }
 
     /**
@@ -297,6 +308,12 @@ public class WXPayMicroService {
 
         // TODO:记录到数据库中...
 
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // TODO：自定义线程池
+        executorService = Executors.newCachedThreadPool();
     }
 
 }

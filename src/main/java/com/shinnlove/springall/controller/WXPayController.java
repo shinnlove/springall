@@ -100,7 +100,8 @@ public class WXPayController {
         // 先根据payType判断，这里默认直接进入微信支付
         int type = Integer.valueOf(payType);
 
-        Map<String, String> result = wxPayMicroService.microPay(oId, mId, params);
+        // hold单做刷卡，后续这个参数透给上游
+        Map<String, String> result = wxPayMicroService.microPay(oId, mId, params, false);
 
         return ResponseUtil.success(result);
     }
