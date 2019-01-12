@@ -172,7 +172,7 @@ public class WXPayMchConfig {
      * 给模型转换器构造对象后初始化证书的显式调用。
      */
     public void loadCert() {
-        readCertData(sslCertPath);
+        readCertData(certP12);
     }
 
     /**

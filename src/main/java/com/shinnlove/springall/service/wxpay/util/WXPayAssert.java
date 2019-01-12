@@ -101,15 +101,30 @@ public class WXPayAssert {
      * @throws SystemException
      */
     public static void checkMicroPayResp(Map<String, String> resp) throws SystemException {
+        // 通信字段必须存在
         if (!resp.containsKey(WXPayConstants.RETURN_CODE)) {
             throw new SystemException("刷卡支付通信返回码不存在");
         }
+        // 通信失败直接失败
         String returnCode = resp.get(WXPayConstants.RETURN_CODE);
         if (!WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)) {
             throw new SystemException("刷卡支付通信失败，请稍后再试");
         }
+        // 业务字段也要存在
         if (!resp.containsKey(WXPayConstants.RESULT_CODE)) {
             throw new SystemException("刷卡支付业务返回码不存在");
+        }
+
+        // 如果是其他类型的错误，直接默认刷卡支付失败，抛错
+        String resultCode = resp.get(WXPayConstants.RESULT_CODE);
+        String errCode = resp.get(WXPayConstants.ERR_CODE);
+
+        if (WXPayConstants.FAIL.equalsIgnoreCase(resultCode)) {
+            if (!WXPayConstants.USERPAYING.equalsIgnoreCase(errCode)
+                && !WXPayConstants.SYSTEMERROR.equalsIgnoreCase(errCode)) {
+                String errMsg = resp.get(WXPayConstants.ERR_CODE_DES);
+                throw new SystemException("刷卡支付返回业务码状态错误：" + errMsg);
+            }
         }
     }
 

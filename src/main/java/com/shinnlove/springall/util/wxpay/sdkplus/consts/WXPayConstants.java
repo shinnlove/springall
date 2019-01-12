@@ -144,10 +144,12 @@ public final class WXPayConstants {
     /** 微信支付业务错误描述 */
     public static final String ERR_CODE_DES                        = "err_code_des";
 
-    // 刷卡支付
+    // 刷卡支付请求字段
 
     /** 刷卡支付用户授权码（钱包-付款-条形码） */
     public static final String AUTH_CODE                           = "auth_code";
+    /** 刷卡支付费用类型 */
+    public static final String FEE_TYPE                            = "fee_type";
     /** 商品详情 */
     public static final String DETAIL                              = "detail";
     /** 指定支付方式：no-credit|禁止信用卡刷卡 */
@@ -171,6 +173,14 @@ public final class WXPayConstants {
 
     /** 刷卡支付错误码 */
     public static final String ERR_CODE                            = "err_code";
+    /** 刷卡支付银行类型 */
+    public static final String BANK_TYPE                           = "bank_type";
+    /** 刷卡支付用户是否关注公众号 */
+    public static final String IS_SUBSCRIBE                        = "is_subscribe";
+    /** 刷卡支付中现金费用数 */
+    public static final String CASH_FEE                            = "cash_fee";
+    /** 刷卡支付中现金费用币种 */
+    public static final String CASH_FEE_TYPE                       = "cash_fee_type";
 
     // 刷卡支付状态机
 
