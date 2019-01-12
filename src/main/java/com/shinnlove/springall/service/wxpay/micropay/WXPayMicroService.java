@@ -209,6 +209,7 @@ public class WXPayMicroService implements InitializingBean {
             // 超时、dns解析、签名验签、稀奇古怪错误等统统穿上马甲扔给切面
             throw new SystemException(SystemResultCode.WXPAY_MICRO_PAY_ERROR, e, e.getMessage());
         }
+
         return result;
     }
 
@@ -230,7 +231,7 @@ public class WXPayMicroService implements InitializingBean {
 
         try {
             Map<String, String> resp = wxPayQueryOrderService.queryWXPayOrder(orderId, merchantId);
-            LoggerUtil.info(LOGGER, "查询刷卡支付第", (10 - retryCount), "返回resp=", resp);
+            LoggerUtil.info(LOGGER, "hold单查询刷卡支付，第", retryCount, "次返回resp=", resp);
 
             int holdStatus = Integer.valueOf(resp.get(WXPayConstants.MICRO_HOLD_STATUS));
             if (holdStatus == 1) {
@@ -254,7 +255,7 @@ public class WXPayMicroService implements InitializingBean {
             }
 
         } catch (Exception e) {
-            LoggerUtil.error(LOGGER, e, "刷卡支付验密中查询第", (10 - retryCount), "次出错，e=", e);
+            LoggerUtil.error(LOGGER, e, "刷卡支付验密中查询第", retryCount, "次出错，e=", e);
             sleepSilently(interval);
         }
 

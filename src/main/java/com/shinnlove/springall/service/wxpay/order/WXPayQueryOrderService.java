@@ -7,15 +7,19 @@ package com.shinnlove.springall.service.wxpay.order;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinnlove.springall.dao.mch.MchWXPayConfigRepository;
 import com.shinnlove.springall.dao.model.WXPayRecord;
 import com.shinnlove.springall.dao.wxpay.WXPayRecordRepository;
+import com.shinnlove.springall.service.wxpay.micropay.WXPayMicroService;
 import com.shinnlove.springall.service.wxpay.request.WXPayRequestService;
 import com.shinnlove.springall.util.code.SystemResultCode;
 import com.shinnlove.springall.util.exception.SystemException;
+import com.shinnlove.springall.util.log.LoggerUtil;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.consts.WXPayConstants;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.request.order.QueryOrderClient;
@@ -28,6 +32,9 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.request.order.QueryOrd
  */
 @Service
 public class WXPayQueryOrderService {
+
+    /** log4j2日志 */
+    private static final Logger      LOGGER = LoggerFactory.getLogger(WXPayMicroService.class);
 
     /** 微信配置仓储 */
     @Autowired
@@ -99,33 +106,10 @@ public class WXPayQueryOrderService {
         try {
             result = wxPayRequestService.doPayRequest(new QueryOrderClient(mchConfig), payParams,
                 (resp) -> {
-
-                    // 根据微信应答处理业务（这里可能是普通查询、也可能是刷卡查询，把交易状态一并带出来）
-
-                // 刷卡支付状态：2-系统错误、用户支付中则继续查询，0-不要查询了，1是成功
-                String microPayStatus = "2";
-
-                String returnCode = resp.get(WXPayConstants.RETURN_CODE);
-                String resultCode = resp.get(WXPayConstants.RESULT_CODE);
-                String errCode = resp.get(WXPayConstants.ERR_CODE);
-                String tradeState = resp.get(WXPayConstants.TRADE_STATE);
-
-                if (WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)
-                    && WXPayConstants.SUCCESS.equalsIgnoreCase(resultCode)) {
-                    if (WXPayConstants.SUCCESS.equalsIgnoreCase(tradeState)) {
-                        microPayStatus = "1";
-                    } else if (WXPayConstants.USERPAYING.equalsIgnoreCase(tradeState)) {
-                        microPayStatus = "2";
-                    }
-                } else if (WXPayConstants.ORDERNOTEXIST.equalsIgnoreCase(errCode)) {
-                    microPayStatus = "0";
-                }
-
-                // 追加刷卡支付查询状态
-                resp.put(WXPayConstants.MICRO_HOLD_STATUS, microPayStatus);
-
-                return null;
-            });
+                    LoggerUtil.info(LOGGER, "查询微信订单orderId=", orderId, "返回resp=", resp);
+                    addMicroPayStatus(resp);
+                    return null;
+                });
         } catch (SystemException e) {
             throw e;
         } catch (Exception e) {
@@ -133,6 +117,35 @@ public class WXPayQueryOrderService {
         }
 
         return result;
+    }
+
+    /**
+     * 根据微信应答处理业务（这里可能是普通查询、也可能是刷卡查询，把交易状态一并带出来）。
+     * 刷卡支付状态：2-系统错误、用户支付中则继续查询，0-不要查询了，1是成功。
+     *
+     * @param resp
+     */
+    private void addMicroPayStatus(final Map<String, String> resp) {
+        String microPayStatus = "2";
+
+        String returnCode = resp.get(WXPayConstants.RETURN_CODE);
+        String resultCode = resp.get(WXPayConstants.RESULT_CODE);
+        String errCode = resp.get(WXPayConstants.ERR_CODE);
+        String tradeState = resp.get(WXPayConstants.TRADE_STATE);
+
+        if (WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)
+            && WXPayConstants.SUCCESS.equalsIgnoreCase(resultCode)) {
+            if (WXPayConstants.SUCCESS.equalsIgnoreCase(tradeState)) {
+                microPayStatus = "1";
+            } else if (WXPayConstants.USERPAYING.equalsIgnoreCase(tradeState)) {
+                microPayStatus = "2";
+            }
+        } else if (WXPayConstants.ORDERNOTEXIST.equalsIgnoreCase(errCode)) {
+            microPayStatus = "0";
+        }
+
+        // 追加刷卡支付查询状态
+        resp.put(WXPayConstants.MICRO_HOLD_STATUS, microPayStatus);
     }
 
 }
