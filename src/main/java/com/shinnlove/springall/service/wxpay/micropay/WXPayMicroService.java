@@ -148,6 +148,8 @@ public class WXPayMicroService {
                 Map<String, String> queryResult = wxPayQueryOrderService.queryWXPayOrder(orderId,
                     merchantId);
 
+                LoggerUtil.info(LOGGER, "查询刷卡支付第", retryCount, "返回resp=", queryResult);
+
                 String holdStatus = queryResult.get(WXPayConstants.MICRO_HOLD_STATUS);
                 int hs = Integer.valueOf(holdStatus);
 
