@@ -95,18 +95,21 @@ public class WXPayAssert {
     /**
      * 校验微信刷卡支付响应参数。
      *
+     * result_code只要存在，返回给业务层自己处理，不做抛错。
+     *
      * @param resp 
      * @throws SystemException
      */
     public static void checkMicroPayResp(Map<String, String> resp) throws SystemException {
         if (!resp.containsKey(WXPayConstants.RETURN_CODE)) {
-            throw new SystemException("微信支付通信返回码不存在");
+            throw new SystemException("刷卡支付通信返回码不存在");
+        }
+        String returnCode = resp.get(WXPayConstants.RETURN_CODE);
+        if (!WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)) {
+            throw new SystemException("刷卡支付通信失败，请稍后再试");
         }
         if (!resp.containsKey(WXPayConstants.RESULT_CODE)) {
-            throw new SystemException("微信支付业务返回码不存在");
-        }
-        if (!resp.containsKey(WXPayConstants.OUT_TRADE_NO)) {
-            throw new SystemException("微信支付商户订单号不存在");
+            throw new SystemException("刷卡支付业务返回码不存在");
         }
     }
 

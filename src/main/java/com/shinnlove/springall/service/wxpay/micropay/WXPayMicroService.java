@@ -100,16 +100,13 @@ public class WXPayMicroService {
 
                     WXPayAssert.checkMicroPayResp(resp);
 
-                    String returnCode = resp.get(WXPayConstants.RETURN_CODE);
                     String resultCode = resp.get(WXPayConstants.RESULT_CODE);
                     String errCode = resp.get(WXPayConstants.ERR_CODE);
 
-                    // 支付失败返回奇怪错误码直接默认本次刷卡支付失败!!
-                    if (WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)
-                        && WXPayConstants.FAIL.equalsIgnoreCase(resultCode)) {
+                    if (WXPayConstants.FAIL.equalsIgnoreCase(resultCode)) {
                         if (!WXPayConstants.USERPAYING.equalsIgnoreCase(errCode)
                             && !WXPayConstants.SYSTEMERROR.equalsIgnoreCase(errCode)) {
-                            throw new SystemException("刷卡支付状态错误");
+                            throw new SystemException("刷卡支付返回业务码状态错误");
                         }
                     }
 
@@ -124,12 +121,10 @@ public class WXPayMicroService {
         }
 
         // 第一次刷卡支付的返回码和业务结果
-        String returnCode = result.get(WXPayConstants.RETURN_CODE);
         String resultCode = result.get(WXPayConstants.RESULT_CODE);
 
         // 刷卡支付如果成功直接盖章平台支付id并返回
-        if (WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)
-            && WXPayConstants.SUCCESS.equalsIgnoreCase(resultCode)) {
+        if (WXPayConstants.SUCCESS.equalsIgnoreCase(resultCode)) {
             result.put(PAY_ID, String.valueOf(record.getId()));
             return result;
         }
