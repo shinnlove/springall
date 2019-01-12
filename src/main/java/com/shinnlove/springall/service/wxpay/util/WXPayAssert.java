@@ -68,9 +68,7 @@ public class WXPayAssert {
 
         // TODO：result_code不是SUCCESS时需要映射一把错误码原因：@see https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 
-        if (!resp.containsKey(WXPayConstants.RESULT_CODE)) {
-            throw new SystemException("微信支付业务返回码不存在");
-        }
+        wxRespCommonCheck(resp);
 
         if (!WXPayConstants.SUCCESS.equalsIgnoreCase(resp.get(WXPayConstants.RESULT_CODE))) {
             String failMsg = resp.get(WXPayConstants.RESULT_CODE);
@@ -101,19 +99,7 @@ public class WXPayAssert {
      * @throws SystemException
      */
     public static void checkMicroPayResp(Map<String, String> resp) throws SystemException {
-        // 通信字段必须存在
-        if (!resp.containsKey(WXPayConstants.RETURN_CODE)) {
-            throw new SystemException("刷卡支付通信返回码不存在");
-        }
-        // 通信失败直接失败
-        String returnCode = resp.get(WXPayConstants.RETURN_CODE);
-        if (!WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)) {
-            throw new SystemException("刷卡支付通信失败，请稍后再试");
-        }
-        // 业务字段也要存在
-        if (!resp.containsKey(WXPayConstants.RESULT_CODE)) {
-            throw new SystemException("刷卡支付业务返回码不存在");
-        }
+        wxRespCommonCheck(resp);
 
         // 如果是其他类型的错误，直接默认刷卡支付失败，抛错
         String resultCode = resp.get(WXPayConstants.RESULT_CODE);
@@ -125,6 +111,38 @@ public class WXPayAssert {
                 String errMsg = resp.get(WXPayConstants.ERR_CODE_DES);
                 throw new SystemException("刷卡支付返回业务码状态错误：" + errMsg);
             }
+        }
+    }
+
+    /**
+     * 校验订单查询参数。
+     *
+     * @param resp 
+     * @throws SystemException
+     */
+    public static void checkOrderQueryResp(Map<String, String> resp) throws SystemException {
+        wxRespCommonCheck(resp);
+
+    }
+
+    /**
+     * 微信响应公共字段校验。
+     *
+     * @param resp
+     */
+    private static void wxRespCommonCheck(Map<String, String> resp) {
+        // 通信字段必须存在
+        if (!resp.containsKey(WXPayConstants.RETURN_CODE)) {
+            throw new SystemException("微信支付微信侧响应结果通信返回码不存在");
+        }
+        // 通信失败直接失败
+        String returnCode = resp.get(WXPayConstants.RETURN_CODE);
+        if (!WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)) {
+            throw new SystemException("微信支付微信侧响应结果通信失败，请稍后再试");
+        }
+        // 业务字段也要存在
+        if (!resp.containsKey(WXPayConstants.RESULT_CODE)) {
+            throw new SystemException("微信支付微信侧响应结果业务返回码不存在");
         }
     }
 

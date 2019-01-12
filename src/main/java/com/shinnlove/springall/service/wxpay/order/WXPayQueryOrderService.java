@@ -17,6 +17,7 @@ import com.shinnlove.springall.dao.model.WXPayRecord;
 import com.shinnlove.springall.dao.wxpay.WXPayRecordRepository;
 import com.shinnlove.springall.service.wxpay.micropay.WXPayMicroService;
 import com.shinnlove.springall.service.wxpay.request.WXPayRequestService;
+import com.shinnlove.springall.service.wxpay.util.WXPayAssert;
 import com.shinnlove.springall.util.code.SystemResultCode;
 import com.shinnlove.springall.util.exception.SystemException;
 import com.shinnlove.springall.util.log.LoggerUtil;
@@ -107,6 +108,7 @@ public class WXPayQueryOrderService {
             result = wxPayRequestService.doPayRequest(new QueryOrderClient(mchConfig), payParams,
                 (resp) -> {
                     LoggerUtil.info(LOGGER, "查询微信订单orderId=", orderId, "返回resp=", resp);
+                    WXPayAssert.checkOrderQueryResp(resp);
                     addMicroPayStatus(resp);
                     return null;
                 });
