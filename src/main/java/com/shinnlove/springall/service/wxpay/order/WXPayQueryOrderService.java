@@ -130,18 +130,16 @@ public class WXPayQueryOrderService {
     private void addMicroPayStatus(final Map<String, String> resp) {
         String microPayStatus = "2";
 
-        String returnCode = resp.get(WXPayConstants.RETURN_CODE);
-        String resultCode = resp.get(WXPayConstants.RESULT_CODE);
         String errCode = resp.get(WXPayConstants.ERR_CODE);
         String tradeState = resp.get(WXPayConstants.TRADE_STATE);
 
-        if (WXPayConstants.SUCCESS.equalsIgnoreCase(returnCode)
-            && WXPayConstants.SUCCESS.equalsIgnoreCase(resultCode)) {
-            if (WXPayConstants.SUCCESS.equalsIgnoreCase(tradeState)) {
-                microPayStatus = "1";
-            } else if (WXPayConstants.USERPAYING.equalsIgnoreCase(tradeState)) {
-                microPayStatus = "2";
-            }
+        // TODO：再明确下订单状态机所有类型
+        if (WXPayConstants.SUCCESS.equalsIgnoreCase(tradeState)) {
+            microPayStatus = "1";
+        } else if (WXPayConstants.USERPAYING.equalsIgnoreCase(tradeState)) {
+            microPayStatus = "2";
+        } else if (WXPayConstants.NOTPAY.equalsIgnoreCase(errCode)) {
+            microPayStatus = "0";
         } else if (WXPayConstants.ORDERNOTEXIST.equalsIgnoreCase(errCode)) {
             microPayStatus = "0";
         }

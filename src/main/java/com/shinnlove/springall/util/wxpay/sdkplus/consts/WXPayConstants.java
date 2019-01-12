@@ -186,6 +186,8 @@ public final class WXPayConstants {
 
     /** 用户支付中 */
     public static final String USERPAYING                          = "USERPAYING";
+    /** 订单未支付 */
+    public static final String NOTPAY                              = "NOTPAY";
     /** 刷卡支付系统错误 */
     public static final String SYSTEMERROR                         = "SYSTEMERROR";
 

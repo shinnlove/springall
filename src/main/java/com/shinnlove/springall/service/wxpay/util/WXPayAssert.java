@@ -122,7 +122,14 @@ public class WXPayAssert {
      */
     public static void checkOrderQueryResp(Map<String, String> resp) throws SystemException {
         wxRespCommonCheck(resp);
-
+        // 订单查询trade_state字段必须存在
+        if (!resp.containsKey(WXPayConstants.TRADE_STATE)) {
+            throw new SystemException("微信支付订单查询未返回订单交易状态字段");
+        }
+        String resultCode = resp.get(WXPayConstants.RESULT_CODE);
+        if (!WXPayConstants.SUCCESS.equalsIgnoreCase(resultCode)) {
+            throw new SystemException("微信支付订单查询返回结果显示业务失败");
+        }
     }
 
     /**

@@ -250,7 +250,7 @@ public class WXPayMicroService implements InitializingBean {
                 sleepSilently(interval);
             } else {
                 // 其他情况一律异常不再重新查询
-                // TODO：考虑将查询错误信息塞入？
+                // TODO：考虑将查询错误信息塞入？何时算是知道刷卡支付失败？？
                 return;
             }
 
