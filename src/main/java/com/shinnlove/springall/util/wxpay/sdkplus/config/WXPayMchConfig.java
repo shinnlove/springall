@@ -89,7 +89,7 @@ public class WXPayMchConfig {
     /**
      * 构造函数。
      * 
-     * @param id
+     * @param id          
      * @param merchantId
      * @param mchId
      * @param subMchId
@@ -98,8 +98,8 @@ public class WXPayMchConfig {
      * @param appSecret
      * @param apiKey
      * @param certP12
-     * @param sslcertPath
-     * @param sslkeyPath
+     * @param sslCertPath
+     * @param sslKeyPath
      * @param rootcaPem
      * @param payMode
      * @param signType
@@ -166,6 +166,13 @@ public class WXPayMchConfig {
                 }
             }
         }
+    }
+
+    /**
+     * 给模型转换器构造对象后初始化证书的显式调用。
+     */
+    public void loadCert() {
+        readCertData(sslCertPath);
     }
 
     /**

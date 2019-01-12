@@ -189,6 +189,7 @@ public class WXPayMicroService {
 
         // 刷卡支付如果成功直接盖章平台支付id并返回
         if (WXPayConstants.SUCCESS.equalsIgnoreCase(resultCode)) {
+            LoggerUtil.info(LOGGER, "刷卡支付免密返回结果：resp=", result);
             result.put(PAY_ID, String.valueOf(record.getId()));
             return result;
         }
@@ -216,6 +217,8 @@ public class WXPayMicroService {
                     // 成功，根据订单查询结果修改第一次刷卡支付字段，并直接函数返回...不再循环!!
                     result.put(WXPayConstants.RETURN_CODE, WXPayConstants.SUCCESS);
                     result.put(WXPayConstants.RESULT_CODE, WXPayConstants.SUCCESS);
+                    result.remove(WXPayConstants.ERR_CODE);
+                    result.remove(WXPayConstants.ERR_CODE_DES);
 
                     return result;
 

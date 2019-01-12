@@ -49,6 +49,10 @@ public class WXPayMchConfigConverter {
         configVO.setCreateTime(configDO.getCreateTime());
         configVO.setModifyTime(configDO.getModifyTime());
         configVO.setRemark(configDO.getRemark());
+
+        // 最重要的一步，加载证书
+        configVO.loadCert();
+
         return configVO;
     }
 
