@@ -106,7 +106,8 @@ public class WXPayMicroService {
                     if (WXPayConstants.FAIL.equalsIgnoreCase(resultCode)) {
                         if (!WXPayConstants.USERPAYING.equalsIgnoreCase(errCode)
                             && !WXPayConstants.SYSTEMERROR.equalsIgnoreCase(errCode)) {
-                            throw new SystemException("刷卡支付返回业务码状态错误");
+                            String errMsg = resp.get(WXPayConstants.ERR_CODE_DES);
+                            throw new SystemException("刷卡支付返回业务码状态错误" + errMsg);
                         }
                     }
 

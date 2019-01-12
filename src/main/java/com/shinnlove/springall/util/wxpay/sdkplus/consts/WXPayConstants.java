@@ -141,7 +141,7 @@ public final class WXPayConstants {
     public static final String RETURN_MSG                          = "return_msg";
     /** 微信支付业务返回码 */
     public static final String RESULT_CODE                         = "result_code";
-    /** 微信支付业务错误描述（目前此字段不知道是否还有） */
+    /** 微信支付业务错误描述 */
     public static final String ERR_CODE_DES                        = "err_code_des";
 
     // 刷卡支付
