@@ -144,6 +144,29 @@ public final class WXPayConstants {
     /** 微信支付业务错误描述（目前此字段不知道是否还有） */
     public static final String ERR_CODE_DES                        = "err_code_des";
 
+    // 刷卡支付
+
+    /** 刷卡支付用户授权码（钱包-付款-条形码） */
+    public static final String AUTH_CODE                           = "auth_code";
+    /** 商品详情 */
+    public static final String DETAIL                              = "detail";
+    /** 指定支付方式：no-credit|禁止信用卡刷卡 */
+    public static final String LIMIT_PAY                           = "limit_pay";
+    /** 电子发票入口开放标识：Y|代表开电子发票 */
+    public static final String RECEIPT                             = "receipt";
+    /** 刷卡场景信息 */
+    public static final String SCENE_INFO                          = "scene_info";
+    /** 场景信息json中的key */
+    public static final String STORE_INFO                          = "store_info";
+    /** 门店id */
+    public static final String ID                                  = "id";
+    /** 门店名称 */
+    public static final String NAME                                = "name";
+    /** 门店行政区划码 */
+    public static final String AREA_CODE                           = "area_code";
+    /** 门店详细地址 */
+    public static final String ADDRESS                             = "address";
+
     // 刷卡支付响应字段
 
     /** 刷卡支付错误码 */

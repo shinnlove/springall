@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -20,6 +22,7 @@ import com.shinnlove.springall.service.wxpay.request.WXPayRequestService;
 import com.shinnlove.springall.service.wxpay.util.WXPayAssert;
 import com.shinnlove.springall.util.code.SystemResultCode;
 import com.shinnlove.springall.util.exception.SystemException;
+import com.shinnlove.springall.util.log.LoggerUtil;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.consts.WXPayConstants;
 import com.shinnlove.springall.util.wxpay.sdkplus.service.request.micro.MicroPayClient;
@@ -34,6 +37,9 @@ import com.shinnlove.springall.util.wxpay.sdkplus.service.request.micro.MicroPay
  */
 @Service
 public class WXPayMicroService {
+
+    /** log4j2日志 */
+    private static final Logger      LOGGER = LoggerFactory.getLogger(WXPayMicroService.class);
 
     /** 平台支付层的id常量 */
     private static final String      PAY_ID = "pay_id";
@@ -90,6 +96,8 @@ public class WXPayMicroService {
                 payParams,
                 (resp) -> {
 
+                    LoggerUtil.info(LOGGER, "刷卡支付resp=", resp);
+
                     WXPayAssert.checkMicroPayResp(resp);
 
                     String returnCode = resp.get(WXPayConstants.RETURN_CODE);
@@ -127,32 +135,39 @@ public class WXPayMicroService {
         }
 
         // 代码走到这里，一定是刷卡支付没有双SUCCESS（很有可能用户支付中），需要开始循环查询订单状态
+        // TODO：这样做是hold住了主线程，导致商户侧订单系统请求支付系统一直waiting。
+        //  可以直接返回用户支付中给订单系统，然后让其定时查询（最多30秒不行撤单）确定是否支付成功。
+        //  这样如下的代码可以放在异步线程中去做，以DB状态为衔接点。
         int retryCount = 10;
         while (retryCount > 0) {
-            Map<String, String> queryResult = wxPayQueryOrderService.queryWXPayOrder(orderId,
-                merchantId);
 
-            String holdStatus = queryResult.get(WXPayConstants.MICRO_HOLD_STATUS);
-            int hs = Integer.valueOf(holdStatus);
+            // 特别注意：这里每一次的查询出错，都可以忽略；等到下一个周期再做查询
 
-            if (hs == 1) {
+            try {
 
-                // 成功，根据订单查询结果修改第一次刷卡支付字段，并直接函数返回...不再循环!!
-                result.put(WXPayConstants.RETURN_CODE, WXPayConstants.SUCCESS);
-                result.put(WXPayConstants.RESULT_CODE, WXPayConstants.SUCCESS);
+                Map<String, String> queryResult = wxPayQueryOrderService.queryWXPayOrder(orderId,
+                    merchantId);
 
-                return result;
+                String holdStatus = queryResult.get(WXPayConstants.MICRO_HOLD_STATUS);
+                int hs = Integer.valueOf(holdStatus);
 
-            } else if (hs == 2) {
-                try {
-                    // 2秒一次retry一共20次
-                    TimeUnit.SECONDS.sleep(2);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (hs == 1) {
+                    // 成功，根据订单查询结果修改第一次刷卡支付字段，并直接函数返回...不再循环!!
+                    result.put(WXPayConstants.RETURN_CODE, WXPayConstants.SUCCESS);
+                    result.put(WXPayConstants.RESULT_CODE, WXPayConstants.SUCCESS);
+
+                    return result;
+
+                } else if (hs == 2) {
+                    sleepSilently(2);
+                } else {
+                    // 其他情况一律异常不再重新查询
+                    break;
                 }
-            } else {
-                // 其他情况一律异常不再重新查询
-                break;
+
+            } catch (Exception e) {
+                LoggerUtil.error(LOGGER, e, "刷卡支付验密中查询第", retryCount, "次出错，e=", e);
+                sleepSilently(2);
             }
 
             retryCount--;
@@ -160,6 +175,19 @@ public class WXPayMicroService {
         } // end while
 
         return result;
+    }
+
+    /**
+     * 安静地等待。
+     *
+     * @param timeout
+     */
+    private void sleepSilently(long timeout) {
+        try {
+            TimeUnit.SECONDS.sleep(timeout);
+        } catch (InterruptedException e) {
+            LoggerUtil.error(LOGGER, e, e);
+        }
     }
 
     /**
