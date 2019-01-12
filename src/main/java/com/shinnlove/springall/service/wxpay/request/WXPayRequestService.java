@@ -10,14 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.conn.ConnectTimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinnlove.springall.service.wxpay.callback.WXPayBizCallback;
 import com.shinnlove.springall.service.wxpay.config.WXPayGlobalConfigService;
 import com.shinnlove.springall.service.wxpay.handler.WXPayService;
+import com.shinnlove.springall.service.wxpay.micropay.WXPayMicroService;
 import com.shinnlove.springall.service.wxpay.report.WXPayDomainService;
 import com.shinnlove.springall.service.wxpay.report.WXPayReportService;
+import com.shinnlove.springall.util.log.LoggerUtil;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayGlobalConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
 import com.shinnlove.springall.util.wxpay.sdkplus.domain.WXPayDomain;
@@ -33,6 +37,9 @@ import com.shinnlove.springall.util.wxpay.sdkplus.util.WXPayUtil;
  */
 @Service
 public class WXPayRequestService implements WXPayService {
+
+    /** log4j2日志 */
+    private static final Logger      LOGGER = LoggerFactory.getLogger(WXPayMicroService.class);
 
     /** 微信支付全局配置服务 */
     @Autowired
@@ -65,6 +72,8 @@ public class WXPayRequestService implements WXPayService {
         // Step3：组装支付xml报文
         String reqBody = WXPayUtil.mapToXml(payParams);
 
+        LoggerUtil.info(LOGGER, "原始请求报文xml=", reqBody);
+
         // 请求入参
         WXPayMchConfig mchConfig = client.getWxPayMchConfig();
         WXPayDomain domain = wxPayDomainService.getDomain();
@@ -73,6 +82,8 @@ public class WXPayRequestService implements WXPayService {
 
         // Step4：执行请求并且上报
         String respStr = requestAndReport(mchConfig, domain, urlSuffix, reqBody, useCert);
+
+        LoggerUtil.info(LOGGER, "微信响应报文xml=", respStr);
 
         // Step5：解码请求结果
         final Map<String, String> response = client.processResponseXml(respStr);

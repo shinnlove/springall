@@ -69,6 +69,8 @@ public class WXPayMicroService {
      *
      * TODO：JSAPI和刷卡的前置校验商户微信支付配置的代码可以统一一下。
      *
+     * 特别注意：刷卡支付如果被用户取消或者出错，这个订单号是作废了的，可以重新申请一个订单号!!!
+     *
      * @param orderId    
      * @param merchantId
      * @param payParams
@@ -107,7 +109,7 @@ public class WXPayMicroService {
                         if (!WXPayConstants.USERPAYING.equalsIgnoreCase(errCode)
                             && !WXPayConstants.SYSTEMERROR.equalsIgnoreCase(errCode)) {
                             String errMsg = resp.get(WXPayConstants.ERR_CODE_DES);
-                            throw new SystemException("刷卡支付返回业务码状态错误" + errMsg);
+                            throw new SystemException("刷卡支付返回业务码状态错误：" + errMsg);
                         }
                     }
 
