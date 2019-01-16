@@ -21,8 +21,8 @@ import com.shinnlove.springall.util.wxpay.sdkplus.config.WXPayMchConfig;
  * @version $Id: WXPayMchConfigDaoMapperTest.java, v 0.1 2019-01-10 20:01 shinnlove.jinsheng Exp $$
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/META-INF/spring/spring-datasource-tx.xml",
-                                   "classpath:/META-INF/spring/spring-database-mybatis.xml" })
+@ContextConfiguration(locations = {"classpath:/META-INF/spring/spring-druid.xml",
+        "classpath:/META-INF/spring/spring-mybatis.xml"})
 public class WXPayMchConfigDaoMapperTest {
 
     /** mybatis-mapper */

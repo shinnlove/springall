@@ -20,8 +20,8 @@ import javax.annotation.Resource;
  * @version $Id: WXPayRecordDaoMapperTest.java, v 0.1 2019-01-09 15:22 shinnlove.jinsheng Exp $$
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/META-INF/spring/spring-datasource-tx.xml",
-                                   "classpath:/META-INF/spring/spring-database-mybatis.xml" })
+@ContextConfiguration(locations = {"classpath:/META-INF/spring/spring-druid.xml",
+        "classpath:/META-INF/spring/spring-mybatis.xml"})
 public class WXPayRecordDaoMapperTest {
 
     /** mybatis-mapper */
@@ -30,7 +30,7 @@ public class WXPayRecordDaoMapperTest {
 
     @Test
     public void test_getWXPayRecord() {
-        long orderId = 1L;
+        long orderId = 666666L;
         WXPayRecord record = wxPayRecordDaoMapper.getWXPayRecordByOrderId(orderId);
         System.out.println(record.getMerchantId());
         System.out.println(record);

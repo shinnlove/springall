@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       default-autowire="byName">
+
+    <!-- 在此注入bean -->
+
+    <!-- 加载druid配置文件 -->
+    <context:property-placeholder location="classpath:META-INF/database/druid.properties" file-encoding="utf-8"
+                                  ignore-unresolvable="true"/>
+
+    <!-- 配置druid连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close"
+          p:url="${jdbc.url}"
+          p:username="${jdbc.username}"
+          p:password="${jdbc.password}"
+          p:initialSize="${druid.initialSize}"
+          p:minIdle="${druid.minIdle}"
+          p:maxActive="${druid.maxActive}"
+          p:validationQuery="${druid.validationQuery}"
+          p:testWhileIdle="${druid.testWhileIdle}"
+          p:testOnBorrow="${druid.testOnBorrow}"
+          p:testOnReturn="${druid.testOnReturn}"
+          p:maxWait="${druid.maxWait}"
+          p:timeBetweenEvictionRunsMillis="${druid.timeBetweenEvictionRunsMillis}"
+          p:minEvictableIdleTimeMillis="${druid.minEvictableIdleTimeMillis}"
+          p:removeAbandoned="${druid.removeAbandoned}"
+          p:removeAbandonedTimeout="${druid.removeAbandonedTimeout}"
+          p:logAbandoned="${druid.logAbandoned}"
+          p:poolPreparedStatements="${druid.poolPreparedStatements}"
+          p:maxPoolPreparedStatementPerConnectionSize="${druid.maxPoolPreparedStatementPerConnectionSize}">
+        <!-- 加载过滤器 -->
+        <property name="proxyFilters">
+            <list>
+                <ref bean="wall-filter" />
+                <ref bean="stat-filter" />
+                <ref bean="log-filter" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- sql防御自定义配置 -->
+    <bean id="wall-filter-config" class="com.alibaba.druid.wall.WallConfig"
+          init-method="init">
+        <property name="dir" value="META-INF/druid/wall" />
+        <property name="selelctAllow" value="true" />
+    </bean>
+
+    <!-- sql防御过滤器 -->
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <!-- 指定配置装载的目录 -->
+        <property name="dbType" value="mysql" />
+        <property name="config" ref="wall-filter-config" />
+        <!-- 对被认为是攻击的SQL进行log.error输出 -->
+        <property name="logViolation" value="true" />
+        <!-- 对被认为是攻击的SQL抛出SQLExcepton -->
+        <property name="throwException" value="true" />
+    </bean>
+
+    <!-- 统计监控信息过滤器 -->
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <!-- 标记为慢查询日志的时间 -->
+        <property name="slowSqlMillis" value="3000" />
+        <!-- 慢查询的日志记录是否开放 -->
+        <property name="logSlowSql" value="true" />
+        <!-- 合并sql -->
+        <property name="mergeSql" value="true" />
+    </bean>
+
+    <!-- druid log4j2 日志过滤器 -->
+    <bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4j2Filter">
+        <!-- 所有连接相关的日志 -->
+        <property name="connectionLogEnabled" value="false"/>
+        <!-- 所有Statement相关的日志 -->
+        <property name="statementLogEnabled" value="false"/>
+        <!-- 是否显示结果集 -->
+        <property name="resultSetLogEnabled" value="true"/>
+        <!-- 是否显示SQL语句 -->
+        <property name="statementExecutableSqlLogEnable" value="true"/>
+    </bean>
+
+</beans>
