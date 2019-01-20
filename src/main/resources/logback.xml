@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="true">
+
+    <!-- 模块名称， 影响日志配置名，日志文件名 -->
+    <property name="appName" value="springall"/>
+    <property name="logMaxSize" valule="100MB"/>
+    <!--rootPath 日志路径，这里是相对路径，web项目eclipse下会输出到eclipse的安装目录下，如果部署到linux上的tomcat下，会输出到tomcat/bin目录 下 -->
+    <property name="rootPath" value="/Users/zhaochensheng/Downloads"/>
+    <contextName>${appName}</contextName>
+
+    <!--控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss}|%t|%p| %m |%logger:%L%n</pattern>
+            <!-- 控制台也要使用UTF-8，不要使用GBK，否则会中文乱码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- debug日志输出 -->
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 设置日志不超过${logMaxSize}时的保存路径，注意如果 是web项目会保存到Tomcat的bin目录 下 -->
+        <file>${rootPath}/${appName}/logs/${appName}-debug.log</file>
+        <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${rootPath}/${appName}/logs/${appName}-debug-%d{yyyy-MM-dd}-%d.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <!-- 当天的日志大小 超过${logMaxSize}时,压缩日志并保存 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!-- 日志输出的文件的格式  -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss}|%t|%p| %m |%logger:%L%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <!-- 信息日志输出 -->
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${rootPath}/${appName}/logs/${appName}-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${rootPath}/${appName}/logs/all/${appName}-info-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss}|%t|%p| %m |%logger:%L%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 告警日志输出 -->
+    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${rootPath}/${appName}/logs/${appName}-warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${rootPath}/${appName}/logs/all/${appName}-warn-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss}|%t|%p| %m |%logger:%L%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 错误日志输出 -->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${rootPath}/${appName}/error/${appName}-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${rootPath}/${appName}/logs/all/${appName}-error-%d{yyyy-MM-dd}-%e.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss}|%t|%p| %m |%logger:%L%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 为某个包下的所有类的指定Appender 这里也可以指定类名称例如：com.aa.bb.ClassName,下面还有另一种写法，就是涉及到name="关键包的日志输出级别" -->
+    <!-- 减少噪音日志的输出 -->
+    <!--     <logger name="com.lin" additivity="false">   -->
+    <!--         <level value="debug" />   -->
+    <!--         <appender-ref ref="stdout" />   -->
+    <!--         <appender-ref ref="file" />   -->
+    <!--     </logger>   -->
+    <logger name="jdbc" level="INFO"/>
+    <logger name="org" level="INFO"/>
+    <logger name="net" level="INFO"/>
+    <logger name="sql" level="INFO"/>
+    <logger name="java.sql" level="INFO"/>
+    <logger name="javax" level="INFO"/>
+
+    <!--日志的输出级别由低到高（越来问题越严重）trace->debug->info->warn->error -->
+    <!-- root将级别为DEBUG及大于DEBUG的日志信息交给已经配置好的name='STDOUT'的appender处理，将信息打印到控制台-Console -->
+    <root level="DEBUG">
+        <!-- appender-ref标识这个appender将会添加到本应用的日志系统中 -->
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="WARN"/>
+        <appender-ref ref="ERROR"/>
+    </root>
+
+</configuration>

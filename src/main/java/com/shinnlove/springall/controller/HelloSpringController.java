@@ -22,15 +22,15 @@ import com.shinnlove.springall.util.log.LoggerUtil;
 @RequestMapping(value = "/hello")
 public class HelloSpringController {
 
-    /** log4j2日志 */
+    /** logback日志 */
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloSpringController.class);
 
-    @RequestMapping(value = "/log4j2", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/logback", method = { RequestMethod.GET, RequestMethod.POST })
     public String sayHello() {
-        LoggerUtil.info(LOGGER, "你好，我是log4j2的同步日志输出。");
+        LoggerUtil.info(LOGGER, "你好，我是logback的同步日志输出。");
         LoggerUtil.warn(LOGGER, "你好，我的英文名叫shinnlove。");
         LoggerUtil.error(LOGGER, new RuntimeException("这是我自定义的错误"));
-        return "This is log4j2 test.";
+        return "This is logback test.";
     }
 
 }
