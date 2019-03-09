@@ -22,7 +22,7 @@ import com.shinnlove.springall.jvm.classloader.HotSwapClassLoader;
 public class JavaClassExecuter {
 
     public static void main(String[] args) {
-        String filePath = "/Users/zhaochensheng/Downloads/ActionServiceImpl.class";
+        String filePath = "/Users/zhaochensheng/Downloads/SimpleClassModel.class";
         File file = new File(filePath);
 
         Long fileLength = file.length(); // 获取文件长度
@@ -51,8 +51,8 @@ public class JavaClassExecuter {
         cm.traverseClassFile();
 
         // 替换掉常量池的输出
-        byte[] modiBytes = cm.modifyUTF8Constant("java/lang/System",
-            "com.shinnlove.springall.jvm.bytecode.HackSystem");
+        //        byte[] modiBytes = cm.modifyUTF8Constant("java/lang/System",
+        //            "com.shinnlove.springall.jvm.bytecode.HackSystem");
 
     }
 
