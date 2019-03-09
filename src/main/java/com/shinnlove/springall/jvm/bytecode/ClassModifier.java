@@ -24,6 +24,8 @@ public class ClassModifier {
     private static final int                   u1                        = 1;
     /** 无符号整型2，2个字节长度 */
     private static final int                   u2                        = 2;
+    /** 无符号整型4，4个字节长度 */
+    private static final int                   u4                        = 4;
 
     /** 常量池中11种常量长度，其中CONSTANT_Utf8_info型常量除外，因为它不是定长的 */
     private static final Map<Integer, Integer> CONSTANT_ITEM_LENGTH      = new HashMap<>();
@@ -257,7 +259,7 @@ public class ClassModifier {
 
         offset += u2;
 
-        // 解析父类索引
+        // 解析父类索引（特别注意：实现的接口不算是父类的，只在接口索引中!）
         int parentClassIndex = ByteUtils.bytes2Int(classByte, offset, u2);
         resolveConstantPoolByIndex(classByte, parentClassIndex);
 
@@ -267,7 +269,65 @@ public class ClassModifier {
 
         // 接口计数器
         int interfaceCount = ByteUtils.bytes2Int(classByte, offset, u2);
-        System.out.println("interfaceCount=" + interfaceCount);
+        System.out.println("该类实现了接口数interfaceCount=" + interfaceCount);
+
+        offset += u2;
+
+        // 循环遍历接口索引集合（注意数量不定!）
+        for (int i = 0; i < interfaceCount; i++) {
+            // 既然是索引的集合，那必然是u2类型的集合
+            int oneIndex = ByteUtils.bytes2Int(classByte, offset, u2);
+            resolveConstantPoolByIndex(classByte, oneIndex);
+
+            // 遍历完一个索引，offset偏移两字节
+            offset += u2;
+        }
+
+        // 解析字段表
+        int fieldCount = ByteUtils.bytes2Int(classByte, offset, u2);
+        System.out.println("这个类有" + fieldCount + "个字段");
+
+        offset += u2;
+
+        // 循环解析类的字段
+        for (int i = 0; i < fieldCount; i++) {
+            // u2类型的accessFlag
+            int fieldAccessFlag = ByteUtils.bytes2Int(classByte, offset, u2);
+
+            offset += u2;
+
+            // u2类型的name_index简单名称
+            int nameIndex = ByteUtils.bytes2Int(classByte, offset, u2);
+            resolveConstantPoolByIndex(classByte, nameIndex);
+
+            offset += u2;
+
+            // u2类型的name_index简单名称
+            int descriptorIndex = ByteUtils.bytes2Int(classByte, offset, u2);
+            resolveConstantPoolByIndex(classByte, descriptorIndex);
+
+            offset += u2;
+
+            // 解析属性数
+            int attributesCount = ByteUtils.bytes2Int(classByte, offset, u2);
+
+            offset += u2;
+
+            // 循环解析字段的属性表
+            for (int j = 0; j < attributesCount; j++) {
+                int attributeNameIndex = ByteUtils.bytes2Int(classByte, offset, u2);
+                System.out.println("attributeNameIndex=" + attributeNameIndex);
+
+                offset += u2;
+
+                int attributeLength = ByteUtils.bytes2Int(classByte, offset, u4);
+                System.out.println("attributeLength=" + attributeLength);
+
+                offset += u4;
+
+                offset += attributeLength;
+            }
+        }
 
     }
 
