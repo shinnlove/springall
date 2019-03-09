@@ -14,13 +14,15 @@ import java.lang.reflect.Method;
 import com.shinnlove.springall.jvm.classloader.HotSwapClassLoader;
 
 /**
+ * Java类执行类。
+ *
  * @author shinnlove.jinsheng
  * @version $Id: JavaClassExecuter.java, v 0.1 2019-03-09 14:55 shinnlove.jinsheng Exp $$
  */
 public class JavaClassExecuter {
 
     public static void main(String[] args) {
-        String filePath = "/Users/zhaochensheng/Downloads/ByteCodeModelClass.class";
+        String filePath = "/Users/zhaochensheng/Downloads/ActionServiceImpl.class";
         File file = new File(filePath);
 
         Long fileLength = file.length(); // 获取文件长度
@@ -44,6 +46,10 @@ public class JavaClassExecuter {
         }
 
         ClassModifier cm = new ClassModifier(fileContent);
+
+        // 遍历类文件
+        cm.traverseClassFile();
+
         // 替换掉常量池的输出
         byte[] modiBytes = cm.modifyUTF8Constant("java/lang/System",
             "com.shinnlove.springall.jvm.bytecode.HackSystem");

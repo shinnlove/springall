@@ -38,6 +38,21 @@ public class ClassModifier {
 
     /**
      * 修改常量池指定字符串为目标字符串。
+     *
+     * Tag=1：CONSTANT_Utf8_info，UTF-8编码的字符串，指向一个字符串
+     * Tag=3：CONSTANT_Integer_info，整型字面量
+     * Tag=4：CONSTANT_Float_info，浮点型字面量
+     * Tag=5：CONSTANT_Long_info，长整型字面量
+     * Tag=6：CONSTANT_Double_info，双精度浮点型字面量
+     * Tag=7：CONSTANT_Class_info，类或接口的符号引用，指向一个类
+     * Tag=8：CONSTANT_String_info，字符串类型字面量
+     * Tag=9：CONSTANT_Fieldref_info，字段的符号引用
+     * Tag=10：CONSTANT_Methodref_info，类中方法的符号引用
+     * Tag=11：CONSTANT_InterfaceMethodref_info，接口中方法的符号引用
+     * Tag=12：CONSTANT_NameAndType_info，字段或方法的部分符号引用
+     * Tag=15：CONSTANT_MethodHandle_info，表示方法句柄
+     * Tag=16：CONSTANT_MethodType_info，标识方法类型
+     * Tag=18：CONSTANT_InvokeDynamic_info，表示一个动态方法调用点
      * 
      * @param oldStr    原来class文件中的字符串
      * @param newStr    新的class文件中的字符串
@@ -45,11 +60,14 @@ public class ClassModifier {
      */
     public byte[] modifyUTF8Constant(String oldStr, String newStr) {
         int cpc = getConstantPoolCount();
-        // 全局游标偏移量
+
+        // 全局游标偏移量(偏移量定位到第11字节，也就是常量池第一个常量)
         int offset = CONSTANT_POOL_COUNT_INDEX + u2;
+
         // 遍历常量池所有常量
         for (int i = 0; i < cpc; i++) {
-            // 先取常量池标记
+
+            // Step1：每一次遍历常量池，第一个读出的必是u1类型的tag
             int tag = ByteUtils.bytes2Int(classByte, offset, u1);
 
             if (tag == CONSTANT_Utf8_info) {
@@ -92,12 +110,138 @@ public class ClassModifier {
     }
 
     /**
+     * 遍历整个类文件，有点像：`javap -verbose XXX.class`。
+     */
+    public void traverseClassFile() {
+        int cpc = getConstantPoolCount();
+
+        // 全局游标偏移量(偏移量定位到第11字节，也就是常量池第一个常量)
+        int offset = CONSTANT_POOL_COUNT_INDEX + u2;
+
+        // 遍历常量池所有常量
+        for (int i = 0; i < cpc; i++) {
+
+            // Step1：每一次遍历常量池，第一个读出的必是u1类型的tag
+            int tag = ByteUtils.bytes2Int(classByte, offset, u1);
+
+            if (ClassFileConstants.CONSTANT_Utf8_info_TAG == tag) {
+                // 处理不定长的`CONSTANT_Utf8_info`类型
+
+                // 读完偏移量会自动定位到下一个常量池的偏移量
+                offset = read_CONSTANT_Utf8_info(classByte, offset);
+
+            } else if (ClassFileConstants.CONSTANT_Integer_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_Float_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_Long_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_Double_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_Class_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_String_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_Fieldref_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_Methodref_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_InterfaceMethodref_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_NameAndType_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_MethodHandle_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_MethodType_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            } else if (ClassFileConstants.CONSTANT_InvokeDynamic_info_TAG == tag) {
+
+                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
+                offset += CONSTANT_ITEM_LENGTH[tag];
+
+            }
+
+        } // for
+
+    }
+
+    /**
      * 读出类文件常量池计数。
+     *
+     * 每个类的字段、方法各不相同，常量池数量也是不等的。
+     * 在0xCAFEBABE和主次版本号8个字节后，第9个字节开始是一个u2类型的数据，代表常量池容量。
+     *
+     * 0~7是前8个字节，偏移量8就是第9个字节。
      *
      * @return
      */
     public int getConstantPoolCount() {
         return ByteUtils.bytes2Int(classByte, CONSTANT_POOL_COUNT_INDEX, u2);
+    }
+
+    /**
+     * 读取utf8常量池信息。
+     *
+     * typedef struct CONSTANT_Utf8_info {
+     *     u1   tag     1
+     *     u2   length  1
+     *     u1   bytes   length
+     * }
+     *
+     * @param bytes     原字节数组
+     * @param start
+     * @return          返回读完后的偏移量
+     */
+    public int read_CONSTANT_Utf8_info(byte[] bytes, int start) {
+
+        // 读出`CONSTANT_Utf8_info`长度length
+        int length = ByteUtils.bytes2Int(bytes, start + u1, u2);
+
+        start += (u1 + u2);
+
+        // 读出这么长的`CONSTANT_Utf8_info`字符串信息bytes
+        String str = ByteUtils.byte2String(bytes, start, length);
+
+        // 输出这个字符串常量
+        System.out.println(str);
+
+        return start + length;
     }
 
 }
