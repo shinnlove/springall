@@ -22,7 +22,7 @@ import com.shinnlove.springall.jvm.classloader.HotSwapClassLoader;
 public class JavaClassExecuter {
 
     public static void main(String[] args) {
-        String filePath = "/Users/zhaochensheng/Downloads/SimpleClassModel.class";
+        String filePath = "/Users/zhaochensheng/Downloads/ActionServiceImpl.class";
         File file = new File(filePath);
 
         Long fileLength = file.length(); // 获取文件长度
@@ -45,14 +45,23 @@ public class JavaClassExecuter {
             }
         }
 
-        ClassModifier cm = new ClassModifier(fileContent);
-
-        // 遍历类文件
-        cm.traverseClassFile();
-
         // 替换掉常量池的输出
         //        byte[] modiBytes = cm.modifyUTF8Constant("java/lang/System",
         //            "com.shinnlove.springall.jvm.bytecode.HackSystem");
+
+        ClassModifier cm = new ClassModifier(fileContent);
+
+        // 遍历类的常量池
+        cm.traverseConstantPool();
+
+        // 类常量池结束的字节数
+        int offsetByte = cm.ConstantPoolEndAccessFlagOffset();
+
+        // 打印访问标识
+        System.out.println("访问标识开始位置：offsetByte=" + offsetByte);
+
+        // 开始访问类信息
+        cm.traverseClassInfo(offsetByte);
 
     }
 

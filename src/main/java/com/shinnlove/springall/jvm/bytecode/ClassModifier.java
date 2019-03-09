@@ -61,21 +61,6 @@ public class ClassModifier {
     /**
      * 修改常量池指定字符串为目标字符串。
      *
-     * Tag=1：CONSTANT_Utf8_info，UTF-8编码的字符串，指向一个字符串
-     * Tag=3：CONSTANT_Integer_info，整型字面量
-     * Tag=4：CONSTANT_Float_info，浮点型字面量
-     * Tag=5：CONSTANT_Long_info，长整型字面量
-     * Tag=6：CONSTANT_Double_info，双精度浮点型字面量
-     * Tag=7：CONSTANT_Class_info，类或接口的符号引用，指向一个类
-     * Tag=8：CONSTANT_String_info，字符串类型字面量
-     * Tag=9：CONSTANT_Fieldref_info，字段的符号引用
-     * Tag=10：CONSTANT_Methodref_info，类中方法的符号引用
-     * Tag=11：CONSTANT_InterfaceMethodref_info，接口中方法的符号引用
-     * Tag=12：CONSTANT_NameAndType_info，字段或方法的部分符号引用
-     * Tag=15：CONSTANT_MethodHandle_info，表示方法句柄
-     * Tag=16：CONSTANT_MethodType_info，标识方法类型
-     * Tag=18：CONSTANT_InvokeDynamic_info，表示一个动态方法调用点
-     * 
      * @param oldStr    原来class文件中的字符串
      * @param newStr    新的class文件中的字符串
      * @return
@@ -86,8 +71,8 @@ public class ClassModifier {
         // 全局游标偏移量(偏移量定位到第11字节，也就是常量池第一个常量)
         int offset = CONSTANT_POOL_COUNT_INDEX + u2;
 
-        // 遍历常量池所有常量
-        for (int i = 0; i < cpc; i++) {
+        // 遍历常量池所有常量，常量池计数器索引从1开始!!!
+        for (int i = 1; i < cpc; i++) {
 
             // Step1：每一次遍历常量池，第一个读出的必是u1类型的tag
             int tag = ByteUtils.bytes2Int(classByte, offset, u1);
@@ -132,16 +117,62 @@ public class ClassModifier {
     }
 
     /**
-     * 遍历整个类文件，有点像：`javap -verbose XXX.class`。
+     * 确定整个常量池结束的字节位置，返回的值是AccessFlag开始的字节数。
+     *
+     * 如返回offset = 60，则代表60字节、61字节是访问标识：
+     * 因为在常量池结束之后，紧接着的两个字节代表访问标识，识别类或接口的访问信息。
+     *
+     * @return  常量池结束的字节位置
      */
-    public void traverseClassFile() {
+    public int ConstantPoolEndAccessFlagOffset() {
         int cpc = getConstantPoolCount();
 
         // 全局游标偏移量(偏移量定位到第11字节，也就是常量池第一个常量)
         int offset = CONSTANT_POOL_COUNT_INDEX + u2;
 
-        // 遍历常量池所有常量
-        for (int i = 0; i < cpc; i++) {
+        // 常量池计数器索引从1开始!!!
+        for (int i = 1; i < cpc; i++) {
+            // Step1：每一次遍历常量池，第一个读出的必是u1类型的tag
+            int tag = ByteUtils.bytes2Int(classByte, offset, u1);
+
+            if (ClassFileConstants.CONSTANT_Utf8_info_TAG == tag) {
+                offset += CONSTANT_Utf8_Length(classByte, offset);
+            } else {
+                offset += CONSTANT_ITEM_LENGTH.get(tag);
+            }
+
+        }
+
+        return offset;
+    }
+
+    /**
+     * 遍历整个类文件，有点像：`javap -verbose XXX.class`。
+     *
+     * Tag=1：CONSTANT_Utf8_info，UTF-8编码的字符串，指向一个字符串
+     * Tag=3：CONSTANT_Integer_info，整型字面量
+     * Tag=4：CONSTANT_Float_info，浮点型字面量
+     * Tag=5：CONSTANT_Long_info，长整型字面量
+     * Tag=6：CONSTANT_Double_info，双精度浮点型字面量
+     * Tag=7：CONSTANT_Class_info，类或接口的符号引用，指向一个类
+     * Tag=8：CONSTANT_String_info，字符串类型字面量
+     * Tag=9：CONSTANT_Fieldref_info，字段的符号引用
+     * Tag=10：CONSTANT_Methodref_info，类中方法的符号引用
+     * Tag=11：CONSTANT_InterfaceMethodref_info，接口中方法的符号引用
+     * Tag=12：CONSTANT_NameAndType_info，字段或方法的部分符号引用
+     * Tag=15：CONSTANT_MethodHandle_info，表示方法句柄
+     * Tag=16：CONSTANT_MethodType_info，标识方法类型
+     * Tag=18：CONSTANT_InvokeDynamic_info，表示一个动态方法调用点
+     * 
+     */
+    public void traverseConstantPool() {
+        int cpc = getConstantPoolCount();
+
+        // 全局游标偏移量(偏移量定位到第11字节，也就是常量池第一个常量)
+        int offset = CONSTANT_POOL_COUNT_INDEX + u2;
+
+        // 遍历常量池所有常量，常量池从1开始!!!
+        for (int i = 1; i < cpc; i++) {
 
             // Step1：每一次遍历常量池，第一个读出的必是u1类型的tag
             int tag = ByteUtils.bytes2Int(classByte, offset, u1);
@@ -204,6 +235,39 @@ public class ClassModifier {
             }
 
         } // for
+
+    }
+
+    /**
+     * 访问类信息。
+     *
+     * @param offset    常量池结束后、访问标志开始前
+     */
+    public void traverseClassInfo(int offset) {
+        // 如果accessFlag=33（十进制）、则代表十六进制0x0021、代表一个类是public，ACC_SUPER是JDK1.2后必须置为1的
+        int accessFlag = ByteUtils.bytes2Int(classByte, offset, u2);
+
+        offset += u2;
+
+        // 类索引、父类索引、接口类型索引都指向`CONSTANT_Class_info`类型
+
+        // 解析类索引
+        int classIndex = ByteUtils.bytes2Int(classByte, offset, u2);
+        resolveConstantPoolByIndex(classByte, classIndex);
+
+        offset += u2;
+
+        // 解析父类索引
+        int parentClassIndex = ByteUtils.bytes2Int(classByte, offset, u2);
+        resolveConstantPoolByIndex(classByte, parentClassIndex);
+
+        offset += u2;
+
+        // 解析接口索引
+
+        // 接口计数器
+        int interfaceCount = ByteUtils.bytes2Int(classByte, offset, u2);
+        System.out.println("interfaceCount=" + interfaceCount);
 
     }
 
@@ -465,8 +529,14 @@ public class ClassModifier {
         // 全局游标偏移量(偏移量定位到第11字节，也就是常量池第一个常量)
         int offset = CONSTANT_POOL_COUNT_INDEX + u2;
 
-        // 遍历常量池所有常量
-        for (int i = 0; i < cpc; i++) {
+        // 遍历常量池所有常量，注意常量池从1开始!!!
+        for (int i = 1; i < cpc; i++) {
+            count++;
+
+            // 计数从1开始
+            if (index == count) {
+                break;
+            }
 
             // Step1：每一次遍历常量池，第一个读出的必是u1类型的tag
             int tag = ByteUtils.bytes2Int(bytes, offset, u1);
@@ -477,12 +547,6 @@ public class ClassModifier {
             } else {
                 // 其他定长类型
                 offset += CONSTANT_ITEM_LENGTH.get(tag);
-            }
-
-            count++;
-
-            if (index == count) {
-                break;
             }
 
         } // for
