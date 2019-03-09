@@ -152,13 +152,12 @@ public class ClassModifier {
 
             } else if (ClassFileConstants.CONSTANT_Class_info_TAG == tag) {
 
-                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
-                offset += CONSTANT_ITEM_LENGTH[tag];
+                // 读取类类型信息
+                offset = read_CONSTANT_Class_info(classByte, offset);
 
             } else if (ClassFileConstants.CONSTANT_String_info_TAG == tag) {
 
-                // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
-                offset += CONSTANT_ITEM_LENGTH[tag];
+                offset = read_CONSTANT_String_info(classByte, offset);
 
             } else if (ClassFileConstants.CONSTANT_Fieldref_info_TAG == tag) {
 
@@ -241,7 +240,95 @@ public class ClassModifier {
         // 输出这个字符串常量
         System.out.println(str);
 
+        // 不定长，所以加上读出的length
         return start + length;
+    }
+
+    /**
+     * 读取类类型信息。
+     *
+     * typedef struct CONSTANT_Class_info {
+     *     u1   tag     1
+     *     u2   index   全限定类名常量项索引位置
+     * }
+     *
+     * @param bytes
+     * @param start
+     * @return
+     */
+    public int read_CONSTANT_Class_info(byte[] bytes, int start) {
+        // 全限定类名常量项索引
+        int cpcIndex = ByteUtils.bytes2Int(bytes, start + u1, u2);
+
+        resolveConstantPool(bytes, cpcIndex);
+
+        // 类信息占一个u1的tag，一个u2的索引
+        return start + u1 + u2;
+    }
+
+    /**
+     * 读取字符串常量型数据。
+     *
+     * typedef struct CONSTANT_String_info {
+     *     u1   tag     1
+     *     u2   index   指向字符串字面量的索引
+     * }
+     *
+     * @param bytes
+     * @param start
+     * @return
+     */
+    public int read_CONSTANT_String_info(byte[] bytes, int start) {
+        // 字符串字面量的索引
+        int cpcIndex = ByteUtils.bytes2Int(bytes, start + u1, u2);
+
+        // 解析字符串类型数据
+        resolveConstantPool(bytes, cpcIndex);
+
+        return start + u1 + u2;
+    }
+
+    /**
+     * 从常量池某个给定位置读取u1类型的一个标记为，判定是什么数据。
+     *
+     * @param bytes
+     * @param start
+     * @return
+     */
+    public int read_CONSTANT_POOL_INFO_TAG(byte[] bytes, int start) {
+        int tag = ByteUtils.bytes2Int(bytes, start, u1);
+        return tag;
+    }
+
+    /**
+     * 解析常量池常量。
+     * 
+     * @param bytes     给定class类字节文件
+     * @param start     起始解析索引位置
+     */
+    public int resolveConstantPool(byte[] bytes, int start) {
+        int tag = read_CONSTANT_POOL_INFO_TAG(bytes, start);
+        switch (tag) {
+            case ClassFileConstants.CONSTANT_Utf8_info_TAG:
+
+                read_CONSTANT_Utf8_info(bytes, start);
+
+                break;
+            case ClassFileConstants.CONSTANT_Class_info_TAG:
+
+                read_CONSTANT_Class_info(bytes, start);
+
+                break;
+            case ClassFileConstants.CONSTANT_String_info_TAG:
+
+                read_CONSTANT_String_info(bytes, start);
+
+                break;
+            default:
+                break;
+        }
+
+        return start;
     }
 
 }
