@@ -208,7 +208,7 @@ public class ClassModifier {
                 offset = read_CONSTANT_Class_info(classByte, offset);
             } else if (ClassFileConstants.CONSTANT_String_info_TAG == tag) {
                 // 8.处理字符串类型
-                offset = read_CONSTANT_String_info(classByte, offset);
+                offset = traverse_CONSTANT_String_info(classByte, offset);
             } else if (ClassFileConstants.CONSTANT_Fieldref_info_TAG == tag) {
                 // 9.类中字段的符号引用
                 offset = read_CONSTANT_Fieldref_info(classByte, offset);
@@ -324,16 +324,36 @@ public class ClassModifier {
 
                 offset += u2;
 
-                // TODO：根据不同的属性名解析不同的属性表
-
+                // 属性表长度大家都是占用u4字节的
                 int attributeLength = ByteUtils.bytes2Int(classByte, offset, u4);
                 System.out.println("attributeLength=" + attributeLength);
 
                 offset += u4;
 
+                // 根据不同的属性名解析不同的属性表
+                switch (attributeName) {
+                    case "ConstantValue":
+                        // ConstantValue类型attributeLength定长为2
+
+                        // 固定值字面量索引
+                        int constantValueIndex = ByteUtils.bytes2Int(classByte, offset, u2);
+                        String constantValue = resolveConstantPoolByIndex(classByte,
+                            constantValueIndex);
+
+                        // 这里将会输出Micheal Jordan
+                        System.out.println("constantValue=" + constantValue);
+
+                        break;
+                    default:
+                        break;
+                }
+
+                // 共同偏移属性表长度个字节
                 offset += attributeLength;
-            }
-        }
+
+            } // for 属性表
+
+        } // for 类字段
 
     }
 
@@ -433,6 +453,20 @@ public class ClassModifier {
     }
 
     /**
+     * 解析读出的字符串信息。
+     *
+     * @param bytes
+     * @param start
+     * @return
+     */
+    public String read_CONSTANT_String_info(byte[] bytes, int start) {
+        // 字符串字面量的索引
+        int countIndex = ByteUtils.bytes2Int(bytes, start + u1, u2);
+
+        return resolveConstantPoolByIndex(bytes, countIndex);
+    }
+
+    /**
      * 读取字符串常量型数据。
      *
      * typedef struct CONSTANT_String_info {
@@ -444,11 +478,13 @@ public class ClassModifier {
      * @param start
      * @return
      */
-    public int read_CONSTANT_String_info(byte[] bytes, int start) {
+    public int traverse_CONSTANT_String_info(byte[] bytes, int start) {
         // 字符串字面量的索引
         int countIndex = ByteUtils.bytes2Int(bytes, start + u1, u2);
 
-        resolveConstantPoolByIndex(bytes, countIndex);
+        String result = resolveConstantPoolByIndex(bytes, countIndex);
+
+        System.out.println("读到字符串常量result=" + result);
 
         return start + u1 + u2;
     }
@@ -657,7 +693,7 @@ public class ClassModifier {
                 break;
             case ClassFileConstants.CONSTANT_String_info_TAG:
                 // 8.字符串类型字面量(将字符串信息返回出来)
-                read_CONSTANT_String_info(bytes, start);
+                result = read_CONSTANT_String_info(bytes, start);
                 break;
             default:
                 break;
