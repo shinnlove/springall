@@ -298,17 +298,19 @@ public class ClassModifier {
 
             // u2类型的name_index简单名称
             int nameIndex = ByteUtils.bytes2Int(classByte, offset, u2);
-            resolveConstantPoolByIndex(classByte, nameIndex);
+            String fieldSimpleName = resolveConstantPoolByIndex(classByte, nameIndex);
+            System.out.println("字段简单名称fieldSimpleName=" + fieldSimpleName);
 
             offset += u2;
 
             // u2类型的descriptor_index描述符、说明这个字段是什么类型的
             int descriptorIndex = ByteUtils.bytes2Int(classByte, offset, u2);
-            resolveConstantPoolByIndex(classByte, descriptorIndex);
+            String fieldDescriptor = resolveConstantPoolByIndex(classByte, descriptorIndex);
+            System.out.println("字段类型描述fieldDescriptor=" + fieldDescriptor);
 
             offset += u2;
 
-            // 解析属性数
+            // 解析属性数(不是每个字段都有属性的!!!如果没有给初始值就没有)
             int attributesCount = ByteUtils.bytes2Int(classByte, offset, u2);
 
             offset += u2;
