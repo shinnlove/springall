@@ -243,6 +243,9 @@ public class ClassModifier {
     /**
      * 访问类信息。
      *
+     * 包括：类的名称、父类名称、实现接口名称。
+     * 类的属性字段、类的方法。
+     *
      * @param offset    常量池结束后、访问标志开始前
      */
     public void traverseClassInfo(int offset) {
@@ -284,50 +287,73 @@ public class ClassModifier {
         }
 
         // 解析字段表
-        int fieldCount = ByteUtils.bytes2Int(classByte, offset, u2);
-        System.out.println("这个类有" + fieldCount + "个字段");
+        offset = resolveClassFieldOrMethod(classByte, offset);
+
+        // 解析方法表
+        offset = resolveClassFieldOrMethod(classByte, offset);
+
+        // 此时offset是解析完方法表的首字节
+
+    }
+
+    /**
+     * 从给定字节数组的起始位置解析出类的字段或方法，返回类或方法解析结束位置后的首字节偏移量。
+     *
+     * @param bytes     类的字节码文件
+     * @param start     字段或方法开始的首字节偏移量
+     * @return          类或方法解析结束位置后的首字节偏移量
+     */
+    public int resolveClassFieldOrMethod(byte[] bytes, int start) {
+
+        int offset = start;
+
+        // 解析类的方法
+        int methodCount = ByteUtils.bytes2Int(bytes, offset, u2);
+        System.out.println("这个类有" + methodCount + "个方法");
 
         offset += u2;
 
-        // 循环解析类的字段
-        for (int i = 0; i < fieldCount; i++) {
+        // 循环解析类的每个方法
+        for (int i = 0; i < methodCount; i++) {
+
             // u2类型的accessFlag
-            int fieldAccessFlag = ByteUtils.bytes2Int(classByte, offset, u2);
+            int accessFlag = ByteUtils.bytes2Int(bytes, offset, u2);
 
             offset += u2;
 
             // u2类型的name_index简单名称
-            int nameIndex = ByteUtils.bytes2Int(classByte, offset, u2);
-            String fieldSimpleName = resolveConstantPoolByIndex(classByte, nameIndex);
-            System.out.println("字段简单名称fieldSimpleName=" + fieldSimpleName);
+            int nameIndex = ByteUtils.bytes2Int(bytes, offset, u2);
+            String simpleName = resolveConstantPoolByIndex(bytes, nameIndex);
+            System.out.println("字段或方法简单名称simpleName=" + simpleName);
 
             offset += u2;
 
             // u2类型的descriptor_index描述符、说明这个字段是什么类型的
-            int descriptorIndex = ByteUtils.bytes2Int(classByte, offset, u2);
-            String fieldDescriptor = resolveConstantPoolByIndex(classByte, descriptorIndex);
-            System.out.println("字段类型描述fieldDescriptor=" + fieldDescriptor);
+            int descriptorIndex = ByteUtils.bytes2Int(bytes, offset, u2);
+            String descriptor = resolveConstantPoolByIndex(bytes, descriptorIndex);
+            System.out.println("字段或方法类型描述descriptor=" + descriptor);
 
             offset += u2;
 
             // 解析属性数(不是每个字段都有属性的!!!如果没有给初始值就没有)
-            int attributesCount = ByteUtils.bytes2Int(classByte, offset, u2);
+            int attributesCount = ByteUtils.bytes2Int(bytes, offset, u2);
 
             offset += u2;
 
-            // 循环解析字段的属性表，每个属性都是一个attribute_info类型
+            // 循环解析每个方法的属性表
             for (int j = 0; j < attributesCount; j++) {
+
                 // 属性名索引序号
-                int attributeNameIndex = ByteUtils.bytes2Int(classByte, offset, u2);
+                int attributeNameIndex = ByteUtils.bytes2Int(bytes, offset, u2);
                 // 关键的属性名
-                String attributeName = resolveConstantPoolByIndex(classByte, attributeNameIndex);
+                String attributeName = resolveConstantPoolByIndex(bytes, attributeNameIndex);
 
                 System.out.println("当前attributeName=" + attributeName);
 
                 offset += u2;
 
                 // 属性表长度大家都是占用u4字节的
-                int attributeLength = ByteUtils.bytes2Int(classByte, offset, u4);
+                int attributeLength = ByteUtils.bytes2Int(bytes, offset, u4);
                 System.out.println("attributeLength=" + attributeLength);
 
                 offset += u4;
@@ -338,14 +364,41 @@ public class ClassModifier {
                         // ConstantValue类型attributeLength定长为2
 
                         // 固定值字面量索引
-                        int constantValueIndex = ByteUtils.bytes2Int(classByte, offset, u2);
-                        String constantValue = resolveConstantPoolByIndex(classByte,
-                            constantValueIndex);
+                        int constantValueIndex = ByteUtils.bytes2Int(bytes, offset, u2);
+                        String constantValue = resolveConstantPoolByIndex(bytes, constantValueIndex);
 
                         // 这里将会输出Micheal Jordan
                         System.out.println("constantValue=" + constantValue);
 
                         break;
+
+                    case ClassFileConstants.ATTRIBUTE_CODE:
+                        // Code函数体字节码
+
+                        int current = offset;
+
+                        // 最大栈深，注意虚拟机-Xss参数
+                        int maxStacks = ByteUtils.bytes2Int(bytes, current, u2);
+                        current += u2;
+
+                        // 局部变量表容量
+                        int maxLocals = ByteUtils.bytes2Int(bytes, current, u2);
+                        current += u2;
+
+                        // 字节码指令长度
+                        int codeLength = ByteUtils.bytes2Int(bytes, current, u4);
+                        current += u4;
+
+                        // 读出每条字节码，字节码本身在一个字节内，但是有些字节码会跟操作数，因此操作数取完才是下一条指令
+                        for (int k = 0; k < codeLength; k++) {
+                            int codeIndex = ByteUtils.bytes2Int(bytes, current, u1);
+                            System.out.println("字节码指令表对应的十进制索引codeIndex=" + codeIndex);
+                            // 下一条字节码
+                            current += u1;
+                        }
+
+                        break;
+
                     default:
                         break;
                 }
@@ -353,12 +406,11 @@ public class ClassModifier {
                 // 共同偏移属性表长度个字节
                 offset += attributeLength;
 
-            } // for 属性表
+            }
 
-        } // for 类字段
+        } // for field or method count
 
-        // 类字段解析完应该解析方法了
-
+        return offset;
     }
 
     /**

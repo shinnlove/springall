@@ -65,4 +65,7 @@ public class ClassFileConstants {
     /** 属性表固定项——ConstantValue，通知虚拟机自动为静态变量赋值 */
     public static final String ATTRIBUTE_CONSTANT_VALUE             = "ConstantValue";
 
+    /** 属性表固定项——Code，函数字节码指令存放的结构体 */
+    public static final String ATTRIBUTE_CODE                       = "Code";
+
 }
