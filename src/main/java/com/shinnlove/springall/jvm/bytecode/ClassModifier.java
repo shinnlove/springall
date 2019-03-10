@@ -182,7 +182,7 @@ public class ClassModifier {
             // 读完每个常量偏移量会自动定位到下一个常量池的偏移量
             if (ClassFileConstants.CONSTANT_Utf8_info_TAG == tag) {
                 // 1.处理不定长的`CONSTANT_Utf8_info`类型
-                offset = read_CONSTANT_Utf8_info(classByte, offset);
+                offset = traverse_CONSTANT_Utf8_info(classByte, offset);
             } else if (ClassFileConstants.CONSTANT_Integer_info_TAG == tag) {
 
                 // 非`CONSTANT_Utf8_info`常量、直接越过当前常量长度
@@ -302,7 +302,7 @@ public class ClassModifier {
 
             offset += u2;
 
-            // u2类型的name_index简单名称
+            // u2类型的descriptor_index描述符、说明这个字段是什么类型的
             int descriptorIndex = ByteUtils.bytes2Int(classByte, offset, u2);
             resolveConstantPoolByIndex(classByte, descriptorIndex);
 
@@ -313,12 +313,18 @@ public class ClassModifier {
 
             offset += u2;
 
-            // 循环解析字段的属性表
+            // 循环解析字段的属性表，每个属性都是一个attribute_info类型
             for (int j = 0; j < attributesCount; j++) {
+                // 属性名索引序号
                 int attributeNameIndex = ByteUtils.bytes2Int(classByte, offset, u2);
-                System.out.println("attributeNameIndex=" + attributeNameIndex);
+                // 关键的属性名
+                String attributeName = resolveConstantPoolByIndex(classByte, attributeNameIndex);
+
+                System.out.println("当前attributeName=" + attributeName);
 
                 offset += u2;
+
+                // TODO：根据不同的属性名解析不同的属性表
 
                 int attributeLength = ByteUtils.bytes2Int(classByte, offset, u4);
                 System.out.println("attributeLength=" + attributeLength);
@@ -371,7 +377,7 @@ public class ClassModifier {
      * @param start
      * @return          返回读完后的偏移量
      */
-    public int read_CONSTANT_Utf8_info(byte[] bytes, int start) {
+    public int traverse_CONSTANT_Utf8_info(byte[] bytes, int start) {
 
         // 读出`CONSTANT_Utf8_info`长度length
         int length = ByteUtils.bytes2Int(bytes, start + u1, u2);
@@ -379,13 +385,30 @@ public class ClassModifier {
         start += (u1 + u2);
 
         // 读出这么长的`CONSTANT_Utf8_info`字符串信息bytes
-        String str = ByteUtils.byte2String(bytes, start, length);
+        String str = read_CONSTANT_Utf8_info(bytes, start);
 
         // 输出这个字符串常量
         System.out.println(str);
 
         // 不定长，所以加上读出的length
         return start + length;
+    }
+
+    /**
+     * 读出`CONSTANT_Utf8_info`常量信息。
+     *
+     * @param bytes
+     * @param start
+     * @return
+     */
+    public String read_CONSTANT_Utf8_info(byte[] bytes, int start) {
+        // 读出`CONSTANT_Utf8_info`长度length
+        int length = ByteUtils.bytes2Int(bytes, start + u1, u2);
+
+        start += (u1 + u2);
+
+        // 读出这么长的`CONSTANT_Utf8_info`字符串信息bytes
+        return ByteUtils.byte2String(bytes, start, length);
     }
 
     /**
@@ -547,16 +570,16 @@ public class ClassModifier {
     }
 
     /**
-     * 解析常量池中第几个常量。
+     * 按给出索引序号解析常量池中第几个常量。
      *
      * @param bytes
      * @param index
      */
-    public void resolveConstantPoolByIndex(byte[] bytes, int index) {
+    public String resolveConstantPoolByIndex(byte[] bytes, int index) {
         int offsetIndex = searchConstantPoolByIndex(bytes, index);
 
         // 跳跃型解析常量池
-        resolveConstantPoolFromOffset(bytes, offsetIndex);
+        return resolveConstantPoolFromOffset(bytes, offsetIndex);
     }
 
     /**
@@ -615,31 +638,33 @@ public class ClassModifier {
     }
 
     /**
-     * 从给定偏移位置解析常量池常量。
+     * 从给定偏移位置解析常量池常量、通常如果是解析字符串、类名和UTF-8常量则可以接受返回值。
      * 
      * @param bytes     给定class类字节文件
      * @param start     起始解析索引位置
+     * @return          需要字符串信息时的返回值
      */
-    public int resolveConstantPoolFromOffset(byte[] bytes, int start) {
+    public String resolveConstantPoolFromOffset(byte[] bytes, int start) {
+        String result = null;
         int tag = read_CONSTANT_POOL_INFO_TAG(bytes, start);
         switch (tag) {
             case ClassFileConstants.CONSTANT_Utf8_info_TAG:
                 // 1.UTF-8编码的字符串
-                read_CONSTANT_Utf8_info(bytes, start);
+                result = read_CONSTANT_Utf8_info(bytes, start);
                 break;
             case ClassFileConstants.CONSTANT_Class_info_TAG:
-                // 7.类或接口的符号引用，指向一个类
+                // 7.类或接口的符号引用，指向一个类(将类名返回出来)
                 read_CONSTANT_Class_info(bytes, start);
                 break;
             case ClassFileConstants.CONSTANT_String_info_TAG:
-                // 8.字符串类型字面量
+                // 8.字符串类型字面量(将字符串信息返回出来)
                 read_CONSTANT_String_info(bytes, start);
                 break;
             default:
                 break;
         }
 
-        return start;
+        return result;
     }
 
 }
