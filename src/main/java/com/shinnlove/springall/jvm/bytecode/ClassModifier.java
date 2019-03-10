@@ -378,17 +378,16 @@ public class ClassModifier {
      * @return          返回读完后的偏移量
      */
     public int traverse_CONSTANT_Utf8_info(byte[] bytes, int start) {
-
-        // 读出`CONSTANT_Utf8_info`长度length
-        int length = ByteUtils.bytes2Int(bytes, start + u1, u2);
-
-        start += (u1 + u2);
-
         // 读出这么长的`CONSTANT_Utf8_info`字符串信息bytes
         String str = read_CONSTANT_Utf8_info(bytes, start);
 
         // 输出这个字符串常量
         System.out.println(str);
+
+        // 读出`CONSTANT_Utf8_info`长度length
+        int length = ByteUtils.bytes2Int(bytes, start + u1, u2);
+
+        start += (u1 + u2);
 
         // 不定长，所以加上读出的length
         return start + length;
