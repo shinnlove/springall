@@ -334,7 +334,7 @@ public class ClassModifier {
 
                 // 根据不同的属性名解析不同的属性表
                 switch (attributeName) {
-                    case "ConstantValue":
+                    case ClassFileConstants.ATTRIBUTE_CONSTANT_VALUE:
                         // ConstantValue类型attributeLength定长为2
 
                         // 固定值字面量索引
@@ -356,6 +356,8 @@ public class ClassModifier {
             } // for 属性表
 
         } // for 类字段
+
+        // 类字段解析完应该解析方法了
 
     }
 
