@@ -27,6 +27,14 @@ public class JavaNativeHello {
      */
     public static native int print(int width, int precision, double x);
 
+    /**
+     * 传入一个字符串，将字符串拷贝一遍返回。
+     *
+     * @param origin        需要拷贝的原始字符串
+     * @return
+     */
+    public static native String doubleString(String origin);
+
     public static void main(String[] args) {
         System.out.println(System.getProperty("java.library.path"));
     }

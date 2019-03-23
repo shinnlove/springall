@@ -20,14 +20,18 @@ public class NativeHelloTest {
     }
 
     public static void main(String[] args) {
-        // 调用无参方法
+        // 1.调用无参方法
         JavaNativeHello.greeting();
 
-        // 调用带参数和返回值方法
+        // 2.调用带参数和返回值方法
         int count = JavaNativeHello.print(8, 4, 3.14);
         System.out.println("result1=" + count);
         count += JavaNativeHello.print(8, 4, count);
         System.out.println("result2=" + count);
+
+        // 3.调用带字符串形参和返回值的函数
+        String result = JavaNativeHello.doubleString("Hello, native string.");
+        System.out.println("原生方法返回的字符串str=" + result);
     }
 
 }
