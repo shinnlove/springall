@@ -12,7 +12,20 @@ package com.shinnlove.springall.jni;
  */
 public class JavaNativeHello {
 
+    /**
+     * 无参java本地方法。
+     */
     public static native void greeting();
+
+    /**
+     * 带参数的打印数据方法。
+     *
+     * @param width         所打印数据的位数
+     * @param precision     数据精度
+     * @param x             一个浮点数据
+     * @return
+     */
+    public static native int print(int width, int precision, double x);
 
     public static void main(String[] args) {
         System.out.println(System.getProperty("java.library.path"));

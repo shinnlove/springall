@@ -8,6 +8,7 @@ package com.shinnlove.springall.jni;
  * 加载本地方法库。
  *
  * 本地方法库不区分大小写，驼峰式完全为了好看。
+ * 这里将自定义的lib文件放到用户目录下了，反正就本用户使用。
  *
  * @author shinnlove.jinsheng
  * @version $Id: NativeHelloTest.java, v 0.1 2019-03-17 20:59 shinnlove.jinsheng Exp $$
@@ -19,7 +20,14 @@ public class NativeHelloTest {
     }
 
     public static void main(String[] args) {
+        // 调用无参方法
         JavaNativeHello.greeting();
+
+        // 调用带参数和返回值方法
+        int count = JavaNativeHello.print(8, 4, 3.14);
+        System.out.println("result1=" + count);
+        count += JavaNativeHello.print(8, 4, count);
+        System.out.println("result2=" + count);
     }
 
 }
