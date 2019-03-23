@@ -30,7 +30,7 @@ public class NativeHelloTest {
         System.out.println("result2=" + count);
 
         // 3.调用带字符串形参和返回值的函数
-        String result = JavaNativeHello.doubleString("Hello, native string.");
+        String result = JavaNativeHello.doubleString("丝倩我爱你");
         System.out.println("原生方法返回的字符串str=" + result);
     }
 
