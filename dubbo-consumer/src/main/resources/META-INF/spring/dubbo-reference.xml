@@ -14,13 +14,8 @@
        default-autowire="byName">
 
     <!-- dubbo rpc服务 -->
+    <import resource="dubbo-api.xml"/>
 
-    <!-- 提供者的应用名 -->
-    <dubbo:application name="dubbo-client" />
-    <!-- 使用zookeeper作为注册中心地址 -->
-    <dubbo:registry address="zookeeper://127.0.0.1:2181" />
-    <!-- 使用dubbo协议在端口12345上暴露rpc服务 -->
-    <dubbo:protocol name="dubbo" port="12345" />
     <!-- 指明要引用的具体rpc服务 -->
     <dubbo:reference id="rpcHelloService" interface="com.shinnlove.springall.dubbo.api.HelloService" />
 
