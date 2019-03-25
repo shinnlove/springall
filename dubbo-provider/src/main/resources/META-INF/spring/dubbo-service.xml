@@ -22,6 +22,6 @@
     <!-- 使用dubbo协议在端口12345上暴露rpc服务 -->
     <dubbo:protocol name="dubbo" port="12345" />
     <!-- 将具体接口类型服务暴露出来 -->
-    <dubbo:service interface="com.shinnlove.springall.service.HelloService" ref="helloService" />
+    <dubbo:service interface="com.shinnlove.springall.dubbo.api.HelloService" ref="helloService" />
 
 </beans>

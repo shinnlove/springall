@@ -15,9 +15,6 @@
     <!-- 在此注入bean -->
 
     <!-- server内部具体服务 -->
-    <bean id="helloService" class="com.shinnlove.springall.service.impl.HelloServiceImpl" />
-
-    <!-- client端消费者 -->
-    <bean id="helloServiceConsumer" class="com.shinnlove.springall.service.HelloServiceConsumer"/>
+    <bean id="helloService" class="com.shinnlove.springall.dubbo.provider.HelloServiceImpl" />
 
 </beans>
