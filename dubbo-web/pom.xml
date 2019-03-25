@@ -138,15 +138,10 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <!-- web层依赖provider服务 -->
+        <!-- web层依赖dubbo服务 -->
         <dependency>
             <groupId>com.shinnlove</groupId>
-            <artifactId>springall-dubbo-provider</artifactId>
-        </dependency>
-        <!-- web层依赖consumer服务 -->
-        <dependency>
-            <groupId>com.shinnlove</groupId>
-            <artifactId>springall-dubbo-consumer</artifactId>
+            <artifactId>springall-dubbo-service</artifactId>
         </dependency>
     </dependencies>
 

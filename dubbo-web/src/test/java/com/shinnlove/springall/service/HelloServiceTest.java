@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.shinnlove.springall.dubbo.consumer.HelloServiceConsumer;
+import com.shinnlove.springall.dubbo.service.consumer.HelloServiceConsumer;
 
 /**
  * dubbo服务发布测试。
@@ -21,7 +21,7 @@ import com.shinnlove.springall.dubbo.consumer.HelloServiceConsumer;
  * @version $Id: HelloServiceTest.java, v 0.1 2019-03-25 14:49 shinnlove.jinsheng Exp $$
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/META-INF/spring/applicationContext.xml" })
+@ContextConfiguration(locations = { "classpath*:/META-INF/spring/dubbo-service.xml" })
 public class HelloServiceTest {
 
     @Autowired

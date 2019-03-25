@@ -14,7 +14,7 @@
 
     <!-- 在此注入bean -->
 
-    <!-- client端消费者 -->
-    <bean id="helloServiceConsumer" class="com.shinnlove.springall.dubbo.consumer.HelloServiceConsumer" />
+    <!-- server内部具体服务 -->
+    <bean id="helloServiceConsumer" class="com.shinnlove.springall.dubbo.service.consumer.HelloServiceConsumer"/>
 
 </beans>

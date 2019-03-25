@@ -5,24 +5,33 @@
        xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd"
        default-autowire="byName">
 
-    <!-- dubbo rpc服务 -->
+    <!-- dubbo rpc服务 收、发服务都定义在一个模块里 -->
 
     <!-- 提供者的应用名 -->
-    <dubbo:application name="dubbo-service" />
+    <dubbo:application name="dubbo-service"/>
     <!-- 使用zookeeper作为注册中心地址 -->
-    <dubbo:registry address="zookeeper://127.0.0.1:2181" />
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
     <!-- 使用dubbo协议在端口12345上暴露rpc服务 -->
-    <dubbo:protocol name="dubbo" port="12345" />
+    <dubbo:protocol name="dubbo" port="12345"/>
+
+    <!-- 服务发布区域 -->
 
     <!-- 将具体接口类型服务暴露出来 -->
+    <bean id="helloService" class="com.shinnlove.springall.dubbo.service.provider.HelloServiceImpl" />
+
     <dubbo:service interface="com.shinnlove.springall.dubbo.api.HelloService" ref="helloService" />
+
+    <!-- 服务引用区域 -->
+
+    <!-- 指明要引用的具体rpc服务 -->
+    <dubbo:reference id="rpcHelloService" interface="com.shinnlove.springall.dubbo.api.HelloService" />
 
 </beans>

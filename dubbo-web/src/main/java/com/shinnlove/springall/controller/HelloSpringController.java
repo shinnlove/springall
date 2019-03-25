@@ -4,7 +4,7 @@
  */
 package com.shinnlove.springall.controller;
 
-import com.shinnlove.springall.dubbo.consumer.HelloServiceConsumer;
+import com.shinnlove.springall.dubbo.api.HelloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shinnlove.springall.dubbo.service.consumer.HelloServiceConsumer;
 import com.shinnlove.springall.util.log.LoggerUtil;
 
 /**
@@ -25,10 +26,10 @@ import com.shinnlove.springall.util.log.LoggerUtil;
 public class HelloSpringController {
 
     /** log4j2日志 */
-    private static final Logger LOGGER = LoggerFactory.getLogger(HelloSpringController.class);
+    private static final Logger  LOGGER = LoggerFactory.getLogger(HelloSpringController.class);
 
     @Autowired
-    private HelloServiceConsumer helloServiceConsumer;
+    private HelloServiceConsumer rpcHelloService;
 
     @RequestMapping(value = "/log4j2", method = { RequestMethod.GET, RequestMethod.POST })
     public String sayHello() {
@@ -37,7 +38,7 @@ public class HelloSpringController {
         LoggerUtil.error(LOGGER, new RuntimeException("这是我自定义的错误"));
 
         // 调用一下rpc服务
-        helloServiceConsumer.callRpcService();
+        rpcHelloService.callRpcService();
 
         return "This is log4j2 test.";
     }

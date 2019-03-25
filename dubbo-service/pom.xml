@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>com.shinnlove</groupId>
-    <artifactId>springall-dubbo-consumer</artifactId>
+    <artifactId>springall-dubbo-service</artifactId>
     <packaging>jar</packaging>
     <version>1.0.20190325</version>
-    <name>springall-dubbo-consumer Maven Webapp</name>
+    <name>springall-dubbo-service Maven Webapp</name>
     <url>http://www.shinnlove.com</url>
 
     <dependencies>

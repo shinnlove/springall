@@ -202,12 +202,7 @@
             </dependency>
             <dependency>
                 <groupId>com.shinnlove</groupId>
-                <artifactId>springall-dubbo-provider</artifactId>
-                <version>1.0.20190325</version>
-            </dependency>
-            <dependency>
-                <groupId>com.shinnlove</groupId>
-                <artifactId>springall-dubbo-consumer</artifactId>
+                <artifactId>springall-dubbo-service</artifactId>
                 <version>1.0.20190325</version>
             </dependency>
             <dependency>
@@ -220,8 +215,7 @@
 
     <modules>
         <module>dubbo-web</module>
-        <module>dubbo-consumer</module>
-        <module>dubbo-provider</module>
+        <module>dubbo-service</module>
         <module>dubbo-api</module>
     </modules>
 

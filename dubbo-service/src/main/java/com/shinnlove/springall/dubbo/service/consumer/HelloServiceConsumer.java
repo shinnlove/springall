@@ -2,15 +2,15 @@
  * Alipay.com Inc.
  * Copyright (c) 2004-2019 All Rights Reserved.
  */
-package com.shinnlove.springall.dubbo.consumer;
+package com.shinnlove.springall.dubbo.service.consumer;
 
 import com.shinnlove.springall.dubbo.api.HelloService;
 
 /**
- * HelloService服务消费者。
+ * dubbo服务消费者。
  *
  * @author shinnlove.jinsheng
- * @version $Id: HelloServiceConsumer.java, v 0.1 2019-03-25 16:26 shinnlove.jinsheng Exp $$
+ * @version $Id: HelloServiceConsumer.java, v 0.1 2019-03-25 18:45 shinnlove.jinsheng Exp $$
  */
 public class HelloServiceConsumer {
 
