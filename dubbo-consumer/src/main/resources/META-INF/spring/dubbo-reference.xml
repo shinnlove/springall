@@ -16,7 +16,7 @@
     <!-- dubbo rpc服务 -->
 
     <!-- 提供者的应用名 -->
-    <!--<dubbo:application name="dubbo-client" />-->
+    <dubbo:application name="dubbo-client" />
     <!-- 使用zookeeper作为注册中心地址 -->
     <dubbo:registry address="zookeeper://127.0.0.1:2181" />
     <!-- 使用dubbo协议在端口12345上暴露rpc服务 -->
