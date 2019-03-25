@@ -5,14 +5,23 @@
        xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
        default-autowire="byName">
 
-    <!-- 在此注入bean -->
-    <bean id="helloService" class="com.shinnlove.springall.service.impl.HelloServiceImpl" />
+    <!-- dubbo rpc服务 -->
+
+    <!-- 提供者的应用名 -->
+    <dubbo:application name="dubbo-server" />
+    <!-- 使用zookeeper作为注册中心地址 -->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" />
+    <!-- 使用dubbo协议在端口12345上暴露rpc服务 -->
+    <dubbo:protocol name="dubbo" port="12345" />
+    <!-- 将具体接口类型服务暴露出来 -->
+    <dubbo:service interface="com.shinnlove.springall.service.HelloService" ref="helloService" />
 
 </beans>
