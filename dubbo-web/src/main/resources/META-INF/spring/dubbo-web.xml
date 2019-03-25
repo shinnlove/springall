@@ -14,6 +14,9 @@
 
     <!-- 在此注入bean -->
 
-    <import resource="classpath:META-INF/spring/*.xml"/>
+    <import resource="classpath:META-INF/spring/dubbo-provider.xml"/>
+    <import resource="classpath:META-INF/spring/dubbo-service.xml"/>
+    <import resource="classpath:META-INF/spring/dubbo-consumer.xml"/>
+    <import resource="classpath:META-INF/spring/dubbo-reference.xml"/>
 
 </beans>
