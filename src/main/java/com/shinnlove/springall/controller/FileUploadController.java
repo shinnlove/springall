@@ -36,6 +36,16 @@ public class FileUploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadController.class);
 
     /**
+     * 上传文件页面。
+     *
+     * @return
+     */
+    @RequestMapping(value = "/file", method = RequestMethod.GET)
+    public String uploadPage() {
+        return "uploadPage";
+    }
+
+    /**
      * 处理单个文件上传。
      *
      * @param file
