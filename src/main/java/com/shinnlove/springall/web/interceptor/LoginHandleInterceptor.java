@@ -33,7 +33,8 @@ public class LoginHandleInterceptor implements HandlerInterceptor {
             System.out.println("Cookie[" + name + "] from Domain[" + domain + "] value is ["
                                + value + "]");
         }
-        return false;
+        // return false 就直接把请求拦截了。
+        return true;
     }
 
     @Override
