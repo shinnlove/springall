@@ -130,6 +130,17 @@
             <version>${jackson.version}</version>
         </dependency>
         <!-- Object -> json转换 end -->
+        <!-- J2EE servlet api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.2</version>
+        </dependency>
         <!-- 支持jstl表达式 -->
         <dependency>
             <groupId>javax.servlet</groupId>

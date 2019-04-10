@@ -94,4 +94,13 @@
     <!-- 支持上传文件 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/presto/index"/>
+            <bean class="com.shinnlove.springall.web.interceptor.LoginHandleInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>
