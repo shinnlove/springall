@@ -61,11 +61,9 @@ public class FileUploadController {
         LoggerUtil.info(LOGGER, "处理单个文件上传。");
 
         // 文件要保存的路径（这里直接上传到tomcat部署的应用下）
-        String path = request.getSession().getServletContext().getRealPath("upload");
+        String path = request.getSession().getServletContext().getRealPath("WEB-INF") + "/uploads";
         // 遵从文件原来的名字
         String fileName = file.getOriginalFilename();
-
-        System.out.println(path);
 
         // JDK1.7以前的文件类File
         File targetFile = new File(path, fileName);
@@ -80,7 +78,7 @@ public class FileUploadController {
             e.printStackTrace();
         }
 
-        model.addAttribute("filePath", request.getContextPath() + "/upload/" + fileName);
+        model.addAttribute("filePath", request.getContextPath() + "/uploads/" + fileName);
 
         return "result";
     }
@@ -103,7 +101,7 @@ public class FileUploadController {
         // 多文件获取则是使用MultipartHttpServletRequest.getFiles
         List<MultipartFile> fileList = fileRequest.getFiles("product-image");
 
-        String path = request.getSession().getServletContext().getRealPath("upload");
+        String path = request.getSession().getServletContext().getRealPath("WEB-INF") + "/uploads";
 
         for (MultipartFile file : fileList) {
             // 尊重原来的文件名
@@ -112,7 +110,8 @@ public class FileUploadController {
             File ioFile = new File(path, oneFileName);
             try {
                 file.transferTo(ioFile);
-                model.addAttribute("filePath", request.getContextPath() + "/upload/" + oneFileName);
+                model
+                    .addAttribute("filePath", request.getContextPath() + "/uploads/" + oneFileName);
             } catch (IOException e) {
                 model.addAttribute("result", false);
                 model.addAttribute("msg", "文件异常，上传失败！");

@@ -25,6 +25,7 @@
     <mvc:resources mapping="/js/**" location="/WEB-INF/static/js/"/>
     <mvc:resources mapping="/images/**" location="/WEB-INF/static/images/"/>
     <mvc:resources mapping="/error/**" location="/WEB-INF/views/error/"/>
+    <mvc:resources mapping="/uploads/**" location="/WEB-INF/uploads/"/>
 
     <!-- spring mvc 基本异常处理(比web.xml中配置错误更细粒度) -->
     <!-- 但是注意：@ControllerAdvice已经进行了所有应用层的错误捕捉，服务器只需要管404、50x等错误即可(`SimpleMappingExceptionResolver`有点小鸡肋) -->
