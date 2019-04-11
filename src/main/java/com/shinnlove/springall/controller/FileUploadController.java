@@ -4,8 +4,7 @@
  */
 package com.shinnlove.springall.controller;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,9 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.shinnlove.springall.util.code.SystemResultCode;
+import com.shinnlove.springall.util.exception.SystemException;
 import com.shinnlove.springall.util.log.LoggerUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 处理文件上传的控制器。
@@ -78,7 +80,7 @@ public class FileUploadController {
             e.printStackTrace();
         }
 
-        model.addAttribute("fileUrl", request.getContextPath() + "/upload/" + fileName);
+        model.addAttribute("filePath", request.getContextPath() + "/upload/" + fileName);
 
         return "result";
     }
@@ -110,7 +112,7 @@ public class FileUploadController {
             File ioFile = new File(path, oneFileName);
             try {
                 file.transferTo(ioFile);
-                model.addAttribute("fileUrl", request.getContextPath() + "/upload/" + oneFileName);
+                model.addAttribute("filePath", request.getContextPath() + "/upload/" + oneFileName);
             } catch (IOException e) {
                 model.addAttribute("result", false);
                 model.addAttribute("msg", "文件异常，上传失败！");
@@ -120,4 +122,52 @@ public class FileUploadController {
         return "result";
     }
 
+    /**
+     * 下载文件示例。
+     *
+     * @param fileId        要下载的文件id，查询数据库换path和name
+     * @param filePath      做演示用的filePath，省去查询数据库
+     * @param request       
+     * @param response
+     */
+    @RequestMapping(value = "/downloadFile", method = { RequestMethod.GET, RequestMethod.POST })
+    public void downloadFileById(String fileId, String filePath, HttpServletRequest request,
+                                 HttpServletResponse response) {
+
+        // TODO：use fileId to query DB get the file's real path, name and suffix.
+
+        String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+        String currentPath = request.getSession().getServletContext().getRealPath("upload");
+        String fileRealPath = currentPath + "/" + fileName;
+
+        // 读取文件包个马甲送给`@ExceptionHandler`拦截
+        try {
+
+            // 设置响应头
+            response.reset();
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+
+            // 文件流缓冲（注意生产环境文件可能在不同位置）
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileRealPath));
+
+            // 20K的、优雅的、写到输出流里
+            byte[] bytes = new byte[20480];
+            int n = -1;
+            while ((n = in.read(bytes, 0, bytes.length)) != -1) {
+                outputStream.write(bytes, 0, n);
+            }
+
+            // 刷网卡缓冲
+            outputStream.flush();
+            outputStream.close();
+
+        } catch (FileNotFoundException e) {
+            throw new SystemException(SystemResultCode.SYSTEM_ERROR, e, "没有找到文件");
+        } catch (Exception e) {
+            throw new SystemException(SystemResultCode.SYSTEM_ERROR, e, "将文件写入网络IO流出错");
+        }
+
+    }
 }
