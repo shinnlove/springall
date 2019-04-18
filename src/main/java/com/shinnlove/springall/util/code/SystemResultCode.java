@@ -43,6 +43,9 @@ public enum SystemResultCode implements BaseEnum {
     /** 数据SQL执行出错 */
     DB_EXECUTE_ERROR("10008", "数据SQL执行出错"),
 
+    /** 文件上传出错 */
+    FILE_UPLOAD_ERROR("10009", "文件上传出错"),
+
     ;
 
     /** 错误码 */
