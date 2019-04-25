@@ -16,6 +16,8 @@ import com.google.common.util.concurrent.RateLimiter;
  *
  * 这个句柄对象可以被改变，也就是当接收到消息onCall的时候，可以将限流对象重新构造，通常被定义为volatile的类型。
  *
+ * 特别注意：RateLimit如果一次性`acquire`多个令牌，当突发流量吸走所有令牌，产生速率跟不上的时候，还会让线程等待到足量令牌才获得。
+ *
  * @author shinnlove.jinsheng
  * @version $Id: GuavaRateLimiter.java, v 0.1 2018-08-14 下午11:44 shinnlove.jinsheng Exp $$
  */
