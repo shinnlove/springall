@@ -90,27 +90,50 @@ public class JedisString {
 
     /**
      * redis超时key的设置。注意ex是秒数，px是毫秒数。
+     * 
+     * 运行输出：
+     * 超时测试等待前：从redis获取exResult={"age":22,"id":2,"name":"tony"}
+     * 超时测试等待前：从redis获取pxResult={"age":23,"id":3,"name":"shinn"}
+     * 超时测试等待后：从redis获取exResult=null
+     * 超时测试等待后：从redis获取pxResult={"age":23,"id":3,"name":"shinn"}
+     * 
      */
     public static void setExpireKey() {
-        Student student = new Student(2L, "tony", 22);
+        Student exStudent = new Student(2L, "tony", 22);
+        Student pxStudent = new Student(3L, "shinn", 23);
 
-        String key = "student-ex";
-        String value = JSON.toJSONString(student);
+        String exKey = "student-ex";
+        String exValue = JSON.toJSONString(exStudent);
 
-        jedis.setex(key, 5, value);
+        String pxKey = "student-px";
+        String pxValue = JSON.toJSONString(pxStudent);
 
-        String result = jedis.get(key);
-        System.out.println("超时测试等待前：从redis获取result=" + result);
+        // ex：超时秒数
+        jedis.setex(exKey, 5, exValue);
 
+        // px：注意milliseconds是long类型的
+        jedis.psetex(pxKey, 5432L, pxValue);
+
+        String exResult = jedis.get(exKey);
+        System.out.println("超时测试等待前：从redis获取exResult=" + exResult);
+
+        String pxResult = jedis.get(pxKey);
+        System.out.println("超时测试等待前：从redis获取pxResult=" + pxResult);
+
+        // 精确沉睡毫秒
         try {
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.MILLISECONDS.sleep(5100L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         // 注意：超时后再用redis的 get student-ex 得到 nil的结果，代码就直接null了
-        String current = jedis.get(key);
-        System.out.println("超时测试等待后：从redis获取result=" + current);
+        String exCurrent = jedis.get(exKey);
+        System.out.println("超时测试等待后：从redis获取exResult=" + exCurrent);
+
+        // px描述还没超时，所以能获取到
+        String pxCurrent = jedis.get(pxKey);
+        System.out.println("超时测试等待后：从redis获取pxResult=" + pxCurrent);
     }
 
 }
