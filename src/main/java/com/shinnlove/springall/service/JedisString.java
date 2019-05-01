@@ -4,6 +4,7 @@
  */
 package com.shinnlove.springall.service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import redis.clients.jedis.Jedis;
@@ -28,8 +29,11 @@ import com.shinnlove.springall.model.Student;
  * c) 指定更新xx
  * set k v xx
  * 
- * jedis中的设置方法有key和value，第三个参数是nx或xx的字符串，第四个参数是超时时间类型ex或px，第五个参数是long类型的时间。
+ * jedis中的设置方法set有key和value，第三个参数是nx或xx的字符串，第四个参数是超时时间类型ex或px，第五个参数是long类型的时间。
  * 当设置成功后set方法返回OK字符串、否则就返回null对象。
+ * 对于jedis的mset方法成功返回OK，失败返回null；对于msetnx方法多个key/value设置成功返回1，失败返回0。
+ * 
+ * jedis可以设置字节数组类型的key。
  * 
  * @author shinnlove.jinsheng
  * @version $Id: JedisString.java, v 0.1 2019-05-01 10:50 shinnlove.jinsheng Exp $$
@@ -49,6 +53,10 @@ public class JedisString {
         setExpireKey();
 
         setnxAndSetxx();
+
+        multipleGetValue();
+
+        multipleSetValue();
     }
 
     /**
@@ -182,6 +190,44 @@ public class JedisString {
         } else {
             System.out.println("setnx设置失败");
         }
+    }
+
+    /**
+     * 一次get多个值，值的顺序按照key的顺序返回，不存在则为null。
+     */
+    public static void multipleGetValue() {
+        String oneKey = "evelyn";
+        String twoKey = "shinn";
+        String threeKey = "tony";
+        String fouthKey = "silksnow";
+
+        // 传入不确定数量的key
+        List<String> mgetList = jedis.mget(oneKey, twoKey, threeKey, fouthKey);
+        for (int i = 0; i < mgetList.size(); i++) {
+            System.out.println("mget命令得到的第" + i + "个value=" + mgetList.get(i));
+        }
+    }
+
+    /**
+     * 一次设置多个key/value值。
+     */
+    public static void multipleSetValue() {
+        String oneKey = "one";
+        String oneValue = JSON.toJSONString(new Student(6L, "tony", 27));
+
+        String twoKey = "two";
+        String twoValue = JSON.toJSONString(new Student(7L, "silksnow", 27));
+
+        String threeKey = "three";
+        String threeValue = JSON.toJSONString(new Student(8L, "evelyn", 27));
+
+        // 第一次直接设置
+        String multiResult = jedis.mset(oneKey, oneValue, twoKey, twoValue, threeKey, threeValue);
+        System.out.println("使用String的mset批量设置多个key/value结果result=" + multiResult);
+
+        // 第二次用nx设置
+        long nxSetResult = jedis.msetnx(oneKey, oneValue, twoKey, twoValue, threeKey, threeValue);
+        System.out.println("使用String的msetnx批量设置多个key/value结果result=" + nxSetResult);
     }
 
 }
