@@ -25,7 +25,7 @@ import com.shinnlove.springall.model.Student;
 public class JedisString {
 
     /** jedis单连redis客户端 */
-    private static Jedis jedis = new Jedis("192.168.0.108", 6379);
+    private static Jedis jedis = new Jedis("127.0.0.1", 6379);
 
     public static void main(String[] args) {
         stringSetAndGet();
