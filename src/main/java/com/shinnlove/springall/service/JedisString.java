@@ -21,14 +21,15 @@ import com.shinnlove.springall.model.Student;
  * ex是过期的秒数、px是精确过期的毫秒数。
  * nx代表不存在才能设置成功；xx则是必须存在才可以设置成功、用于更新。
  *
- * 原生超时命令
+ * a) 原生超时命令
  * setex key seconds value
- *
- * 全局锁nx
+ * b) 全局锁nx
  * setnx k v  
- *
- * 指定更新xx
+ * c) 指定更新xx
  * set k v xx
+ * 
+ * jedis中的设置方法有key和value，第三个参数是nx或xx的字符串，第四个参数是超时时间类型ex或px，第五个参数是long类型的时间。
+ * 当设置成功后set方法返回OK字符串、否则就返回null对象。
  * 
  * @author shinnlove.jinsheng
  * @version $Id: JedisString.java, v 0.1 2019-05-01 10:50 shinnlove.jinsheng Exp $$
@@ -46,6 +47,8 @@ public class JedisString {
         modelStringSetAndGet();
 
         setExpireKey();
+
+        setnxAndSetxx();
     }
 
     /**
@@ -65,7 +68,9 @@ public class JedisString {
         String key = "name";
         String value = "shinnlove";
 
-        jedis.set(key, value);
+        String setResult = jedis.set(key, value);
+        System.out.println("设置结果setResult=" + setResult);
+
         String result = jedis.get(key);
         System.out.println("name=" + key + ", value=" + result);
     }
@@ -134,6 +139,49 @@ public class JedisString {
         // px描述还没超时，所以能获取到
         String pxCurrent = jedis.get(pxKey);
         System.out.println("超时测试等待后：从redis获取pxResult=" + pxCurrent);
+    }
+
+    /**
+     * Redis的setnx和set k/v xx。
+     */
+    public static void setnxAndSetxx() {
+
+        Student silksnow = new Student(4L, "silksnow", 26);
+        Student evelyn = new Student(5L, "evelyn", 24);
+
+        String silksnowKey = "silksnow";
+        String silksnowValue = JSON.toJSONString(silksnow);
+
+        String evelynKey = "evelyn";
+        String evelynValue = JSON.toJSONString(evelyn);
+
+        // 第一次可以设置
+        long first = jedis.setnx(silksnowKey, silksnowValue);
+        printResult(first);
+
+        // 第二次无法设置
+        long second = jedis.setnx(silksnowKey, silksnowValue);
+        printResult(second);
+
+        // 直接设置xx失败返回null
+        String third = jedis.set(evelynKey, evelynValue, "xx");
+        System.out.println("set key value xx的结果third=" + third);
+
+        // 故意设置evely的key为silksnow
+        String fourth = jedis.set(evelynKey, silksnowValue);
+        System.out.println("普通set的结果fourth=" + fourth);
+
+        // 再做更新，成功返回"OK"的字符串
+        String fifth = jedis.set(evelynKey, evelynValue, "xx");
+        System.out.println("set key value xx的结果fifth=" + fifth);
+    }
+
+    private static void printResult(Long result) {
+        if (result == 1) {
+            System.out.println("setnx设置成功");
+        } else {
+            System.out.println("setnx设置失败");
+        }
     }
 
 }
