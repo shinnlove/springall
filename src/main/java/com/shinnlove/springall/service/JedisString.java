@@ -57,6 +57,8 @@ public class JedisString {
         multipleGetValue();
 
         multipleSetValue();
+
+        incrAndDecr();
     }
 
     /**
@@ -194,6 +196,8 @@ public class JedisString {
 
     /**
      * 一次get多个值，值的顺序按照key的顺序返回，不存在则为null。
+     * 
+     * 高并发的场景下，一次读取多个key使用mget命令，可以节省n-1次的网络请求。
      */
     public static void multipleGetValue() {
         String oneKey = "evelyn";
@@ -228,6 +232,26 @@ public class JedisString {
         // 第二次用nx设置
         long nxSetResult = jedis.msetnx(oneKey, oneValue, twoKey, twoValue, threeKey, threeValue);
         System.out.println("使用String的msetnx批量设置多个key/value结果result=" + nxSetResult);
+    }
+
+    /**
+     * Redis对一个值自增与自减，可以在当前目标key上自增自减指定值。
+     */
+    public static void incrAndDecr() {
+        String oneCount = "1-count";
+        String twoCount = "2-count";
+
+        long oneResult = jedis.incr(oneCount);
+        System.out.println("自增后oneResult=" + oneResult);
+
+        long twoResult = jedis.incrBy(oneCount, 520L);
+        System.out.println("自增520后twoResult=" + twoResult);
+
+        long threeResult = jedis.decr(twoCount);
+        System.out.println("自减后threeResult=" + threeResult);
+
+        long fourResult = jedis.decrBy(twoCount, 666L);
+        System.out.println("从666自减后fourResult=" + fourResult);
     }
 
 }
