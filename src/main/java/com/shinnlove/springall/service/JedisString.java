@@ -44,21 +44,23 @@ public class JedisString {
     private static Jedis jedis = new Jedis("127.0.0.1", 6379);
 
     public static void main(String[] args) {
-        stringSetAndGet();
+        //        stringSetAndGet();
+        //
+        //        existKey();
+        //
+        //        modelStringSetAndGet();
+        //
+        //        setExpireKey();
+        //
+        //        setnxAndSetxx();
+        //
+        //        multipleGetValue();
+        //
+        //        multipleSetValue();
+        //
+        //        incrAndDecr();
 
-        existKey();
-
-        modelStringSetAndGet();
-
-        setExpireKey();
-
-        setnxAndSetxx();
-
-        multipleGetValue();
-
-        multipleSetValue();
-
-        incrAndDecr();
+        rangeLengthGetSet();
     }
 
     /**
@@ -252,6 +254,33 @@ public class JedisString {
 
         long fourResult = jedis.decrBy(twoCount, 666L);
         System.out.println("从666自减后fourResult=" + fourResult);
+    }
+
+    /**
+     * Redis其他命令。如：strlen、getSet、setRange、getRange。
+     */
+    public static void rangeLengthGetSet() {
+        String key = "info";
+        String value = "lovepest";
+
+        String originResult = jedis.set(key, "originValue");
+        System.out.println("首次结果值设置result=" + originResult);
+
+        long length = jedis.strlen(key);
+        System.out.println("字符串key的长度length=" + length);
+
+        String getSetResult = jedis.getSet(key, value);
+        System.out.println("第二次设置后获取之前的结果result=" + getSetResult);
+
+        long setRangeResult = jedis.setrange(key, 4L, "b");
+        System.out.println("字符串偏移量结果result=" + setRangeResult);
+
+        // 注意：起始位置和结束位置都能取到
+        String getRangeResult = jedis.getrange(key, 3L, 5L);
+        System.out.println("获取偏移量result=" + getRangeResult);
+
+        String currentValue = jedis.get(key);
+        System.out.println("当前值result=" + currentValue);
     }
 
 }
