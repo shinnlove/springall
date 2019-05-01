@@ -4,6 +4,8 @@
  */
 package com.shinnlove.springall.service;
 
+import java.util.concurrent.TimeUnit;
+
 import redis.clients.jedis.Jedis;
 
 import com.alibaba.fastjson.JSON;
@@ -18,6 +20,15 @@ import com.shinnlove.springall.model.Student;
  * 字符串命令很简单，就是key和序列化的value存入。
  * ex是过期的秒数、px是精确过期的毫秒数。
  * nx代表不存在才能设置成功；xx则是必须存在才可以设置成功、用于更新。
+ *
+ * 原生超时命令
+ * setex key seconds value
+ *
+ * 全局锁nx
+ * setnx k v  
+ *
+ * 指定更新xx
+ * set k v xx
  * 
  * @author shinnlove.jinsheng
  * @version $Id: JedisString.java, v 0.1 2019-05-01 10:50 shinnlove.jinsheng Exp $$
@@ -33,6 +44,8 @@ public class JedisString {
         existKey();
 
         modelStringSetAndGet();
+
+        setExpireKey();
     }
 
     /**
@@ -69,10 +82,35 @@ public class JedisString {
         jedis.set(key, value);
 
         String result = jedis.get(key);
-        System.out.println("从redis获取result=" + result);
+        System.out.println("序列化测试：从redis获取result=" + result);
 
         Student s = JSON.parseObject(result, Student.class);
-        System.out.println("反序列化后名字name=" + s.getName());
+        System.out.println("序列化测试：反序列化后名字name=" + s.getName());
+    }
+
+    /**
+     * redis超时key的设置。注意ex是秒数，px是毫秒数。
+     */
+    public static void setExpireKey() {
+        Student student = new Student(2L, "tony", 22);
+
+        String key = "student-ex";
+        String value = JSON.toJSONString(student);
+
+        jedis.setex(key, 5, value);
+
+        String result = jedis.get(key);
+        System.out.println("超时测试等待前：从redis获取result=" + result);
+
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 注意：超时后再用redis的 get student-ex 得到 nil的结果，代码就直接null了
+        String current = jedis.get(key);
+        System.out.println("超时测试等待后：从redis获取result=" + current);
     }
 
 }
