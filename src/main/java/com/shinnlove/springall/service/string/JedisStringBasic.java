@@ -2,7 +2,7 @@
  * Alipay.com Inc.
  * Copyright (c) 2004-2019 All Rights Reserved.
  */
-package com.shinnlove.springall.service;
+package com.shinnlove.springall.service.string;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -36,29 +36,29 @@ import com.shinnlove.springall.model.Student;
  * jedis可以设置字节数组类型的key。
  * 
  * @author shinnlove.jinsheng
- * @version $Id: JedisString.java, v 0.1 2019-05-01 10:50 shinnlove.jinsheng Exp $$
+ * @version $Id: JedisStringBasic.java, v 0.1 2019-05-01 10:50 shinnlove.jinsheng Exp $$
  */
-public class JedisString {
+public class JedisStringBasic {
 
     /** jedis单连redis客户端 */
     private static Jedis jedis = new Jedis("127.0.0.1", 6379);
 
     public static void main(String[] args) {
-        //        stringSetAndGet();
-        //
-        //        existKey();
-        //
-        //        modelStringSetAndGet();
-        //
-        //        setExpireKey();
-        //
-        //        setnxAndSetxx();
-        //
-        //        multipleGetValue();
-        //
-        //        multipleSetValue();
-        //
-        //        incrAndDecr();
+        stringSetAndGet();
+
+        existKey();
+
+        modelStringSetAndGet();
+
+        setExpireKey();
+
+        setnxAndSetxx();
+
+        multipleGetValue();
+
+        multipleSetValue();
+
+        incrAndDecr();
 
         rangeLengthGetSet();
     }
@@ -278,6 +278,11 @@ public class JedisString {
         // 注意：起始位置和结束位置都能取到
         String getRangeResult = jedis.getrange(key, 3L, 5L);
         System.out.println("获取偏移量result=" + getRangeResult);
+
+        // 追加数据，append命令返回字符串追加后的长度
+        String appendValue = "family";
+        long appendResult = jedis.append(key, appendValue);
+        System.out.println("append结果result=" + appendResult);
 
         String currentValue = jedis.get(key);
         System.out.println("当前值result=" + currentValue);
