@@ -164,6 +164,7 @@ public class JedisHashMapBasic {
         scanParams.match("new:student*");
 
         while (true) {
+            // 默认从cursor位置开始、一次遍历10个键值
             ScanResult<Map.Entry<String, String>> scanResult = jedis.hscan(key, cursor, scanParams);
 
             List<Map.Entry<String, String>> result = scanResult.getResult();
@@ -173,7 +174,7 @@ public class JedisHashMapBasic {
             for (Map.Entry<String, String> entry : result) {
                 System.out.println("field=[" + entry.getKey() + "], value=[" + entry.getValue()
                                    + "]");
-            } // for
+            }
 
             cursor = scanResult.getStringCursor();
             if ("0".equals(cursor)) {
@@ -182,6 +183,7 @@ public class JedisHashMapBasic {
 
         } // while
 
+        System.out.println("所有键值都被遍历完成。");
     }
 
 }
