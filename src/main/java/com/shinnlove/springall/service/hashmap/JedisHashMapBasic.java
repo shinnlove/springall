@@ -1,13 +1,16 @@
 package com.shinnlove.springall.service.hashmap;
 
-import com.alibaba.fastjson.JSON;
-import com.shinnlove.springall.model.Student;
-import redis.clients.jedis.Jedis;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
+
+import com.alibaba.fastjson.JSON;
+import com.shinnlove.springall.model.Student;
 
 /**
  * jedis的HashMap基础使用。
@@ -18,29 +21,37 @@ import java.util.Set;
 public class JedisHashMapBasic {
 
     /** jedis单连redis客户端 */
-    private static Jedis jedis = new Jedis("127.0.0.1", 6379);
+    private static Jedis        jedis = new Jedis("127.0.0.1", 6379);
 
     /** hash存取的field名 */
-    private static final String ID = "id";
+    private static final String ID    = "id";
 
     /** hash存取的field名 */
-    private static final String NAME = "name";
+    private static final String NAME  = "name";
 
     /** hash存取的field名 */
-    private static final String AGE = "age";
+    private static final String AGE   = "age";
 
     public static void main(String[] args) {
         simpleHSet();
 
-        hGet();
+        hGetLenExist();
 
         multipleHSet();
+
+        multipleHGet();
+
+        keysAndVals();
+
+        hgetall();
+
+        hscan();
     }
 
     /**
      * 一次像hashMap中放入一个值。
      */
-    public static void simpleHSet(){
+    public static void simpleHSet() {
         // 准备要存redis的对象
         Student student = new Student(1L, "tony", 24);
         String key = "student:" + student.getId();
@@ -53,8 +64,10 @@ public class JedisHashMapBasic {
 
     /**
      * 使用hashMap数据结构必须注意除了hash的key外，还要准备固定的常量字符字段，否则无法读取具体字段的值。
+     * 
+     * hlen返回某个key下的hash字段数量、hexist判断某个key下指定field对应的键是否存在。
      */
-    public static void hGet(){
+    public static void hGetLenExist() {
         // 准备要存redis的对象
         Student student = new Student(1L, "tony", 24);
         String key = "student:" + student.getId();
@@ -65,10 +78,17 @@ public class JedisHashMapBasic {
 
         long fLen = jedis.hlen(key);
 
-        System.out.println("从redis读取的student对象是：id=" + id + ", name=" + name + ", age=" + age + ", 总计" + fLen + "个字段");
+        System.out.println("从redis读取的student对象是：id=" + id + ", name=" + name + ", age=" + age
+                           + ", 总计" + fLen + "个字段");
+
+        boolean exist = jedis.hexists(key, NAME);
+        System.out.println("name字段在student:" + student.getId() + "中存在结果exist=" + exist);
     }
 
-    public static void multipleHSet(){
+    /**
+     * 一次网络请求合并放入多个hash对应的值、类似字符串的mset命令。
+     */
+    public static void multipleHSet() {
         Student student = new Student(2L, "evelyn", 24);
         String key = "student:" + student.getId();
 
@@ -78,18 +98,89 @@ public class JedisHashMapBasic {
         map.put(ID, "24");
 
         String result = jedis.hmset(key, map);
+        System.out.println("一次批量设置的结果result=" + result);
     }
 
-    public static void multipleHGet(){
+    /**
+     * 一次得到多个指定的field对应的值，传入泛参、返回List值列表。
+     */
+    public static void multipleHGet() {
         Student student = new Student(2L, "evelyn", 24);
         String key = "student:" + student.getId();
 
+        List<String> values = jedis.hmget(key, ID, NAME, AGE);
+        for (String value : values) {
+            System.out.println("current value=" + value);
+        }
+    }
+
+    /**
+     * hkeys返回某个key下所有的hash字段、hvals返回某个key下所有的hash字段对应的value。
+     */
+    public static void keysAndVals() {
+        Student student = new Student(2L, "evelyn", 24);
+        String key = "student:" + student.getId();
+
+        // 返回所有的key是无序集合
         Set<String> fieldSet = jedis.hkeys(key);
-        for(String field : fieldSet){
-            jedis.hmget(key, field);
+        for (String field : fieldSet) {
+            System.out.println("field=" + field);
         }
 
+        // 返回hash值是有序的
         List<String> values = jedis.hvals(key);
+        for (String value : values) {
+            System.out.println("value=" + value);
+        }
+    }
+
+    /**
+     * hgetall命令，能获取指定key下的所有field/value。
+     * 
+     * 特别注意：如果field和value特别多，有可能阻塞redis的可能，建议使用hmget获取部分key、或使用hscan遍历所有key。
+     * 
+     */
+    public static void hgetall() {
+        Student student = new Student(2L, "evelyn", 24);
+        String key = "student:" + student.getId();
+
+        Map<String, String> fieldValues = jedis.hgetAll(key);
+        for (Map.Entry<String, String> entry : fieldValues.entrySet()) {
+            System.out.println("field[" + entry.getKey() + "]=value[" + entry.getValue() + "] ");
+        }
+    }
+
+    /**
+     * Redis2.8版本后渐进式遍历指定key下的field/value方式。
+     */
+    public static void hscan() {
+        Student student = new Student(2L, "evelyn", 24);
+        String key = "student:" + student.getId();
+
+        // 遍历参数
+        String cursor = "0";
+
+        ScanParams scanParams = new ScanParams();
+        scanParams.match("new:student*");
+
+        while (true) {
+            ScanResult<Map.Entry<String, String>> scanResult = jedis.hscan(key, cursor, scanParams);
+
+            List<Map.Entry<String, String>> result = scanResult.getResult();
+
+            System.out.println("一次hscan遍历结果集大小size=" + result.size());
+
+            for (Map.Entry<String, String> entry : result) {
+                System.out.println("field=[" + entry.getKey() + "], value=[" + entry.getValue()
+                                   + "]");
+            } // for
+
+            cursor = scanResult.getStringCursor();
+            if ("0".equals(cursor)) {
+                break;
+            }
+
+        } // while
 
     }
 
