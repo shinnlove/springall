@@ -15,6 +15,8 @@ import com.shinnlove.springall.model.Student;
 /**
  * Redis对hash的操作在Jedis中对应的API。
  * 
+ * 存储结构：ziplist或hashtable。
+ * 
  * 命令格式：hset key [field value...], hdel key [field value...].
  * hkeys, hvals, hlen, hincrBy...
  * 

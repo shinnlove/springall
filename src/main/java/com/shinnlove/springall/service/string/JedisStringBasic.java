@@ -15,6 +15,8 @@ import com.shinnlove.springall.model.Student;
 /**
  * Redis对字符串的操作在Jedis中对应的API。
  * 
+ * 存储结构：int(不大于8个字节)、embstr(小于39字节)、raw(大于39字节)。
+ * 
  * 命令格式：
  * set key value [ex seconds] [px milliseconds] [nx|xx]
  * 
