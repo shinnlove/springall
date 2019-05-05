@@ -87,6 +87,8 @@ public class JedisHashMapBasic {
 
     /**
      * 一次网络请求合并放入多个hash对应的值、类似字符串的mset命令。
+     * 
+     * hmset和hset一样返回OK字符串代表成功。
      */
     public static void multipleHSet() {
         Student student = new Student(2L, "evelyn", 24);
@@ -151,39 +153,60 @@ public class JedisHashMapBasic {
     }
 
     /**
+     * 为hscan命令准备大量的field/value键值对。
+     */
+    private static void prepareHugeFieldValueForHScan(String key) {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < 10000; i++) {
+            map.put("hello" + i, "tony" + i);
+        }
+        String result = jedis.hmset(key, map);
+        System.out.println("设置大量field/value完成，result=" + result);
+    }
+
+    /**
      * Redis2.8版本后渐进式遍历指定key下的field/value方式。
+     * 
+     * 特别注意：hscan命令不是顺序读取的，读取下标位置随机，本来hash中的field/value就没有顺序可言。
      */
     public static void hscan() {
         Student student = new Student(2L, "evelyn", 24);
         String key = "student:" + student.getId();
 
+        // 准备大量的field/value
+        prepareHugeFieldValueForHScan(key);
+
         // 遍历参数
         String cursor = "0";
 
         ScanParams scanParams = new ScanParams();
-        scanParams.match("new:student*");
+        scanParams.match("he*");
 
+        int count = 0;
         while (true) {
-            // 默认从cursor位置开始、一次遍历10个键值
+            // 默认从cursor位置开始、一次默认遍历10个键值，有时候也不一定完全10个值，有发现有12个值的
             ScanResult<Map.Entry<String, String>> scanResult = jedis.hscan(key, cursor, scanParams);
 
             List<Map.Entry<String, String>> result = scanResult.getResult();
 
             System.out.println("一次hscan遍历结果集大小size=" + result.size());
 
+            // 循环读取这一次遍历的数据
             for (Map.Entry<String, String> entry : result) {
                 System.out.println("field=[" + entry.getKey() + "], value=[" + entry.getValue()
                                    + "]");
             }
 
+            // 判断游标决定后续有无要处理的数据
             cursor = scanResult.getStringCursor();
             if ("0".equals(cursor)) {
                 break;
             }
 
+            count++;
         } // while
 
-        System.out.println("所有键值都被遍历完成。");
+        System.out.println("所有键值都被遍历完成，总计遍历了count=" + count + "次。");
     }
 
 }
