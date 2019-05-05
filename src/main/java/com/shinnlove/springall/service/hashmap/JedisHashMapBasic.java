@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.shinnlove.springall.model.Student;
 
 /**
- * jedis的HashMap基础使用。
+ * Redis对hash的操作在Jedis中对应的API。
  * 
  * 命令格式：hset key [field value...], hdel key [field value...].
  * hkeys, hvals, hlen, hincrBy...
