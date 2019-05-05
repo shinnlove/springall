@@ -14,6 +14,12 @@ import com.shinnlove.springall.model.Student;
 
 /**
  * jedis的HashMap基础使用。
+ * 
+ * 命令格式：hset key [field value...], hdel key [field value...].
+ * hkeys, hvals, hlen, hincrBy...
+ * 
+ * 合理使用hash数据结构可以使数据内聚性更强、减少字符串存取领域模型key较多、序列化的问题。
+ * 特别注意：保证hash中的数据精简、存储结构在ziplist中，不要蜕变成hashtable占用内存。
  *
  * @author shinnlove.jinsheng
  * @version $Id: JedisStringBasic.java, v 0.1 2019-05-01 10:50 shinnlove.jinsheng Exp $$
