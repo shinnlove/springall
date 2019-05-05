@@ -41,11 +41,15 @@ public class JedisHashMapBasic {
 
         multipleHGet();
 
+        hincr();
+
         keysAndVals();
 
         hgetall();
 
         hscan();
+
+        hdel();
     }
 
     /**
@@ -114,6 +118,19 @@ public class JedisHashMapBasic {
         for (String value : values) {
             System.out.println("current value=" + value);
         }
+    }
+
+    /**
+     * 递增hash中某键值下field对应的值，hincrBy返回增加后的结果。
+     */
+    public static void hincr() {
+        Student student = new Student(2L, "evelyn", 24);
+        String key = "student:" + student.getId();
+
+        multipleHSet();
+
+        long result = jedis.hincrBy(key, AGE, 25);
+        System.out.println("年龄增加到25岁后返回增加后的结果result=" + result);
     }
 
     /**
@@ -207,6 +224,25 @@ public class JedisHashMapBasic {
         } // while
 
         System.out.println("所有键值都被遍历完成，总计遍历了count=" + count + "次。");
+    }
+
+    /**
+     * hdel命令作用域某个key下的若干个field，返回删除成功的field数量。
+     */
+    public static void hdel() {
+        Student student = new Student(2L, "evelyn", 24);
+        String key = "student:" + student.getId();
+
+        Map<String, String> temp = new HashMap<>();
+        for (int i = 0; i < 5; i++) {
+            temp.put("hello" + i, "tony" + i);
+        }
+
+        String setResult = jedis.hmset(key, temp);
+        System.out.println("hash批量设置5个key=" + setResult);
+
+        long delResult = jedis.hdel(key, "hello1", "hello2", "hello3");
+        System.out.println("hash删除结果result=" + delResult);
     }
 
 }
