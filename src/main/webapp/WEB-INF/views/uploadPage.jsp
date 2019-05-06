@@ -79,6 +79,8 @@
         xhr.addEventListener("load", completed, false);		        //监听XMLHttpRequest的load事件，使用模块内complete函数响应
         xhr.addEventListener("error", errorCallback, false);		//监听XMLHttpRequest的error事件，使用模块内failed函数响应
         xhr.open("POST", uploadURL + '?time=' + Date.now());
+        xhr.setRequestHeader("Origin", "https://www.aitaotu.com");
+        xhr.setRequestHeader("Referer", "https://www.aitaotu.com");
         xhr.send(formData);
 
     };
