@@ -5,8 +5,9 @@
 package com.shinnlove.springall.service.callup;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
-import com.shinnlove.springall.service.tasks.AsyncTaskWithoutResult;
+import com.shinnlove.springall.service.tasks.AsyncTaskWithResult;
 import com.shinnlove.springall.service.threads.ThreadPoolUtil;
 
 /**
@@ -18,18 +19,20 @@ public class AsyncTaskService {
     /** spring中构造注入哈 */
     private static ExecutorService bizExecutor = ThreadPoolUtil.createPool(10, 50, 100, "美国队长");
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        System.out.println("美国队长报道");
+        System.out.println("美国队长");
 
-        bizExecutor.submit(new AsyncTaskWithoutResult() {
+        Future<String> f = bizExecutor.submit(new AsyncTaskWithResult<String>() {
             @Override
-            public void startAsyncTask() {
-                System.out.println("惊奇队长报道");
+            public String doAsyncTask() {
+                return "惊奇队长";
             }
         });
 
-        System.out.println("奇异博士报道");
+        System.out.println(f.get());
+
+        System.out.println("奇异博士");
 
     }
 
