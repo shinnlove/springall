@@ -5,7 +5,7 @@
 package com.shinnlove.springall.service.tasks;
 
 /**
- * 使用其他线程开启批次异步校验能力的Runnable任务。
+ * 使用其他线程开启异步能力的Runnable任务。
  *
  * @author shinnlove.jinsheng
  * @version $Id: AsyncTaskWithoutResult.java, v 0.1 2017-07-31 下午3:31 shinnlove.jinsheng Exp $$
