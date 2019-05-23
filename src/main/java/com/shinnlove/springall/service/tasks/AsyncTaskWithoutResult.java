@@ -10,19 +10,20 @@ package com.shinnlove.springall.service.tasks;
  * @author shinnlove.jinsheng
  * @version $Id: AsyncTaskWithoutResult.java, v 0.1 2017-07-31 下午3:31 shinnlove.jinsheng Exp $$
  */
-public abstract class AsyncTaskWithoutResult implements Runnable {
+@FunctionalInterface
+public interface AsyncTaskWithoutResult extends Runnable {
 
     /**
      * @see Runnable#run()
      */
     @Override
-    public void run() {
+    default void run() {
         startAsyncTask();
     }
 
     /**
      * 离开主线程开启一个异步任务动作。
      */
-    public abstract void startAsyncTask();
+    void startAsyncTask();
 
 }
