@@ -13,7 +13,7 @@
     <url>http://www.shinnlove.com</url>
 
     <properties>
-        <!-- 通用的spring配置 -->
+        <!-- 通用的spring配置属性 -->
         <spring.version>4.2.6.RELEASE</spring.version>
         <jackson.version>2.7.4</jackson.version>
         <slf4j.version>1.7.21</slf4j.version>
