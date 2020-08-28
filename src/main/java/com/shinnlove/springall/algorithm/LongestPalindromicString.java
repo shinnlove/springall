@@ -7,6 +7,8 @@ package com.shinnlove.springall.algorithm;
 /**
  * Accepted.
  * 
+ * Extend: https://github.com/azl397985856/leetcode/blob/master/problems/5.longest-palindromic-substring.md.
+ * 
  * @author Tony, Zhao
  * @version $Id: LongestPalindromicString.java, v 0.1 2020-08-28 9:26 PM Tony, Zhao Exp $$
  */
