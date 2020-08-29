@@ -13,6 +13,8 @@ import java.util.Map;
  * https://github.com/azl397985856/leetcode/blob/master/problems/3.longest-substring-without-repeating-characters.md
  * https://github.com/azl397985856/leetcode/blob/master/thinkings/slide-window.md
  * 
+ * Warning: map's entrySet has interface iterator, could be convert to specific entry type.
+ * 
  * @author Tony, Zhao
  * @version $Id: LongestSubstring.java, v 0.1 2020-08-28 4:59 PM Tony, Zhao Exp $$
  */
