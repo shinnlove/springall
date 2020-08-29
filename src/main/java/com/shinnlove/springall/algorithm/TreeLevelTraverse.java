@@ -15,6 +15,9 @@ import java.util.concurrent.ArrayBlockingQueue;
  * 时间复杂度：$O(N)$，其中N为树中节点总数。
  * 空间复杂度：$O(N)$，其中N为树中节点总数。
  * 
+ * Tips: could use null element instead of level split so that we might not need structure NodeWrapper.
+ * See the link above's javascript code.
+ * 
  * @author Tony, Zhao
  * @version $Id: TreeLevelTraverse.java, v 0.1 2020-08-29 9:35 AM Tony, Zhao Exp $$
  */
