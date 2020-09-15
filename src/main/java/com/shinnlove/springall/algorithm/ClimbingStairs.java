@@ -5,7 +5,9 @@
 package com.shinnlove.springall.algorithm;
 
 /**
- * 考察递归推理能力。
+ * 70. 考察递归推理能力，还有优化能力。
+ * 
+ * TODOs: Time Limit Exceed.
  * 
  * 要么递归、要么排列组合，把问题分解为递归的前提是要有分解问题或数学归纳的想法，找到问题转化的表达式。
  * 
