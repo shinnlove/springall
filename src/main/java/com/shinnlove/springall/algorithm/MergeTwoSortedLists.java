@@ -8,7 +8,7 @@ package com.shinnlove.springall.algorithm;
  * @author Tony, Zhao
  * @version $Id: MergeTwoSortedArrays.java, v 0.1 2020-09-14 4:09 PM Tony, Zhao Exp $$
  */
-public class MergeTwoSortedArrays {
+public class MergeTwoSortedLists {
 
     public class ListNode {
         int      val;
