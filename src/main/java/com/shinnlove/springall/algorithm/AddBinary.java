@@ -40,9 +40,17 @@ public class AddBinary {
         char[] reverse = new char[max + 1];
         int rTop = 0;
         int temp = 0;
-        while (left >= 0 && right >= 0) {
-            int numLeft = a.charAt(left) - '0';
-            int numRight = b.charAt(right) - '0';
+        while (left >= 0 || right >= 0) {
+            int numLeft = 0;
+            if (left >= 0) {
+                numLeft = a.charAt(left) - '0';
+            }
+
+            int numRight = 0;
+            if (right >= 0) {
+                numRight = b.charAt(right) - '0';
+            }
+
             int result = numLeft + numRight + temp;
             if (result == 3) {
                 reverse[rTop++] = '1';
@@ -60,42 +68,6 @@ public class AddBinary {
             left--;
             right--;
         } // while
-
-        if (left >= 0) {
-            while (left >= 0) {
-                int leftNumber = a.charAt(left) - '0';
-                int result = leftNumber + temp;
-                if (result == 2) {
-                    reverse[rTop++] = '0';
-                    temp = 1;
-                } else if (result == 1) {
-                    reverse[rTop++] = '1';
-                    temp = 0;
-                } else {
-                    reverse[rTop++] = '0';
-                    temp = 0;
-                }
-                left--;
-            }
-        }
-
-        if (right >= 0) {
-            while (right >= 0) {
-                int rightNumber = b.charAt(right) - '0';
-                int result = rightNumber + temp;
-                if (result == 2) {
-                    reverse[rTop++] = '0';
-                    temp = 1;
-                } else if (result == 1) {
-                    reverse[rTop++] = '1';
-                    temp = 0;
-                } else {
-                    reverse[rTop++] = '0';
-                    temp = 0;
-                }
-                right--;
-            }
-        }
 
         StringBuilder sb = new StringBuilder();
         if (temp > 0) {
