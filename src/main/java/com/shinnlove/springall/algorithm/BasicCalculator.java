@@ -5,7 +5,21 @@
 package com.shinnlove.springall.algorithm;
 
 /**
- * Basic calculator algorithm.
+ * 227. Basic calculator algorithm.
+ * 
+ * TODOs: Search number should independent implement as a function.
+ * 
+ * https://leetcode-cn.com/problems/basic-calculator-ii/solution/si-ze-yun-suan-by-yi-wen-statistics/
+ * 
+ * 方法1——先乘除后加减
+ * 算法实际上很简单，但是细节上容易出错，主要有以下几点问题：
+ *
+ * 空格需要跳过，因此本题更适合while循环，while循环可以轻松地移动指针，到达目的地；
+ * 利用Hash记录四个运算符号，后续代码编写可以省事儿很多；
+ * 先计算乘法的过程中会遇到两种情况，一种是连乘或连除，一种是第一次碰到乘号或除号；
+ * 计算完乘法或者除法以后，一旦遇到加号，进入下一次循环的时候对tmp进行判空；
+ * 尾部数字处理，如果最后一个符号是加减，那么尾部数字需要扩展到cal数组中
+ * 最后还存在一种情况，说好的是四则运算，结果字符中只有数字，这个时候还需要单独处理
  * 
  * @author Tony, Zhao
  * @version $Id: BasicCalculator.java, v 0.1 2020-09-16 11:11 PM Tony, Zhao Exp $$
