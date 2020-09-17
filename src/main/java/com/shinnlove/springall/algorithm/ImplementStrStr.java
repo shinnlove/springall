@@ -5,6 +5,10 @@
 package com.shinnlove.springall.algorithm;
 
 /**
+ * 28. Implement strStr.
+ * 
+ * https://leetcode.com/problems/implement-strstr/
+ * 
  * For the purpose of this problem, we will return 0 when needle is an empty string. 
  * This is consistent to C's strstr() and Java's indexOf().
  * 
