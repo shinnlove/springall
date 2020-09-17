@@ -15,12 +15,19 @@ public class AddBinary {
     public static void main(String[] args) {
         AddBinary ab = new AddBinary();
 
-        String a = "1010";
-        String b = "1011";
-        String validation = "10101";
+        String a1 = "1010";
+        String b1 = "1011";
+        String validation1 = "10101";
 
-        String result = ab.addBinary(a, b);
-        System.out.println("Result is " + result + ", validation is " + validation);
+        String result1 = ab.addBinary(a1, b1);
+        System.out.println("Result is " + result1 + ", validation is " + validation1);
+
+        String a2 = "11";
+        String b2 = "1";
+        String validation2 = "100";
+
+        String result2 = ab.addBinary(a2, b2);
+        System.out.println("Result is " + result2 + ", validation is " + validation2);
     }
 
     public String addBinary(String a, String b) {
@@ -54,7 +61,7 @@ public class AddBinary {
             right--;
         } // while
 
-        if (left > 0) {
+        if (left >= 0) {
             while (left >= 0) {
                 int leftNumber = a.charAt(left) - '0';
                 int result = leftNumber + temp;
@@ -72,7 +79,7 @@ public class AddBinary {
             }
         }
 
-        if (right > 0) {
+        if (right >= 0) {
             while (right >= 0) {
                 int rightNumber = b.charAt(right) - '0';
                 int result = rightNumber + temp;
