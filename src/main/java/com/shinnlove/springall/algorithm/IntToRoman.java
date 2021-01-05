@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Integer to Roman number.
+ * 
+ * 主要考察每一位数字在做转换的过程中低位、中间位和高位的转换，有一个转换函数。
+ * 
  * @author Tony, Zhao
  * @version $Id: IntToRoman.java, v 0.1 2020-09-13 11:17 PM Tony, Zhao Exp $$
  */

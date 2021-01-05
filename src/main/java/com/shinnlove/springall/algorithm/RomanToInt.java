@@ -16,6 +16,8 @@ import java.util.Map;
  * D -> 500
  * M -> 1000
  * 
+ * 罗马数字到整型的转换，主要考察遇到逆序的时候进行一个连读。
+ * 
  * @author Tony, Zhao
  * @version $Id: RomanToInt.java, v 0.1 2020-09-13 10:31 PM Tony, Zhao Exp $$
  */
@@ -25,15 +27,15 @@ public class RomanToInt {
         RomanToInt rti = new RomanToInt();
 
         String r1 = "IX";
-        int result1 = rti.RomanToInt(r1);
+        int result1 = rti.romanToInt(r1);
         System.out.println(result1);
 
         String r2 = "LVIII";
-        int result2 = rti.RomanToInt(r2);
+        int result2 = rti.romanToInt(r2);
         System.out.println(result2);
     }
 
-    public int RomanToInt(String s) {
+    public int romanToInt(String s) {
         Map<String, Integer> romanMap = new HashMap<>();
         romanMap.put("I", 1);
         romanMap.put("V", 5);
