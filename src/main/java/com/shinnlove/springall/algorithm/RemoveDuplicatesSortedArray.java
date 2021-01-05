@@ -30,12 +30,15 @@ public class RemoveDuplicatesSortedArray {
 
         int count = 1;
         int duplicate = 0;
+        // from the end of the array
         int prev = nums[len - 1];
+        // check from the second last of the array
         for (int i = len - 2; i >= 0; i--) {
             if (nums[i] != prev) {
                 count++;
                 prev = nums[i];
             } else {
+                // duplicate and need move elements
                 duplicate++;
                 for (int j = i; j <= len - 1 - duplicate; j++) {
                     nums[j] = nums[j + 1];

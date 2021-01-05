@@ -31,6 +31,7 @@ public class PalindromeNumber {
             return false;
         }
 
+        // 把2个字节整数放入整型数组中用指针比较
         int[] numbers = new int[16];
         int i = 0;
         while (x > 0) {

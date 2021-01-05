@@ -33,6 +33,12 @@ public class LongestCommonPrefix {
         return sb.toString();
     }
 
+    /**
+     * 用第一个字符串比较，取指针慢慢叠加，但注意边界值。
+     * 
+     * @param strs 
+     * @return return position
+     */
     public int searchIndex(String[] strs) {
         int low = 0;
         while (true) {
@@ -42,9 +48,11 @@ public class LongestCommonPrefix {
             char c = strs[0].charAt(low);
             for (int i = 0; i < strs.length; i++) {
                 if (strs[i].length() == low) {
+                    // 长度不够直接返回
                     return low;
                 }
                 if (strs[i].charAt(low) != c) {
+                    // 不匹配也直接返回
                     return low;
                 }
             }

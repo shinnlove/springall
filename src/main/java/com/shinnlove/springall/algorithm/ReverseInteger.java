@@ -27,12 +27,15 @@ public class ReverseInteger {
         if (x < 0) {
             index = 1;
         }
+        // 反着读
         for (int i = numStr.length() - 1; i >= index; i--) {
             char c = numStr.charAt(i);
             sb.append(c);
         }
         String result = sb.toString();
         long y = Long.valueOf(result);
+        // 题目有要求，溢出的时候返回为0，所以这里考虑溢出情况的判断
+        // 注意带符号整型32位是2^31-1
         if (y > Math.pow(2, 31) - 1 || y < -Math.pow(2, 31)) {
             return 0;
         }

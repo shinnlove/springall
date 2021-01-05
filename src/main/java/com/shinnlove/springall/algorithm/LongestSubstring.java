@@ -15,6 +15,10 @@ import java.util.Map;
  * 
  * Warning: map's entrySet has interface iterator, could be convert to specific entry type.
  * 
+ * Key thoughts of the slide window:
+ * Using a map to reflect existing letter's position and update the low pointer to that position,
+ * then remove all existed keys whose position is smaller than the lower pointer.
+ * 
  * @author Tony, Zhao
  * @version $Id: LongestSubstring.java, v 0.1 2020-08-28 4:59 PM Tony, Zhao Exp $$
  */
@@ -52,14 +56,14 @@ public class LongestSubstring {
 
         // init set
         char first = s.charAt(0);
-        String firstKey = String.valueOf(new char[]{first});
+        String firstKey = String.valueOf(new char[] { first });
         strPosMap.put(firstKey, 0);
         int currentNoRepeatLength = maxNoRepeatLength = 1;
 
         while (high < length - 1) {
             high += 1;
             char c = s.charAt(high);
-            String key = String.valueOf(new char[]{c});
+            String key = String.valueOf(new char[] { c });
 
             if (strPosMap.containsKey(key)) {
                 // char repeated, should move low

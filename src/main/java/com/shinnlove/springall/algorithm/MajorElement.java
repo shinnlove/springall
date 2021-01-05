@@ -5,14 +5,14 @@
 package com.shinnlove.springall.algorithm;
 
 /**
- * 
+ * Simple example for find the major element.
  * 
  * @author Tony, Zhao
  * @version $Id: MajorElement.java, v 0.1 2020-09-21 4:56 PM Tony, Zhao Exp $$
  */
 public class MajorElement {
 
-    public int findMajorElement(int[] nums) {
+    public int majorityElement(int[] nums) {
         int len = nums.length;
         if (len == 0) {
             return 0;

@@ -5,6 +5,8 @@
 package com.shinnlove.springall.algorithm;
 
 /**
+ * Perfect with the thought below:
+ * 
  * First combine two arrays, then if the total length is odd,
  * then the median is the middle of the length,
  * otherwise the median is the middle-left and middle-right sum divide two.

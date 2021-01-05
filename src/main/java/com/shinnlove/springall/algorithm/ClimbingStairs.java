@@ -13,6 +13,8 @@ package com.shinnlove.springall.algorithm;
  * 
  * https://blog.csdn.net/Kikitious_Du/article/details/79057803
  * 
+ * 如果N = 45，就会超过时间限制，所以这道题目还要优化！
+ * 
  * @author Tony, Zhao
  * @version $Id: ClimbingStairs.java, v 0.1 2020-09-15 5:23 PM Tony, Zhao Exp $$
  */

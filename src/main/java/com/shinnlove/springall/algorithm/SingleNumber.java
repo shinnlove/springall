@@ -7,9 +7,9 @@ package com.shinnlove.springall.algorithm;
 /**
  * 136. Single Number.
  * 
- * 思路：相同数字位数一样就会为0，这样如果一个数出现偶数次，一定会抵消为0，剩下的那个数字就是落单的数字。
+ * 思路：相同数字位数一样异或就会为0，这样如果一个数出现偶数次，一定会抵消为0，剩下的那个数字就是落单的数字。
  * 
- * 题解：数组中所有数字两两异或运算。
+ * 题解：考察异或运算，数组中所有数字两两异或运算。
  * 
  * @author Tony, Zhao
  * @version $Id: SingleNumber.java, v 0.1 2020-09-17 9:54 PM Tony, Zhao Exp $$
