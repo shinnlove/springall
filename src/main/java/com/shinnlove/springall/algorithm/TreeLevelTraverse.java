@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.shinnlove.springall.algorithm.util.TreeNode;
+
 /**
  * https://github.com/azl397985856/leetcode/blob/master/problems/102.binary-tree-level-order-traversal.md
  * 
