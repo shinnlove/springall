@@ -21,7 +21,8 @@ public class MaximumSubArray {
         MaximumSubArray msa = new MaximumSubArray();
         int[] nums = new int[] { -2, 1, -3, 4, -1, 2, 1, -5, 4 };
         int result = msa.maxSubArray(nums);
-        System.out.println("Result is" + result);
+        //        int result = msa.maxSubArray2(nums);
+        System.out.println("Result is " + result);
     }
 
     public int maxSubArray(int[] nums) {
@@ -38,6 +39,60 @@ public class MaximumSubArray {
             }
         }
         return max;
+    }
+
+    public int maxSubArray2(int[] nums) {
+        int len = nums.length;
+        if (len == 0) {
+            return 0;
+        }
+        if (len == 1) {
+            return nums[0];
+        }
+
+        boolean inSearching = false;
+        int maxSum = 0;
+        int tempSum = 0;
+        int startIndex = -1;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] > 0) {
+                // larger than 0
+                if (!inSearching) {
+                    startIndex = i;
+                }
+                tempSum += nums[i];
+                inSearching = true;
+                continue;
+            }
+
+            // here smaller than 0
+            if (!inSearching) {
+                continue;
+            }
+
+            if (i < len - 1 && nums[i] + nums[i + 1] > 0) {
+                tempSum += nums[i] + nums[i + 1];
+                i += 1;
+            } else {
+                // no need this negative number
+                inSearching = false;
+                if (tempSum > maxSum) {
+                    maxSum = tempSum;
+                    tempSum = 0;
+                    // reset to that point to do recursive
+                    if (startIndex < len) {
+                        i = startIndex;
+                    }
+                }
+            }
+
+        } // for
+
+        if (startIndex == -1) {
+            return 0;
+        }
+
+        return maxSum;
     }
 
 }
