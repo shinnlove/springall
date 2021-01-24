@@ -40,4 +40,26 @@ public class ClimbingStairs {
         return climbStairs(n - 1) + climbStairs(n - 2);
     }
 
+    public int climbStairs2(int n) {
+        if (n == 1) {
+            return 1;
+        }
+        if (n == 2) {
+            return 2;
+        }
+
+        // set the two original numbers
+        int a1 = 1;
+        int a2 = 2;
+
+        int count = n - 2;
+        while (count-- > 0) {
+            int temp = a1;
+            a1 = a2;
+            a2 = temp + a2;
+        }
+
+        return a2;
+    }
+
 }
