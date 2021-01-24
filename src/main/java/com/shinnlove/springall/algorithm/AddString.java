@@ -27,6 +27,13 @@ public class AddString {
     }
 
     public String addStrings(String num1, String num2) {
+        if (num1 == null) {
+            return num2;
+        }
+        if (num2 == null) {
+            return num1;
+        }
+
         int len1 = num1.length();
         int len2 = num2.length();
 
@@ -44,8 +51,8 @@ public class AddString {
         int pointer2 = len2 - 1;
         int pointer3 = max;
         while (pointer1 >= 0 && pointer2 >= 0) {
-            int temp1 = num1.charAt(pointer1--) - 48;
-            int temp2 = num2.charAt(pointer2--) - 48;
+            int temp1 = getNumberFromStringByPos(num1, pointer1--);
+            int temp2 = getNumberFromStringByPos(num2, pointer2--);
             int total = temp1 + temp2 + highBit;
             if (total >= 10) {
                 total = total % 10;
@@ -57,7 +64,7 @@ public class AddString {
         } // end while
 
         while (pointer1 >= 0) {
-            int t = num1.charAt(pointer1--) - 48;
+            int t = getNumberFromStringByPos(num1, pointer1--);
             int total = t + highBit;
             if (total >= 10) {
                 total = total % 10;
@@ -69,7 +76,7 @@ public class AddString {
         } // end pointer1
 
         while (pointer2 >= 0) {
-            int t = num2.charAt(pointer2--) - 48;
+            int t = getNumberFromStringByPos(num2, pointer2--);
             int total = t + highBit;
             if (total >= 10) {
                 total = total % 10;
@@ -84,12 +91,12 @@ public class AddString {
             sums[pointer3--] = 1;
         }
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(max + 1);
         boolean allZero = true;
         boolean leadingZero = true;
         for (int k = 0; k < max + 1; k++) {
             if (sums[k] == 0 && leadingZero) {
-                k++;
+                continue;
             }
             if (sums[k] != 0) {
                 allZero = false;
@@ -106,6 +113,13 @@ public class AddString {
         }
 
         return sb.toString();
+    }
+
+    public int getNumberFromStringByPos(String target, int pos) {
+        if (target == null || pos < 0 || pos >= target.length()) {
+            return 0;
+        }
+        return target.charAt(pos) - 48;
     }
 
 }
