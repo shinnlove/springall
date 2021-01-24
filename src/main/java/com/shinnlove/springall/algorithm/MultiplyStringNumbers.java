@@ -77,8 +77,8 @@ public class MultiplyStringNumbers {
 
                 int onceBitResult = stemp * ltemp + exceedPos;
                 if (onceBitResult >= 10) {
-                    onceBitResult %= 10;
                     exceedPos = onceBitResult / 10;
+                    onceBitResult %= 10;
                 } else {
                     exceedPos = 0;
                 }
@@ -108,11 +108,12 @@ public class MultiplyStringNumbers {
 
             // 7. move position by bit count
             if (bitCount > 0) {
-                int bc = bitCount++;
+                int bc = bitCount;
                 while (bc-- > 0) {
                     onceNumberString.append("0");
                 }
             }
+            bitCount++;
 
             if (allZero) {
                 // skip this multiply calculation in while
