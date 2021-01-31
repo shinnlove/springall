@@ -10,6 +10,8 @@ package com.shinnlove.springall.algorithm;
  * wiki: https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof/.
  * 
  * This is a problem aim on the search start position of this array!!
+ * 
+ * Time Complexity is O(m+n), m is the length of rows and n is the length of cols.
  *
  * @author Tony Zhao
  * @version $Id: FindNumberIn2DArray.java, v 0.1 2021-01-31 2:02 PM Tony Zhao Exp $$
