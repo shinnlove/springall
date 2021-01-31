@@ -4,6 +4,8 @@
  */
 package com.shinnlove.springall.algorithm;
 
+import com.shinnlove.springall.algorithm.util.ListNode;
+
 /**
  * You are given two non-empty linked lists representing two non-negative integers.
  * The digits are stored in reverse order and each of their nodes contain a single digit.
@@ -36,15 +38,6 @@ public class Solution2nd {
             result = result.next;
         }
 
-    }
-
-    public class ListNode {
-        int      val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-        }
     }
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {

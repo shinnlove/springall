@@ -4,6 +4,8 @@
  */
 package com.shinnlove.springall.algorithm;
 
+import com.shinnlove.springall.algorithm.util.ListNode;
+
 /**
  * Reverse List Node.
  * 
@@ -16,15 +18,6 @@ package com.shinnlove.springall.algorithm;
  * @version $Id: ReverseListNode.java, v 0.1 2020-09-08 2:22 PM Tony, Zhao Exp $$
  */
 public class ReverseListNode {
-
-    public class ListNode {
-        int      val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-        }
-    }
 
     public ListNode reverseList(ListNode head) {
         if (head == null) {
