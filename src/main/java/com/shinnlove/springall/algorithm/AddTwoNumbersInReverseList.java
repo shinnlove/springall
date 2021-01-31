@@ -4,28 +4,17 @@
  */
 package com.shinnlove.springall.algorithm;
 
+import com.shinnlove.springall.algorithm.util.ListNode;
+
 /**
+ * LeetCode 2.
+ * 
+ * wiki: https://leetcode-cn.com/problems/add-two-numbers/.
+ * 
  * @author Tony Zhao
  * @version $Id: AddTwoNumbersInReverseList.java, v 0.1 2021-01-05 6:41 PM Tony Zhao Exp $$
  */
 public class AddTwoNumbersInReverseList {
-
-    public class ListNode {
-        int      val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         // judgement

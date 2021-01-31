@@ -4,28 +4,13 @@
  */
 package com.shinnlove.springall.algorithm;
 
+import com.shinnlove.springall.algorithm.util.ListNode;
+
 /**
  * @author Tony, Zhao
  * @version $Id: RemoveDuplicateFromSortedList.java, v 0.1 2020-09-15 5:05 PM Tony, Zhao Exp $$
  */
 public class RemoveDuplicateFromSortedList {
-
-    public class ListNode {
-        int      val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
 
     public ListNode deleteDuplicates(ListNode head) {
         if (head == null) {
