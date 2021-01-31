@@ -7,6 +7,8 @@ package com.shinnlove.springall.algorithm;
 /**
  * 66. Plus One.
  * 
+ * wiki: https://leetcode-cn.com/problems/plus-one/submissions/.
+ * 
  * @author Tony, Zhao
  * @version $Id: PlusOne.java, v 0.1 2020-09-15 6:22 PM Tony, Zhao Exp $$
  */
