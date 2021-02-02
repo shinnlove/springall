@@ -10,6 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * LeetCode 1. Two Sum.
+ * 
+ * wiki: https://leetcode-cn.com/problems/two-sum/.
+ * 
+ * The method given by myself is a little bit complex, need to be optimized.
+ * 
  * @author Tony, Zhao
  * @version $Id: TwoSum.java, v 0.1 2020-08-20 12:00 AM Tony, Zhao Exp $$
  */
