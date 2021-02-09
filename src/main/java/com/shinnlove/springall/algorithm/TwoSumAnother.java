@@ -15,11 +15,11 @@ package com.shinnlove.springall.algorithm;
  * @author shinnlove.jinsheng
  * @version $Id: Solution1st.java, v 0.1 2019-04-08 13:21 shinnlove.jinsheng Exp $$
  */
-public class Solution1st {
+public class TwoSumAnother {
 
     public static void main(String[] args) {
         int[] nums = new int[] { 2, 7, 11, 15 };
-        Solution1st s = new Solution1st();
+        TwoSumAnother s = new TwoSumAnother();
         int[] result = s.twoSum(nums, 9);
 
         for (int i = 0; i < result.length; i++) {

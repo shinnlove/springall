@@ -7,6 +7,10 @@ package com.shinnlove.springall.algorithm;
 import com.shinnlove.springall.algorithm.util.ListNode;
 
 /**
+ * LeetCode 2.
+ *
+ * wiki: https://leetcode-cn.com/problems/add-two-numbers/.
+ *
  * You are given two non-empty linked lists representing two non-negative integers.
  * The digits are stored in reverse order and each of their nodes contain a single digit.
  * Add the two numbers and return it as a linked list.
@@ -22,14 +26,14 @@ import com.shinnlove.springall.algorithm.util.ListNode;
  * @author shinnlove.jinsheng
  * @version $Id: Solution2nd.java, v 0.1 2019-04-08 13:32 shinnlove.jinsheng Exp $$
  */
-public class Solution2nd {
+public class AddTwoNumbersInList {
 
     public static void main(String[] args) {
 
         int[] nums1 = new int[] { 2, 4, 3 };
         int[] nums2 = new int[] { 5, 6, 4 };
 
-        Solution2nd s = new Solution2nd();
+        AddTwoNumbersInList s = new AddTwoNumbersInList();
 
         ListNode result = s.addTwoNumbers(s.createList(nums1), s.createList(nums2));
 

@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * LeetCode 3.
+ *
+ * wiki: https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/.
+ *
  * Given a string, find the length of the longest substring without repeating characters.
  *
  * Example 1:
@@ -30,7 +34,7 @@ import java.util.Map;
  * @author shinnlove.jinsheng
  * @version $Id: Solution3rd.java, v 0.1 2019-04-08 14:16 shinnlove.jinsheng Exp $$
  */
-public class Solution3rd {
+public class LongestSubstringUsingSlideWindow {
 
     public static void main(String[] args) {
         String input1 = "abcabcbb";
@@ -42,7 +46,7 @@ public class Solution3rd {
         String input7 = "dvdf";
         String input8 = "tmmzuxt";
 
-        Solution3rd s = new Solution3rd();
+        LongestSubstringUsingSlideWindow s = new LongestSubstringUsingSlideWindow();
 
         System.out.println(s.lengthOfLongestSubstring(input1));
         System.out.println(s.lengthOfLongestSubstring(input2));
