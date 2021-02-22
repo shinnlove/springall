@@ -2,10 +2,12 @@
  * Alipay.com Inc.
  * Copyright (c) 2004-2021 All Rights Reserved.
  */
-package com.shinnlove.springall.algorithm;
+package com.shinnlove.springall.algorithm.scenario.solutions;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.shinnlove.springall.algorithm.util.KeyPairNode;
 
 /**
  * LRU cache class.
@@ -18,22 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version $Id: LRUCache.java, v 0.1 2021-01-05 5:19 PM Tony Zhao Exp $$
  */
 public class LRUCache {
-
-    class KeyPairNode {
-        int key;
-        int value;
-
-        public KeyPairNode() {
-        }
-
-        public KeyPairNode(int key, int value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        KeyPairNode prev;
-        KeyPairNode next;
-    }
 
     private int                       capacity;
     private int                       currentNums;

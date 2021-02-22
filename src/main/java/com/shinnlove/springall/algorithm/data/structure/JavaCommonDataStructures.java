@@ -2,7 +2,7 @@
  * Alipay.com Inc.
  * Copyright (c) 2004-2021 All Rights Reserved.
  */
-package com.shinnlove.springall.algorithm;
+package com.shinnlove.springall.algorithm.data.structure;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -55,7 +55,20 @@ public class JavaCommonDataStructures {
 
         Map<String, String> linkedHashMap = new LinkedHashMap<>();
 
-        Map<String, String> treeMap = new TreeMap<>();
+        Map<String, String> treeMap = new TreeMap<>((o1, o2) -> o1.compareTo(o2));
+        Set<String> keySet = treeMap.keySet();
+        Iterator<String> iter = keySet.iterator();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            System.out.println(key + ":" + treeMap.get(key));
+        }
+
+        List<Map.Entry<String, String>> list = new ArrayList<>(treeMap.entrySet());
+        Collections.sort(list, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
+
+        for (Map.Entry<String, String> mapping : list) {
+            System.out.println(mapping.getKey() + ":" + mapping.getValue());
+        }
 
         Map<String, String> skipList = new ConcurrentSkipListMap<>();
 

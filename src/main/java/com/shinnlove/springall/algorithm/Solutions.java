@@ -6,8 +6,7 @@ package com.shinnlove.springall.algorithm;
 
 /**
  * @author Tony Zhao
- * @version $Id: JavaReadFileAndRegulations.java, v 0.1 2021-02-21 9:42 AM Tony Zhao Exp $$
+ * @version $Id: Solutions.java, v 0.1 2021-02-21 9:42 AM Tony Zhao Exp $$
  */
-public class JavaReadFileAndRegulations {
-
+public class Solutions {
 }
