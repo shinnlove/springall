@@ -6,6 +6,7 @@ package com.shinnlove.springall.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,15 @@ public class HelloSpringController {
         LoggerUtil.warn(LOGGER, "你好，我的英文名叫shinnlove。");
         LoggerUtil.error(LOGGER, new RuntimeException("这是我自定义的错误"));
         return "This is log4j2 test.";
+    }
+
+    @RequestMapping(value = "test", method = RequestMethod.POST)
+    public String test(@RequestBody ServiceModel serviceModel) {
+
+        System.out.println(serviceModel.getMid());
+        System.out.println(serviceModel.getName());
+
+        return "ok";
     }
 
 }
