@@ -7,7 +7,9 @@ package com.shinnlove.springall.algorithm;
 import com.shinnlove.springall.algorithm.util.ListNode;
 
 /**
- * 面试题 02.04.得物. 线性表、分割链表
+ * 86. 线性表、分割链表
+ * 
+ * 同：面试题 02.04.得物. 
  *
  * https://leetcode.cn/problems/partition-list-lcci/description/?company_slug=de-wu
  *
