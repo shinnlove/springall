@@ -42,11 +42,12 @@ public class ThreeSum {
 
         for (int i = 0; i < len - 2; i++) {
 
-            // skip duplicate
+            // skip duplicate started from the second number
             if (i > 0 && nums[i] == nums[i - 1]) {
                 continue;
             }
 
+            // start always ahead one step of current number(target number)
             int start = i + 1;
             int end = len - 1;
 
@@ -62,6 +63,8 @@ public class ThreeSum {
                     oneResult.add(nums[end]);
                     result.add(oneResult);
                     start += 1;
+
+                    // start - 1 at least equals [current number + 1] since else clauses has done result once
                     while (nums[start] == nums[start - 1] && start < end) {
                         // careful: next start should not equals to the previous start!
                         start += 1;
