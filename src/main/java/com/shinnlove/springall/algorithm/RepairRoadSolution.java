@@ -22,17 +22,18 @@ public class RepairRoadSolution {
         int n = s.length();
 
         for (int i = 0; i < n; i++) {
-            // 如果一旦遇到了X字符开头
+            // if start with 'X'
             if (s.charAt(i) == 'X') {
-                // 处理紧随其后的3个字符、但是要区分是不是遇到数组右边界
+                // handle consequent three characters within the right bound of array..
                 for (int j = i; j < Math.min(i + 3, n); j++) {
-                    // 把j的位置字符从X改成.
+
+                    // change character from X to .
                     char[] chars = s.toCharArray();
                     chars[j] = '.';
                     s = new String(chars);
                 }
 
-                // 更新修复次数
+                // update repair count
                 count++;
             }
         }
