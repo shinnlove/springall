@@ -4,10 +4,8 @@
  */
 package com.shinnlove.springall.algorithm;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * Nomura Task 2.
@@ -69,8 +67,6 @@ public class WarehouseSolution {
         // for common case:
 
         // initialize variables
-        List<Box> statBoxes = new ArrayList<>();
-
         int leftSpan = boxes[1] - boxes[0];
         int minSpan = Integer.MAX_VALUE;
         int minIndex = -1;
@@ -80,10 +76,6 @@ public class WarehouseSolution {
 
             int rightSpan = boxes[i + 1] - boxes[i];
             int totalSpan = leftSpan + rightSpan;
-
-            // add into list
-            Box b = new Box(i, leftSpan, rightSpan, totalSpan);
-            statBoxes.add(b);
 
             // for memo
             if (totalSpan < minSpan) {
