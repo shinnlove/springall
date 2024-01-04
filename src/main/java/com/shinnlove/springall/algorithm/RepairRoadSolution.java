@@ -13,6 +13,11 @@ package com.shinnlove.springall.algorithm;
 public class RepairRoadSolution {
 
     public int repairRoadSolution(String s) {
+
+        if (s == null) {
+            return 0;
+        }
+
         int count = 0;
         int n = s.length();
 
