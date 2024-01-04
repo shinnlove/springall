@@ -5,44 +5,14 @@
 package com.shinnlove.springall.algorithm;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
- * Nomura Task 2.
+ * Coding Task 2.
  * 
  * @author Tony Zhao
  * @version $Id: WarehouseSolution.java, v 0.1 2023-12-31 6:32 PM Tony Zhao Exp $$
  */
 public class WarehouseSolution {
-
-    public static class Box implements Comparator<Box> {
-        public int selfIndex;
-        public int leftSpan;
-        public int rightSpan;
-        public int totalSpan;
-
-        public Box() {
-        }
-
-        public Box(int selfIndex, int leftSpan, int rightSpan, int totalSpan) {
-            this.selfIndex = selfIndex;
-            this.leftSpan = leftSpan;
-            this.rightSpan = rightSpan;
-            this.totalSpan = totalSpan;
-        }
-
-        @Override
-        public int compare(Box o1, Box o2) {
-            if (o1.totalSpan < o2.totalSpan) {
-                // smaller global distance range to the former
-                return -1;
-            } else if (o1.totalSpan == o2.totalSpan) {
-                return 0;
-            } else {
-                return 1;
-            }
-        }
-    }
 
     public int warehouseSolution(int[] boxes) {
         int len = boxes.length;

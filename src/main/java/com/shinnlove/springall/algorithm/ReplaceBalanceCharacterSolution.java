@@ -5,7 +5,7 @@
 package com.shinnlove.springall.algorithm;
 
 /**
- * Nomura Task 3.
+ * Coding Task 3.
  * 
  * @author Tony Zhao
  * @version $Id: ReplaceBalanceCharacterSolution.java, v 0.1 2024-01-04 11:44 AM Tony Zhao Exp $$
