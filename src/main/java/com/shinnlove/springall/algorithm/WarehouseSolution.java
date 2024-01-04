@@ -64,7 +64,7 @@ public class WarehouseSolution {
         int startIndex = minIndex;
         int endIndex = minIndex;
 
-        // expand
+        // expand start
         while ((boxes[startIndex] - boxes[startIndex - 1] == 1) && startIndex > leftMoveIndex) {
             startIndex -= 1;
             if (startIndex == leftMoveIndex) {
@@ -72,6 +72,7 @@ public class WarehouseSolution {
             }
         }
 
+        // expand end
         while ((boxes[endIndex + 1] - boxes[endIndex] == 1) && endIndex < rightMoveIndex) {
             endIndex += 1;
             if (endIndex == rightMoveIndex) {
