@@ -10,7 +10,9 @@ import java.util.Set;
 import com.shinnlove.springall.algorithm.util.ListNode;
 
 /**
- * Leetcode 83. 
+ * Leetcode 83. 删除排序链表中的重复元素
+ * 
+ * 这题是重复的元素留下一个即可。
  * 
  * <p>https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/submissions/</p>
  * 
@@ -18,10 +20,6 @@ import com.shinnlove.springall.algorithm.util.ListNode;
  * @version $Id: DeleteDuplicates.java, v 0.1 2022-02-26 11:15 PM Tony Zhao Exp $$
  */
 public class DeleteDuplicates {
-
-    public static void main(String[] args) {
-
-    }
 
     public ListNode deleteDuplicates(ListNode head) {
         if (head == null) {
@@ -45,6 +43,27 @@ public class DeleteDuplicates {
         }
 
         return head;
+    }
+
+    public ListNode deleteDuplicatesLeetCode(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+
+        ListNode cur = head;
+        while (cur.next != null) {
+            if (cur.val == cur.next.val) {
+                cur.next = cur.next.next;
+            } else {
+                cur = cur.next;
+            }
+        }
+
+        return head;
+    }
+
+    public static void main(String[] args) {
+
     }
 
 }
