@@ -137,6 +137,7 @@ public class SpiralMatrix {
         } // while
 
         // if the return type is int[], then loop to copy array
+        // use Lists.toArray() instead directly ?
         int[] visit = new int[rowLen * colLen];
         for (int k = 0; k < rowLen * colLen; k++) {
             visit[k] = result.get(k);
